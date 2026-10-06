@@ -2,41 +2,87 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>DigiTrainer</title>
 
     <style>
+        html,
         body {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
             background-color: #202020;
-            font-family: Arial, sans-serif;
             color: white;
-            text-align: center;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .app {
+            width: 100%;
+            min-height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            box-sizing: border-box;
+            padding: 12px;
         }
 
         h1 {
-            margin-top: 0;
+            margin: 0 0 12px 0;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        .board-container {
+            flex: 1;
+
+            width: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+
+            overflow: auto;
         }
 
         .board {
-            max-width: 100%;
-            height: auto;
             display: block;
-            margin: 0 auto;
+
+            max-width: 95vw;
+            max-height: calc(100vh - 70px);
+
+            width: auto;
+            height: auto;
+
+            object-fit: contain;
         }
     </style>
 </head>
 
 <body>
 
-    <h1>DigiTrainer</h1>
+    <main class="app">
 
-    <img
-        class="board"
-        src="boards/itt-digitrainer2/board.jpg"
-        alt="ITT Digi-Trainer 2">
+        <h1>DigiTrainer</h1>
+
+        <div class="board-container">
+
+            <img
+                class="board"
+                src="boards/itt-digitrainer2/board.jpg"
+                alt="ITT Digi-Trainer 2">
+
+        </div>
+
+    </main>
 
 </body>
 </html>
