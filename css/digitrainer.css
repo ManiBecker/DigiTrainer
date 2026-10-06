@@ -50,6 +50,8 @@ h1 {
     height: auto;
 
     object-fit: contain;
+
+    cursor: crosshair;
 }
 
 .statusbar {
