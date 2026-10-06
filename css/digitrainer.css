@@ -44,7 +44,7 @@ h1 {
     display: block;
 
     max-width: 95vw;
-    max-height: calc(100vh - 70px);
+    max-height: calc(100vh - 100px);
 
     width: auto;
     height: auto;
@@ -60,6 +60,7 @@ h1 {
     justify-content: space-between;
     align-items: center;
 
+    min-height: 32px;
     padding: 6px 10px;
 
     background-color: #111;
@@ -72,4 +73,3 @@ h1 {
 .coordinates {
     white-space: nowrap;
 }
-
