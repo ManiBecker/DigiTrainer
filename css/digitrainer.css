@@ -52,6 +52,7 @@ h1 {
     object-fit: contain;
 
     cursor: crosshair;
+    touch-action: none;
 }
 
 .statusbar {
