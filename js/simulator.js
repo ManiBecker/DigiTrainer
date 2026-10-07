@@ -108,13 +108,23 @@ board.addEventListener("pointerup", function (event) {
         pos.x <= pos.width &&
         pos.y <= pos.height;
 
-    if (insideBoard) {
+    const x1 = parseFloat(currentWire.getAttribute("x1"));
+    const y1 = parseFloat(currentWire.getAttribute("y1"));
+    
+    const dx = pos.x - x1;
+    const dy = pos.y - y1;
+    
+    const length = Math.sqrt(dx * dx + dy * dy);
+    
+    if (insideBoard && length >= 10) {
+    
         // Leitung endgültig ablegen
         currentWire.setAttribute("x2", pos.x);
         currentWire.setAttribute("y2", pos.y);
+    
     } else {
-        // Außerhalb losgelassen:
-        // Leitung wieder entfernen
+    
+        // Zu kurze Leitung oder außerhalb losgelassen
         currentWire.remove();
     }
 
