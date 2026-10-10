@@ -204,3 +204,23 @@ function drawWire(x1, y1, x2, y2) {
 
     return line;
 }
+
+// ------------------------------------------------------------
+// Hauptschalter und Betriebs-LED
+// ------------------------------------------------------------
+
+const powerSwitch = document.querySelector(".power-switch");
+const powerLed = document.querySelector(".power-led");
+
+let powerOn = false;
+
+powerSwitch.addEventListener("click", function () {
+
+    powerOn = !powerOn;
+
+    powerLed.classList.toggle("on", powerOn);
+
+    statusMessage.textContent = powerOn
+        ? "Power ON"
+        : "Power OFF";
+});
