@@ -87,9 +87,10 @@ board.addEventListener("pointerdown", function (event) {
 });
 
 
-// ------------------------------------------------------------
-// Leitung beenden
-// ------------------------------------------------------------
+
+ // ------------------------------------------------------------
+ // Leitung beenden
+ // ------------------------------------------------------------
 
 board.addEventListener("pointerup", function (event) {
 
@@ -110,22 +111,53 @@ board.addEventListener("pointerup", function (event) {
 
     const x1 = parseFloat(currentWire.getAttribute("x1"));
     const y1 = parseFloat(currentWire.getAttribute("y1"));
-    
+
     const dx = pos.x - x1;
     const dy = pos.y - y1;
-    
+
     const length = Math.sqrt(dx * dx + dy * dy);
-    
+
     if (insideBoard && length >= 10) {
-    
+
         // Leitung endgültig ablegen
         currentWire.setAttribute("x2", pos.x);
         currentWire.setAttribute("y2", pos.y);
-    
-    } else {
-    
-        // Zu kurze Leitung oder außerhalb losgelassen
+
+        // Rechteck aus den beiden Endpunkten berechnen
+        const x = Math.min(x1, pos.x) / pos.width;
+        const y = Math.min(y1, pos.y) / pos.height;
+
+        const width = Math.abs(dx) / pos.width;
+        const height = Math.abs(dy) / pos.height;
+
+        statusMessage.textContent =
+            `x: ${x.toFixed(4)}, y: ${y.toFixed(4)}, ` +
+            `width: ${width.toFixed(4)}, height: ${height.toFixed(4)}`;
+
+    } else if (insideBoard) {
+
+        // Einfacher Klick: keine Leitung erzeugen
         currentWire.remove();
+
+        // Mittelpunkt des Buchsen-Hotspots
+        const cx = pos.x / pos.width;
+        const cy = pos.y / pos.height;
+
+        // Feste quadratische Hotspot-Größe (2 %)
+        const size = 0.02;
+
+        const x = cx - size / 2;
+        const y = cy - size / 2;
+
+        statusMessage.textContent =
+            `x: ${x.toFixed(4)}, y: ${y.toFixed(4)}, ` +
+            `width: ${size.toFixed(4)}, height: ${size.toFixed(4)}`;
+
+    } else {
+
+        // Außerhalb des Boards losgelassen
+        currentWire.remove();
+        statusMessage.textContent = "Ready";
     }
 
     if (board.hasPointerCapture(event.pointerId)) {
@@ -134,8 +166,6 @@ board.addEventListener("pointerup", function (event) {
 
     currentWire = null;
     activePointerId = null;
-
-    statusMessage.textContent = "Ready";
 });
 
 
