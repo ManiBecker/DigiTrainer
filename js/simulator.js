@@ -64,6 +64,12 @@ board.addEventListener("pointermove", function (event) {
 
 board.addEventListener("pointerdown", function (event) {
 
+    // Bei eingeschaltetem Gerät keine Leitungen verlegen
+    if (powerOn) {
+        statusMessage.textContent = "Power ON - Wiring disabled";
+        return;
+    }
+
     // Bei einer Maus nur die linke Taste verwenden
     if (event.pointerType === "mouse" && event.button !== 0) {
         return;
