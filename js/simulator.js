@@ -230,3 +230,65 @@ powerSwitch.addEventListener("click", function () {
         ? "Power ON"
         : "Power OFF";
 });
+
+
+ // ------------------------------------------------------------
+ // Board-Konfiguration laden und Hotspots anzeigen
+ // ------------------------------------------------------------
+
+const hotspotLayer = document.createElement("div");
+
+hotspotLayer.className = "hotspot-layer";
+
+Object.assign(hotspotLayer.style, {
+    position: "absolute",
+    left: "0",
+    top: "0",
+    width: "100%",
+    height: "100%",
+    pointerEvents: "none"
+});
+
+document.querySelector(".board-area").appendChild(hotspotLayer);
+
+
+fetch("boards/itt-digitrainer2/board.json")
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+        }
+        return response.json();
+    })
+    .then(function (config) {
+
+        config.hotspots.forEach(function (hotspot) {
+
+            const marker = document.createElement("div");
+
+            marker.title = hotspot.label;
+
+            Object.assign(marker.style, {
+                position: "absolute",
+                left: (hotspot.x * 100) + "%",
+                top: (hotspot.y * 100) + "%",
+                width: (hotspot.width * 100) + "%",
+                height: (hotspot.height * 100) + "%",
+                boxSizing: "border-box",
+                border: "2px solid lime",
+                backgroundColor: "rgba(0,255,0,0.15)",
+                pointerEvents: "none"
+            });
+
+            hotspotLayer.appendChild(marker);
+        });
+
+        console.log(
+            "Board loaded:",
+            config.name,
+            config.hotspots.length,
+            "hotspots"
+        );
+    })
+    .catch(function (error) {
+        console.error("Cannot load board.json:", error);
+    });
