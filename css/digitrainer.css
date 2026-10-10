@@ -88,6 +88,39 @@ h1 {
 
     pointer-events: none;
 }
+
+/* Hauptschalter: gemessener Hotspot */
+.power-switch {
+    position: absolute;
+    left: 7.13%;
+    top: 29.74%;
+    width: 4.87%;
+    height: 6.03%;
+
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* Betriebs-LED: gemessener Bereich */
+.power-led {
+    position: absolute;
+    left: 33.08%;
+    top: 28.97%;
+    width: 1.24%;
+    height: 2.05%;
+
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Leuchtende LED bei eingeschaltetem Gerät */
+.power-led.on {
+    background: #ff3030;
+    box-shadow:
+        0 0 6px 3px #ff2020,
+        0 0 14px 6px rgba(255, 0, 0, 0.65);
+}
 .coordinates {
     white-space: nowrap;
 }
