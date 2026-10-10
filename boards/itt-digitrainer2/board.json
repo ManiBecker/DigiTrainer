@@ -1,1 +1,39 @@
-{}
+{
+  "id": "itt-digitrainer2",
+  "name": "ITT Digi-Trainer 2",
+  "hotspots": [
+    {
+      "id": "vcc",
+      "label": "+5V",
+      "x": 0.0941,
+      "y": 0.3823,
+      "width": 0.0200,
+      "height": 0.0200
+    },
+    {
+      "id": "ic0-pin14",
+      "label": "IC 0 Pin 14 (VCC)",
+      "x": 0.1826,
+      "y": 0.4233,
+      "width": 0.0200,
+      "height": 0.0200
+    },
+    {
+      "id": "ic0-pin7",
+      "label": "IC 0 Pin 7 (GND)",
+      "x": 0.0932,
+      "y": 0.6131,
+      "width": 0.0200,
+      "height": 0.0200
+    },
+    {
+      "id": "gnd",
+      "label": "GND",
+      "x": 0.0949,
+      "y": 0.6644,
+      "width": 0.0200,
+      "height": 0.0200
+    }
+  ]
+}
+
