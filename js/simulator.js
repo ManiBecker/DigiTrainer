@@ -19,6 +19,28 @@ let hotspots = [];
 let boardLoaded = false;
 
 
+const PAD_SIZE = 0.029;  // 2,9 % der Bildhöhe
+
+// Quadratische Trefferfläche um den Buchsenmittelpunkt
+function getHotspotBounds(hotspot) {
+    const rect = board.getBoundingClientRect();
+
+    const cx = hotspot.x + hotspot.width / 2;
+    const cy = hotspot.y + hotspot.height / 2;
+
+    // Gleiche Seitenlänge in Bildschirmpixeln
+    const halfHeight = PAD_SIZE / 2;
+    const halfWidth = halfHeight * rect.height / rect.width;
+
+    return {
+        x: cx - halfWidth,
+        y: cy - halfHeight,
+        width: 2 * halfWidth,
+        height: PAD_SIZE
+    };
+}
+
+
 // ------------------------------------------------------------
 // Position relativ zum Board ermitteln
 // ------------------------------------------------------------
@@ -48,11 +70,13 @@ function findHotspot(pos) {
     const y = pos.y / pos.height;
 
     return hotspots.find(function (hotspot) {
+        const bounds = getHotspotBounds(hotspot);
+
         return (
-            x >= hotspot.x &&
-            x <= hotspot.x + hotspot.width &&
-            y >= hotspot.y &&
-            y <= hotspot.y + hotspot.height
+            x >= bounds.x &&
+            x <= bounds.x + bounds.width &&
+            y >= bounds.y &&
+            y <= bounds.y + bounds.height
         );
     }) || null;
 }
@@ -390,14 +414,16 @@ fetch("boards/itt-digitrainer2/board.json")
 
             marker.title = hotspot.label;
 
+            const bounds = getHotspotBounds(hotspot);
+
             Object.assign(marker.style, {
                 position: "absolute",
-                left: (hotspot.x * 100) + "%",
-                top: (hotspot.y * 100) + "%",
-                width: (hotspot.width * 100) + "%",
-                height: (hotspot.height * 100) + "%",
+                left: (bounds.x * 100) + "%",
+                top: (bounds.y * 100) + "%",
+                width: (bounds.width * 100) + "%",
+                height: (bounds.height * 100) + "%",
                 boxSizing: "border-box",
-                border: "2px solid lime",
+                border: "1px solid lime",
                 backgroundColor: "rgba(0,255,0,0.15)",
                 pointerEvents: "none"
             });
