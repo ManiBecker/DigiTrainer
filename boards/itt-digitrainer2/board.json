@@ -15,7 +15,7 @@
 
     {"id":"ic0-pin16","label":"IC 0 Pin 16","x":0.1818,"y":0.4221,"width":0.0200,"height":0.0200},
     {"id":"ic0-pin15","label":"IC 0 Pin 15","x":0.1818,"y":0.4554,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin14","label":"IC 0 Pin 14","x":0.1826,"y":0.4233,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin14","label":"IC 0 Pin 14","x":0.1818,"y":0.4849,"width":0.0200,"height":0.0200},
     {"id":"ic0-pin13","label":"IC 0 Pin 13","x":0.1818,"y":0.5169,"width":0.0200,"height":0.0200},
     {"id":"ic0-pin12","label":"IC 0 Pin 12","x":0.1809,"y":0.5490,"width":0.0200,"height":0.0200},
     {"id":"ic0-pin11","label":"IC 0 Pin 11","x":0.1809,"y":0.5797,"width":0.0200,"height":0.0200},
