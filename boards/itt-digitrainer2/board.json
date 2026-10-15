@@ -2,8 +2,10 @@
   "id": "itt-digitrainer2",
   "name": "ITT Digi-Trainer 2",
   "hotspots": [
-    {"id": "vcc","label": "+5V","x": 0.0932,"y": 0.3823,"width": 0.0200,"height": 0.0200},
-    {"id": "gnd","label": "GND","x": 0.0932,"y": 0.6737,"width": 0.0200,"height": 0.0200},
+    {"id": "vcc1","label": "+5V","x": 0.0932,"y": 0.3823,"width": 0.0200,"height": 0.0200},
+    {"id": "vcc2","label": "+5V","x": 0.1818,"y": 0.3823,"width": 0.0200,"height": 0.0200},
+    {"id": "gnd1","label": "GND","x": 0.0932,"y": 0.6737,"width": 0.0200,"height": 0.0200},
+    {"id": "gnd2","label": "GND","x": 0.1818,"y": 0.6737,"width": 0.0200,"height": 0.0200},
     {"id":"ic0-pin1","label":"IC 0 Pin 1","x":0.0932,"y":0.4233,"width":0.0200,"height":0.0200},
     {"id":"ic0-pin2","label":"IC 0 Pin 2","x":0.0932,"y":0.4546,"width":0.0200,"height":0.0200},
     {"id":"ic0-pin3","label":"IC 0 Pin 3","x":0.0932,"y":0.4859,"width":0.0200,"height":0.0200},
