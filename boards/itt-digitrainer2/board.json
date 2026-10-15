@@ -3,24 +3,24 @@
   "name": "ITT Digi-Trainer 2",
   "hotspots": [
     {"id": "vcc","label": "+5V","x": 0.0932,"y": 0.3823,"width": 0.0200,"height": 0.0200},
-    {"id": "gnd","label": "GND","x": 0.0932,"y": 0.6644,"width": 0.0200,"height": 0.0200},
+    {"id": "gnd","label": "GND","x": 0.0932,"y": 0.6737,"width": 0.0200,"height": 0.0200},
     {"id":"ic0-pin1","label":"IC 0 Pin 1","x":0.0932,"y":0.4233,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin2","label":"IC 0 Pin 2","x":0.0932,"y":0.4541,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin3","label":"IC 0 Pin 3","x":0.0932,"y":0.4874,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin4","label":"IC 0 Pin 4","x":0.0932,"y":0.5195,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin5","label":"IC 0 Pin 5","x":0.0932,"y":0.5490,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin6","label":"IC 0 Pin 6","x":0.0932,"y":0.5810,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin7","label":"IC 0 Pin 7","x":0.0932,"y":0.6131,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin8","label":"IC 0 Pin 8","x":0.0932,"y":0.6438,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin2","label":"IC 0 Pin 2","x":0.0932,"y":0.4546,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin3","label":"IC 0 Pin 3","x":0.0932,"y":0.4859,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin4","label":"IC 0 Pin 4","x":0.0932,"y":0.5172,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin5","label":"IC 0 Pin 5","x":0.0932,"y":0.5485,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin6","label":"IC 0 Pin 6","x":0.0932,"y":0.5798,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin7","label":"IC 0 Pin 7","x":0.0932,"y":0.6111,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin8","label":"IC 0 Pin 8","x":0.0932,"y":0.6424,"width":0.0200,"height":0.0200},
 
     {"id":"ic0-pin16","label":"IC 0 Pin 16","x":0.1818,"y":0.4233,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin15","label":"IC 0 Pin 15","x":0.1818,"y":0.4554,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin14","label":"IC 0 Pin 14","x":0.1818,"y":0.4874,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin13","label":"IC 0 Pin 13","x":0.1818,"y":0.5195,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin12","label":"IC 0 Pin 12","x":0.1818,"y":0.5490,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin11","label":"IC 0 Pin 11","x":0.1818,"y":0.5810,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin10","label":"IC 0 Pin 10","x":0.1818,"y":0.6131,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin9","label":"IC 0 Pin 9","x":0.1818,"y":0.6426,"width":0.0200,"height":0.0200}
+    {"id":"ic0-pin15","label":"IC 0 Pin 15","x":0.1818,"y":0.4546,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin14","label":"IC 0 Pin 14","x":0.1818,"y":0.4859,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin13","label":"IC 0 Pin 13","x":0.1818,"y":0.5172,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin12","label":"IC 0 Pin 12","x":0.1818,"y":0.5485,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin11","label":"IC 0 Pin 11","x":0.1818,"y":0.5798,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin10","label":"IC 0 Pin 10","x":0.1818,"y":0.6111,"width":0.0200,"height":0.0200},
+    {"id":"ic0-pin9","label":"IC 0 Pin 9","x":0.1818,"y":0.6424,"width":0.0200,"height":0.0200}
   ]
 }
 
