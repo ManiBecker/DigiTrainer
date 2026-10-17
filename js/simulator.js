@@ -1,4 +1,3 @@
-
 const board = document.querySelector(".board");
 const boardArea = document.querySelector(".board-area");
 const coordinates = document.querySelector(".coordinates");
@@ -16,6 +15,8 @@ let activePointerId = null;
 let startHotspot = null;
 
 let hotspots = [];
+let switches = [];
+const switchStates = {};
 let boardLoaded = false;
 
 
@@ -407,7 +408,14 @@ fetch("boards/itt-digitrainer2/board.json")
         }
 
         hotspots = config.hotspots;
+        switches = Array.isArray(config.controls) ? config.controls : [];
         boardLoaded = true;
+
+        switches.forEach(function (control) {
+            if (control.type !== "switch") return;
+            switchStates[control.id] = control.initialState ?? 0;
+            createSwitchControl(control);
+        });
 
         hotspots.forEach(function (hotspot) {
             const marker = document.createElement("div");
@@ -444,3 +452,60 @@ fetch("boards/itt-digitrainer2/board.json")
         console.error("Cannot load board.json:", error);
         statusMessage.textContent = "Error loading board.json";
     });
+
+
+// ------------------------------------------------------------
+// Schiebeschalter aus der Board-Konfiguration erzeugen
+// ------------------------------------------------------------
+
+function createSwitchControl(control) {
+    const element = document.createElement("div");
+    element.className = "slide-switch";
+
+    Object.assign(element.style, {
+        position: "absolute",
+        left: (control.x * 100) + "%",
+        top: (control.y * 100) + "%",
+        width: (control.width * 100) + "%",
+        height: (control.height * 100) + "%",
+        boxSizing: "border-box",
+        border: "1px solid rgba(0,255,255,0.7)",
+        cursor: "pointer",
+        zIndex: "20",
+        touchAction: "manipulation"
+    });
+
+    const indicator = document.createElement("div");
+
+    Object.assign(indicator.style, {
+        position: "absolute",
+        left: "15%",
+        width: "70%",
+        height: "15%",
+        backgroundColor: "rgba(0,255,255,0.75)",
+        borderRadius: "3px",
+        pointerEvents: "none"
+    });
+
+    element.appendChild(indicator);
+
+    function updateSwitchDisplay() {
+        const state = switchStates[control.id];
+        indicator.style.top = state === 1 ? "12%" : "73%";
+        element.title = (control.label || control.id) + ": " + state;
+    }
+
+    element.addEventListener("click", function (event) {
+        event.stopPropagation();
+
+        if (!powerOn) return;
+
+        switchStates[control.id] = switchStates[control.id] === 0 ? 1 : 0;
+        updateSwitchDisplay();
+        statusMessage.textContent =
+            (control.label || control.id) + " = " + switchStates[control.id];
+    });
+
+    updateSwitchDisplay();
+    boardArea.appendChild(element);
+}
