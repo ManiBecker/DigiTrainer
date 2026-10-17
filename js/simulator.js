@@ -165,8 +165,7 @@ board.addEventListener("pointermove", function (event) {
         currentWire !== null &&
         event.pointerId === activePointerId
     ) {
-        currentWire.setAttribute("x2", pos.x);
-        currentWire.setAttribute("y2", pos.y);
+        updateWirePath(currentWire, pos.x, pos.y);
     }
 });
 
@@ -282,8 +281,7 @@ board.addEventListener("pointerup", function (event) {
         ) {
             const end = getHotspotCenter(endHotspot);
 
-            currentWire.setAttribute("x2", end.x);
-            currentWire.setAttribute("y2", end.y);
+            updateWirePath(currentWire, end.x, end.y);
 
             // Die SVG-Leitung bleibt sichtbar; zusätzlich elektrische
             // Verbindung speichern, damit die LED-Simulation sie auswertet.
@@ -344,24 +342,41 @@ board.addEventListener("pointerleave", function () {
 // SVG-Leitung zeichnen
 // ------------------------------------------------------------
 
+// Leicht durchhängendes Patchkabel als kubischer Bézier-Pfad.
+// Endpunkte bleiben exakt auf den Buchsenmitten.
+function updateWirePath(path, x2, y2) {
+    const x1 = Number(path.getAttribute("x1"));
+    const y1 = Number(path.getAttribute("y1"));
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const length = Math.hypot(dx, dy);
+    const sag = Math.min(28, length * 0.12);
+
+    path.setAttribute("x2", x2);
+    path.setAttribute("y2", y2);
+    path.setAttribute("d",
+        `M ${x1} ${y1} C ${x1 + dx / 3} ${y1 + sag}, ` +
+        `${x1 + 2 * dx / 3} ${y2 + sag}, ${x2} ${y2}`
+    );
+}
+
 function drawWire(x1, y1, x2, y2) {
-    const line = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "line"
+    const path = document.createElementNS(
+        "http://www.w3.org/2000/svg", "path"
     );
 
-    line.setAttribute("x1", x1);
-    line.setAttribute("y1", y1);
-    line.setAttribute("x2", x2);
-    line.setAttribute("y2", y2);
+    // x1/y1 bleiben für den Vermessungsmodus abrufbar.
+    path.setAttribute("x1", x1);
+    path.setAttribute("y1", y1);
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "red");
+    path.setAttribute("stroke-width", "4");
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("stroke-linejoin", "round");
+    updateWirePath(path, x2, y2);
 
-    line.setAttribute("stroke", "red");
-    line.setAttribute("stroke-width", "4");
-    line.setAttribute("stroke-linecap", "round");
-
-    wiringLayer.appendChild(line);
-
-    return line;
+    wiringLayer.appendChild(path);
+    return path;
 }
 
 
