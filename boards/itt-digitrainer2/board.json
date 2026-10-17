@@ -41,6 +41,26 @@
     {"id":"D5","label":"D 5", "x": 0.8515, "y": 0.7403, "width": 0.0200, "height": 0.0200},
     {"id":"D6","label":"D 6", "x": 0.8730, "y": 0.7403, "width": 0.0200, "height": 0.0200},
     {"id":"D7","label":"D 7", "x": 0.8961, "y": 0.7403, "width": 0.0200, "height": 0.0200}
-  ]
+  ],
+  "controls": [
+  {"id":"switch0","label":"Schalter S0","type":"switch","output":"S0","initialState":0,"x":0.2598,"y":0.8327,"width":0.0289,"height":0.0920},
+  {"id":"switch1","label":"Schalter S1","type":"switch","output":"S1","initialState":0,"x":0.3044,"y":0.8327,"width":0.0289,"height":0.0896},
+  {"id":"switch2","label":"Schalter S2","type":"switch","output":"S2","initialState":0,"x":0.3473,"y":0.8327,"width":0.0289,"height":0.0920},
+  {"id":"switch3","label":"Schalter S3","type":"switch","output":"S3","initialState":0,"x":0.3919,"y":0.8327,"width":0.0289,"height":0.0920},
+  {"id":"switch4","label":"Schalter S4","type":"switch","output":"S4","initialState":0,"x":0.4348,"y":0.8327,"width":0.0289,"height":0.0920},
+  {"id":"switch5","label":"Schalter S5","type":"switch","output":"S5","initialState":0,"x":0.4777,"y":0.8327,"width":0.0289,"height":0.0920},
+  {"id":"switch6","label":"Schalter S6","type":"switch","output":"S6","initialState":0,"x":0.5215,"y":0.8327,"width":0.0289,"height":0.0920},
+  {"id":"switch7","label":"Schalter S7","type":"switch","output":"S7","initialState":0,"x":0.5644,"y":0.8327,"width":0.0289,"height":0.0920}
+],
+"indicators": [
+  {"id":"led0","type":"led","input":"D0","x":0.7460,"y":0.8841,"width":0.0212,"height":0.0275},
+  {"id":"led1","type":"led","input":"D1","x":0.7672,"y":0.8841,"width":0.0212,"height":0.0275},
+  {"id":"led2","type":"led","input":"D2","x":0.7883,"y":0.8841,"width":0.0212,"height":0.0275},
+  {"id":"led3","type":"led","input":"D3","x":0.8095,"y":0.8841,"width":0.0212,"height":0.0275},
+  {"id":"led4","type":"led","input":"D4","x":0.8306,"y":0.8841,"width":0.0212,"height":0.0275},
+  {"id":"led5","type":"led","input":"D5","x":0.8518,"y":0.8841,"width":0.0212,"height":0.0275},
+  {"id":"led6","type":"led","input":"D6","x":0.8729,"y":0.8841,"width":0.0212,"height":0.0275},
+  {"id":"led7","type":"led","input":"D7","x":0.8941,"y":0.8841,"width":0.0212,"height":0.0275}
+]
 }
 
