@@ -253,8 +253,8 @@ board.addEventListener("pointerup", function (event) {
                 const height = Math.abs(dy) / pos.height;
 
                 statusMessage.textContent =
-                    `x: ${x.toFixed(4)}, y: ${y.toFixed(4)}, ` +
-                    `width: ${width.toFixed(4)}, height: ${height.toFixed(4)}`;
+                    `"x": ${x.toFixed(4)}, "y": ${y.toFixed(4)}, ` +
+                    `"width": ${width.toFixed(4)}, "height": ${height.toFixed(4)}`;
             } else {
                 // Einfacher Klick: 2%-Hotspot
                 const cx = pos.x / pos.width;
@@ -262,9 +262,9 @@ board.addEventListener("pointerup", function (event) {
                 const size = 0.02;
 
                 statusMessage.textContent =
-                    `x: ${(cx - size / 2).toFixed(4)}, ` +
-                    `y: ${(cy - size / 2).toFixed(4)}, ` +
-                    `width: ${size.toFixed(4)}, height: ${size.toFixed(4)}`;
+                    `"x": ${(cx - size / 2).toFixed(4)}, ` +
+                    `"y": ${(cy - size / 2).toFixed(4)}, ` +
+                    `"width": ${size.toFixed(4)}, "height": ${size.toFixed(4)}`;
             }
         } else {
             updateStatus();
