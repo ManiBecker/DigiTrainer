@@ -350,7 +350,8 @@ function updateWirePath(path, x2, y2) {
     const dx = x2 - x1;
     const dy = y2 - y1;
     const length = Math.hypot(dx, dy);
-    const sag = Math.min(28, length * 0.12);
+    // Mehr Durchhang bei langen Kabeln, unabhängig von der Ziehrichtung.
+    const sag = Math.min(55, length * 0.20);
 
     path.setAttribute("x2", x2);
     path.setAttribute("y2", y2);
@@ -370,7 +371,7 @@ function drawWire(x1, y1, x2, y2) {
     path.setAttribute("y1", y1);
     path.setAttribute("fill", "none");
     path.setAttribute("stroke", "red");
-    path.setAttribute("stroke-width", "4");
+    path.setAttribute("stroke-width", "3");
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
     updateWirePath(path, x2, y2);
