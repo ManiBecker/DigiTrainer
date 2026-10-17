@@ -44,7 +44,7 @@
   ],
   "controls": [
     {"id":"switch0","label":"Schalter S0","type":"switch","output":"S0","initialState":0,"x":0.2598,"y":0.8327,"width":0.0289,"height":0.0920},
-    {"id":"switch1","label":"Schalter S1","type":"switch","output":"S1","initialState":0,"x":0.3044,"y":0.8327,"width":0.0289,"height":0.0896},
+    {"id":"switch1","label":"Schalter S1","type":"switch","output":"S1","initialState":0,"x":0.3044,"y":0.8327,"width":0.0289,"height":0.0920},
     {"id":"switch2","label":"Schalter S2","type":"switch","output":"S2","initialState":0,"x":0.3473,"y":0.8327,"width":0.0289,"height":0.0920},
     {"id":"switch3","label":"Schalter S3","type":"switch","output":"S3","initialState":0,"x":0.3919,"y":0.8327,"width":0.0289,"height":0.0920},
     {"id":"switch4","label":"Schalter S4","type":"switch","output":"S4","initialState":0,"x":0.4348,"y":0.8327,"width":0.0289,"height":0.0920},
