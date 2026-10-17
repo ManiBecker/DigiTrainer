@@ -625,8 +625,8 @@ function createOutputLed(indicator) {
 const norGatesIC0 = [
     { a: "ic0-pin2",  b: "ic0-pin3",  y: "ic0-pin1"  },
     { a: "ic0-pin5",  b: "ic0-pin6",  y: "ic0-pin4"  },
-    { a: "ic0-pin10", b: "ic0-pin11", y: "ic0-pin9" },
-    { a: "ic0-pin13", b: "ic0-pin14", y: "ic0-pin12" }
+    { a: "ic0-pin11", b: "ic0-pin10", y: "ic0-pin12" },
+    { a: "ic0-pin14", b: "ic0-pin13", y: "ic0-pin15" }
 ];
 
 // Bestimmt alle elektrisch zusammenhängenden Netze. Die reine
