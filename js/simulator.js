@@ -615,42 +615,122 @@ function createOutputLed(indicator) {
     outputLeds.push({ input: indicator.input, element: element });
 }
 
-// Alle über Kabel miteinander verbundenen Buchsen bilden ein Netz.
-// Ein Netz wird nur dann HIGH/LOW, wenn genau dieser Pegel von den
-// Schaltern vorgegeben ist. Widersprüchliche Pegel bleiben dunkel.
-function getWireNetSignal(socketId) {
-    const visited = new Set([socketId]);
-    const pending = [socketId];
+// ------------------------------------------------------------
+// IC 0: SN74LS02N - vier NOR-Gatter mit je zwei Eingängen.
+// Der DigiTrainer-Sockel hat 16 Anschlusspositionen. Bei einem
+// 14-poligen IC entspricht die rechte oberste Buchse (16) Pin 14,
+// rechts darunter (15) Pin 13 usw. Die Positionen 8 und 9
+// sind bei diesem 14-poligen IC nicht belegt.
+// ------------------------------------------------------------
+const norGatesIC0 = [
+    { a: "ic0-pin2",  b: "ic0-pin3",  y: "ic0-pin1"  },
+    { a: "ic0-pin5",  b: "ic0-pin6",  y: "ic0-pin4"  },
+    { a: "ic0-pin10", b: "ic0-pin11", y: "ic0-pin12" },
+    { a: "ic0-pin13", b: "ic0-pin14", y: "ic0-pin15" }
+];
 
-    while (pending.length > 0) {
-        const id = pending.pop();
-        wireConnections.forEach(function (wire) {
-            let neighbor = null;
-            if (wire.from === id) neighbor = wire.to;
-            else if (wire.to === id) neighbor = wire.from;
-            if (neighbor !== null && !visited.has(neighbor)) {
-                visited.add(neighbor);
-                pending.push(neighbor);
-            }
-        });
+// Bestimmt alle elektrisch zusammenhängenden Netze. Die reine
+// Zeichnung der roten Leitungen bleibt davon unabhängig.
+function buildWireNets() {
+    const parent = new Map();
+
+    function root(id) {
+        if (!parent.has(id)) parent.set(id, id);
+        if (parent.get(id) !== id) parent.set(id, root(parent.get(id)));
+        return parent.get(id);
+    }
+    function join(a, b) {
+        const ra = root(a), rb = root(b);
+        if (ra !== rb) parent.set(ra, rb);
     }
 
-    const levels = new Set();
-    switches.forEach(function (control) {
-        if (control.type !== "switch") return;
-        const state = switchStates[control.id] === 1 ? 1 : 0;
-        if (visited.has(control.output)) levels.add(state);
-        if (visited.has(control.output + "_NOT")) levels.add(1 - state);
+    hotspots.forEach(h => root(h.id));
+    wireConnections.forEach(w => join(w.from, w.to));
+    norGatesIC0.forEach(g => {
+        root(g.a); root(g.b); root(g.y);
+    });
+    outputLeds.forEach(led => root(led.input));
+    switches.forEach(control => {
+        if (control.type === "switch") {
+            root(control.output);
+            root(control.output + "_NOT");
+        }
     });
 
-    // Ohne Schalterquelle oder bei widersprüchlichen Quellen kein
-    // eindeutiges Signal. VCC/GND und ICs folgen in späteren Schritten.
-    return levels.size === 1 ? levels.values().next().value : null;
+    const nets = new Map();
+    for (const id of parent.keys()) {
+        const key = root(id);
+        if (!nets.has(key)) nets.set(key, new Set());
+        nets.get(key).add(id);
+    }
+    return { nets, root };
+}
+
+// 0 = LOW, 1 = HIGH, null = unbestimmt (z.B. offener Eingang).
+// Bei widersprüchlichen Treibern wird das Netz unbestimmt.
+function resolveSignals() {
+    const { nets, root } = buildWireNets();
+    const sourceLevels = new Map();
+    const levels = new Map();
+
+    function drive(id, level) {
+        if (level === null) return;
+        const key = root(id);
+        if (!sourceLevels.has(key)) sourceLevels.set(key, new Set());
+        sourceLevels.get(key).add(level);
+    }
+
+    switches.forEach(control => {
+        if (control.type !== "switch") return;
+        const state = switchStates[control.id] === 1 ? 1 : 0;
+        drive(control.output, state);
+        drive(control.output + "_NOT", 1 - state);
+    });
+
+    // IC-Ausgänge iterativ auswerten: damit funktionieren auch
+    // hintereinander geschaltete NOR-Gatter ohne Verzögerungsmodell.
+    // Ein unbekannter Eingang bleibt unbekannt. Sobald ein Eingang
+    // HIGH ist, ist der NOR-Ausgang jedoch sicher LOW.
+    let previous = new Map();
+    const maxIterations = 32;
+    for (let i = 0; i < maxIterations; i++) {
+        const drivers = new Map();
+        for (const [key, values] of sourceLevels) {
+            drivers.set(key, new Set(values));
+        }
+        norGatesIC0.forEach(gate => {
+            const a = previous.has(root(gate.a)) ? previous.get(root(gate.a)) : null;
+            const b = previous.has(root(gate.b)) ? previous.get(root(gate.b)) : null;
+            let result = null;
+            if (a === 1 || b === 1) result = 0;
+            else if (a === 0 && b === 0) result = 1;
+            if (result !== null) {
+                const key = root(gate.y);
+                if (!drivers.has(key)) drivers.set(key, new Set());
+                drivers.get(key).add(result);
+            }
+        });
+        levels.clear();
+        for (const key of nets.keys()) {
+            const values = drivers.get(key);
+            levels.set(key, values && values.size === 1 ? values.values().next().value : null);
+        }
+        let unchanged = true;
+        for (const key of nets.keys()) {
+            if (levels.get(key) !== previous.get(key)) { unchanged = false; break; }
+        }
+        if (unchanged) return { levels, root };
+        previous = new Map(levels);
+    }
+    // Nicht konvergierende Rückkopplungen werden nicht als stabile
+    // HIGH-Pegel ausgegeben.
+    return { levels: new Map([...nets.keys()].map(k => [k, null])), root };
 }
 
 function updateOutputLeds() {
+    const signals = powerOn ? resolveSignals() : null;
     outputLeds.forEach(function (led) {
-        const on = powerOn && getWireNetSignal(led.input) === 1;
+        const on = signals && signals.levels.get(signals.root(led.input)) === 1;
         led.element.style.backgroundColor = on
             ? "rgba(255, 25, 25, 0.9)" : "transparent";
         led.element.style.boxShadow = on
