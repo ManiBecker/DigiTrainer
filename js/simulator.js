@@ -17,6 +17,7 @@ let startHotspot = null;
 let hotspots = [];
 let switches = [];
 const switchStates = {};
+const switchLeds = [];
 let boardLoaded = false;
 
 
@@ -365,6 +366,7 @@ powerSwitch.addEventListener("click", function () {
     powerOn = !powerOn;
 
     powerLed.classList.toggle("on", powerOn);
+    updateSwitchLeds();
     updateStatus();
 });
 
@@ -388,6 +390,20 @@ Object.assign(hotspotLayer.style, {
 
 boardArea.appendChild(hotspotLayer);
 
+// LED-Anzeigen über dem Board; blockieren keine Maus-/Touch-Eingaben
+const switchLedLayer = document.createElement("div");
+switchLedLayer.className = "switch-led-layer";
+Object.assign(switchLedLayer.style, {
+    position: "absolute",
+    left: "0",
+    top: "0",
+    width: "100%",
+    height: "100%",
+    pointerEvents: "none",
+    zIndex: "10"
+});
+boardArea.appendChild(switchLedLayer);
+
 
 // ------------------------------------------------------------
 // Board-Konfiguration laden
@@ -409,6 +425,7 @@ fetch("boards/itt-digitrainer2/board.json")
 
         hotspots = config.hotspots;
         switches = Array.isArray(config.controls) ? config.controls : [];
+        const indicators = Array.isArray(config.indicators) ? config.indicators : [];
         boardLoaded = true;
 
         switches.forEach(function (control) {
@@ -416,6 +433,19 @@ fetch("boards/itt-digitrainer2/board.json")
             switchStates[control.id] = control.initialState ?? 0;
             createSwitchControl(control);
         });
+
+        // Nur die Schalter-LEDs werden bisher simuliert.
+        // D0 bis D7 bleiben für die spätere Logiksimulation reserviert.
+        const switchOutputs = new Set(
+            switches.filter(control => control.type === "switch")
+                .map(control => control.output)
+        );
+        indicators.forEach(function (indicator) {
+            if (indicator.type === "led" && switchOutputs.has(indicator.input)) {
+                createSwitchLed(indicator);
+            }
+        });
+        updateSwitchLeds();
 
         hotspots.forEach(function (hotspot) {
             const marker = document.createElement("div");
@@ -502,10 +532,49 @@ function createSwitchControl(control) {
 
         switchStates[control.id] = switchStates[control.id] === 0 ? 1 : 0;
         updateSwitchDisplay();
+        updateSwitchLeds();
         statusMessage.textContent =
             (control.label || control.id) + " = " + switchStates[control.id];
     });
 
     updateSwitchDisplay();
     boardArea.appendChild(element);
+}
+
+// ------------------------------------------------------------
+// LEDs der Schiebeschalter: bei Power ON und Schalter = 1 leuchten
+// ------------------------------------------------------------
+
+function createSwitchLed(indicator) {
+    const element = document.createElement("div");
+    element.title = indicator.input;
+
+    Object.assign(element.style, {
+        position: "absolute",
+        left: (indicator.x * 100) + "%",
+        top: (indicator.y * 100) + "%",
+        width: (indicator.width * 100) + "%",
+        height: (indicator.height * 100) + "%",
+        borderRadius: "50%",
+        boxSizing: "border-box",
+        pointerEvents: "none"
+    });
+
+    switchLedLayer.appendChild(element);
+    switchLeds.push({ input: indicator.input, element: element });
+}
+
+function updateSwitchLeds() {
+    switchLeds.forEach(function (led) {
+        const control = switches.find(function (item) {
+            return item.type === "switch" && item.output === led.input;
+        });
+        const on = powerOn && control && switchStates[control.id] === 1;
+
+        // Ausgeschaltet bleibt das unveränderte Foto sichtbar.
+        led.element.style.backgroundColor = on ? "rgba(255, 25, 25, 0.9)" : "transparent";
+        led.element.style.boxShadow = on
+            ? "0 0 6px 3px rgba(255, 0, 0, 0.85), 0 0 12px 5px rgba(255, 0, 0, 0.35)"
+            : "none";
+    });
 }
