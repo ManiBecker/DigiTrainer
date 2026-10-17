@@ -18,6 +18,8 @@ let hotspots = [];
 let switches = [];
 const switchStates = {};
 const switchLeds = [];
+const outputLeds = [];
+const wireConnections = []; // Verbindungen zwischen Buchsen-IDs
 let boardLoaded = false;
 
 
@@ -283,6 +285,11 @@ board.addEventListener("pointerup", function (event) {
             currentWire.setAttribute("x2", end.x);
             currentWire.setAttribute("y2", end.y);
 
+            // Die SVG-Leitung bleibt sichtbar; zusätzlich elektrische
+            // Verbindung speichern, damit die LED-Simulation sie auswertet.
+            wireConnections.push({ from: startHotspot.id, to: endHotspot.id });
+            updateOutputLeds();
+
             statusMessage.textContent =
                 startHotspot.label + " -> " + endHotspot.label;
         } else {
@@ -367,6 +374,7 @@ powerSwitch.addEventListener("click", function () {
 
     powerLed.classList.toggle("on", powerOn);
     updateSwitchLeds();
+    updateOutputLeds();
     updateStatus();
 });
 
@@ -434,18 +442,21 @@ fetch("boards/itt-digitrainer2/board.json")
             createSwitchControl(control);
         });
 
-        // Nur die Schalter-LEDs werden bisher simuliert.
-        // D0 bis D7 bleiben für die spätere Logiksimulation reserviert.
+        // Schalter-LEDs und die acht Ausgab LEDs D0 bis D7 laden.
         const switchOutputs = new Set(
             switches.filter(control => control.type === "switch")
                 .map(control => control.output)
         );
         indicators.forEach(function (indicator) {
-            if (indicator.type === "led" && switchOutputs.has(indicator.input)) {
+            if (indicator.type !== "led") return;
+            if (switchOutputs.has(indicator.input)) {
                 createSwitchLed(indicator);
+            } else if (/^D[0-7]$/.test(indicator.input)) {
+                createOutputLed(indicator);
             }
         });
         updateSwitchLeds();
+        updateOutputLeds();
 
         hotspots.forEach(function (hotspot) {
             const marker = document.createElement("div");
@@ -533,6 +544,7 @@ function createSwitchControl(control) {
         switchStates[control.id] = switchStates[control.id] === 0 ? 1 : 0;
         updateSwitchDisplay();
         updateSwitchLeds();
+        updateOutputLeds();
         statusMessage.textContent =
             (control.label || control.id) + " = " + switchStates[control.id];
     });
@@ -573,6 +585,74 @@ function updateSwitchLeds() {
 
         // Ausgeschaltet bleibt das unveränderte Foto sichtbar.
         led.element.style.backgroundColor = on ? "rgba(255, 25, 25, 0.9)" : "transparent";
+        led.element.style.boxShadow = on
+            ? "0 0 6px 3px rgba(255, 0, 0, 0.85), 0 0 12px 5px rgba(255, 0, 0, 0.35)"
+            : "none";
+    });
+}
+
+
+// ------------------------------------------------------------
+// Ausgab LEDs D0-D7: direkte Signale über verdrahtete Buchsen
+// ------------------------------------------------------------
+
+function createOutputLed(indicator) {
+    const element = document.createElement("div");
+    element.title = indicator.input;
+
+    Object.assign(element.style, {
+        position: "absolute",
+        left: (indicator.x * 100) + "%",
+        top: (indicator.y * 100) + "%",
+        width: (indicator.width * 100) + "%",
+        height: (indicator.height * 100) + "%",
+        borderRadius: "50%",
+        boxSizing: "border-box",
+        pointerEvents: "none"
+    });
+
+    switchLedLayer.appendChild(element);
+    outputLeds.push({ input: indicator.input, element: element });
+}
+
+// Alle über Kabel miteinander verbundenen Buchsen bilden ein Netz.
+// Ein Netz wird nur dann HIGH/LOW, wenn genau dieser Pegel von den
+// Schaltern vorgegeben ist. Widersprüchliche Pegel bleiben dunkel.
+function getWireNetSignal(socketId) {
+    const visited = new Set([socketId]);
+    const pending = [socketId];
+
+    while (pending.length > 0) {
+        const id = pending.pop();
+        wireConnections.forEach(function (wire) {
+            let neighbor = null;
+            if (wire.from === id) neighbor = wire.to;
+            else if (wire.to === id) neighbor = wire.from;
+            if (neighbor !== null && !visited.has(neighbor)) {
+                visited.add(neighbor);
+                pending.push(neighbor);
+            }
+        });
+    }
+
+    const levels = new Set();
+    switches.forEach(function (control) {
+        if (control.type !== "switch") return;
+        const state = switchStates[control.id] === 1 ? 1 : 0;
+        if (visited.has(control.output)) levels.add(state);
+        if (visited.has(control.output + "_NOT")) levels.add(1 - state);
+    });
+
+    // Ohne Schalterquelle oder bei widersprüchlichen Quellen kein
+    // eindeutiges Signal. VCC/GND und ICs folgen in späteren Schritten.
+    return levels.size === 1 ? levels.values().next().value : null;
+}
+
+function updateOutputLeds() {
+    outputLeds.forEach(function (led) {
+        const on = powerOn && getWireNetSignal(led.input) === 1;
+        led.element.style.backgroundColor = on
+            ? "rgba(255, 25, 25, 0.9)" : "transparent";
         led.element.style.boxShadow = on
             ? "0 0 6px 3px rgba(255, 0, 0, 0.85), 0 0 12px 5px rgba(255, 0, 0, 0.35)"
             : "none";
