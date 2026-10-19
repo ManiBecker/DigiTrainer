@@ -937,15 +937,11 @@ function refreshWireGeometry() {
 
 function fitBoard() {
     if (!board.naturalWidth || !board.naturalHeight) return;
-
     const availableWidth = Math.max(1, boardContainer.clientWidth - 12);
     const availableHeight = Math.max(1, boardContainer.clientHeight - 12);
-
     const ratio = board.naturalWidth / board.naturalHeight;
-
     baseWidth = Math.min(availableWidth, availableHeight * ratio);
     baseHeight = baseWidth / ratio;
-
     applyZoom(zoom);
 }
 
@@ -1030,22 +1026,39 @@ function endPinch(event) {
 boardContainer.addEventListener("touchend", endPinch, { capture: true });
 boardContainer.addEventListener("touchcancel", endPinch, { capture: true });
 
+// iPhone-Fallback: Pseudo-Vollbild statt Fullscreen API.
+const pseudoExitButton = document.querySelector(".pseudo-fullscreen-exit");
+function setPseudoFullscreen(enabled) {
+    document.body.classList.toggle("pseudo-fullscreen", enabled);
+    fullscreenButton.textContent = enabled ? "Vollbild beenden" : "Vollbild";
+    requestAnimationFrame(() => {
+        fitBoard();
+        boardContainer.scrollLeft = 0;
+        boardContainer.scrollTop = 0;
+    });
+}
+pseudoExitButton.addEventListener("click", () => setPseudoFullscreen(false));
 fullscreenButton.addEventListener("click", async function () {
+    if (document.body.classList.contains("pseudo-fullscreen")) {
+        setPseudoFullscreen(false);
+        return;
+    }
     try {
         if (document.fullscreenElement) {
             await document.exitFullscreen();
         } else if (boardContainer.requestFullscreen) {
             await boardContainer.requestFullscreen();
         } else {
-            statusMessage.textContent = "Vollbild wird von diesem Browser nicht unterstützt";
+            setPseudoFullscreen(true);
         }
     } catch (error) {
-        statusMessage.textContent = "Vollbild nicht verfügbar";
+        // Safari auf dem iPhone kann die Fullscreen API ablehnen.
+        setPseudoFullscreen(true);
     }
 });
 document.addEventListener("fullscreenchange", function () {
     fullscreenButton.textContent = document.fullscreenElement ? "Vollbild beenden" : "Vollbild";
-    fitBoard();
+    requestAnimationFrame(fitBoard);
 });
 board.addEventListener("load", fitBoard);
 window.addEventListener("resize", fitBoard);
