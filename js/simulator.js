@@ -1,5 +1,6 @@
 const board = document.querySelector(".board");
 const boardArea = document.querySelector(".board-area");
+const boardContainer = document.querySelector(".board-container");
 const coordinates = document.querySelector(".coordinates");
 const statusMessage = document.querySelector(".status-message");
 const wiringLayer = document.querySelector(".wiring-layer");
@@ -239,7 +240,7 @@ board.addEventListener("pointermove", function (event) {
 
 board.addEventListener("pointerdown", function (event) {
     hideSocketTooltip();
-    if (powerOn || currentWire !== null) {
+    if (zoomGesture || powerOn || currentWire !== null) {
         return;
     }
 
@@ -286,7 +287,7 @@ board.addEventListener("pointerdown", function (event) {
 
 board.addEventListener("pointerup", function (event) {
     if (
-        currentWire === null ||
+        zoomGesture || currentWire === null ||
         event.pointerId !== activePointerId
     ) {
         return;
@@ -349,7 +350,7 @@ board.addEventListener("pointerup", function (event) {
 
             // Erst probeweise elektrisch verbinden. Bei einem Kurzschluss
             // oder mehreren treibenden Ausgaengen wird das Kabel verworfen.
-            wireConnections.push({ from: startHotspot.id, to: endHotspot.id });
+            wireConnections.push({ from: startHotspot.id, to: endHotspot.id, path: currentWire });
             const wiringError = checkWiringConflict();
             if (wiringError) {
                 wireConnections.pop();
@@ -886,3 +887,146 @@ function updateOutputLeds() {
 }
 
 window.addEventListener("blur", hideSocketTooltip);
+
+// ------------------------------------------------------------
+// Zoom (100–400 %), Zwei-Finger-Gesten und Vollbild
+// Die Platine wird im Layout skaliert; alle Overlays folgen mit.
+// ------------------------------------------------------------
+const zoomInButton = document.querySelector(".zoom-in");
+const zoomOutButton = document.querySelector(".zoom-out");
+const zoomResetButton = document.querySelector(".zoom-reset");
+const fullscreenButton = document.querySelector(".fullscreen-toggle");
+const zoomDisplay = document.querySelector(".zoom-value");
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 4;
+let zoom = 1;
+let baseWidth = 0;
+let baseHeight = 0;
+let zoomGesture = false;
+let pinchStart = null;
+
+function refreshWireGeometry() {
+    wireConnections.forEach(function (wire) {
+        if (!wire.path) return;
+        const a = hotspots.find(h => h.id === wire.from);
+        const b = hotspots.find(h => h.id === wire.to);
+        if (!a || !b) return;
+        const start = getHotspotCenter(a);
+        const end = getHotspotCenter(b);
+        wire.path.setAttribute("x1", start.x);
+        wire.path.setAttribute("y1", start.y);
+        updateWirePath(wire.path, end.x, end.y);
+    });
+}
+
+function fitBoard() {
+    if (!board.naturalWidth || !board.naturalHeight) return;
+    const availableWidth = Math.max(100, boardContainer.clientWidth - 12);
+    const availableHeight = Math.max(100, boardContainer.clientHeight - 58);
+    const ratio = board.naturalWidth / board.naturalHeight;
+    baseWidth = Math.min(availableWidth, availableHeight * ratio);
+    baseHeight = baseWidth / ratio;
+    applyZoom(zoom);
+}
+
+function applyZoom(value, clientX, clientY) {
+    if (!baseWidth) return;
+    const oldWidth = boardArea.offsetWidth || baseWidth;
+    const oldHeight = boardArea.offsetHeight || baseHeight;
+    const rect = boardArea.getBoundingClientRect();
+    const viewport = boardContainer.getBoundingClientRect();
+    const focusX = clientX ?? (viewport.left + viewport.width / 2);
+    const focusY = clientY ?? (viewport.top + viewport.height / 2);
+    const relativeX = (focusX - rect.left) / oldWidth;
+    const relativeY = (focusY - rect.top) / oldHeight;
+    zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, value));
+    boardArea.style.width = (baseWidth * zoom) + "px";
+    boardArea.style.height = (baseHeight * zoom) + "px";
+    zoomDisplay.textContent = Math.round(zoom * 100) + " %";
+    refreshWireGeometry();
+    // Mittelpunkt bzw. Mausposition beim Zoomen festhalten.
+    boardContainer.scrollLeft += relativeX * (baseWidth * zoom - oldWidth);
+    boardContainer.scrollTop += relativeY * (baseHeight * zoom - oldHeight);
+}
+
+zoomInButton.addEventListener("click", () => applyZoom(zoom * 1.25));
+zoomOutButton.addEventListener("click", () => applyZoom(zoom / 1.25));
+zoomResetButton.addEventListener("click", () => {
+    applyZoom(1);
+    boardContainer.scrollLeft = 0;
+    boardContainer.scrollTop = 0;
+});
+
+// Mausrad: Zoom am Mauszeiger (nur über der Platine).
+boardContainer.addEventListener("wheel", function (event) {
+    if (!event.target.closest(".board-area")) return;
+    event.preventDefault();
+    applyZoom(zoom * (event.deltaY < 0 ? 1.12 : 1 / 1.12), event.clientX, event.clientY);
+}, { passive: false });
+
+// Touch: Ein Finger bedient weiterhin Buchsen und Schalter.
+// Zwei Finger zoomen und verschieben die gesamte Platine.
+function touchInfo(event) {
+    const a = event.touches[0], b = event.touches[1];
+    return {
+        distance: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
+        x: (a.clientX + b.clientX) / 2,
+        y: (a.clientY + b.clientY) / 2
+    };
+}
+function cancelCurrentCable() {
+    if (currentWire) currentWire.remove();
+    if (activePointerId !== null && board.hasPointerCapture(activePointerId)) {
+        board.releasePointerCapture(activePointerId);
+    }
+    currentWire = null;
+    activePointerId = null;
+    startHotspot = null;
+    hideSocketTooltip();
+    updateStatus();
+}
+boardContainer.addEventListener("touchstart", function (event) {
+    if (event.touches.length < 2) return;
+    zoomGesture = true;
+    cancelCurrentCable();
+    const info = touchInfo(event);
+    pinchStart = { ...info, zoom, scrollLeft: boardContainer.scrollLeft, scrollTop: boardContainer.scrollTop };
+    event.preventDefault();
+}, { capture: true, passive: false });
+boardContainer.addEventListener("touchmove", function (event) {
+    if (!zoomGesture || event.touches.length < 2 || !pinchStart) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const info = touchInfo(event);
+    applyZoom(pinchStart.zoom * info.distance / Math.max(1, pinchStart.distance), info.x, info.y);
+    boardContainer.scrollLeft -= info.x - pinchStart.x;
+    boardContainer.scrollTop -= info.y - pinchStart.y;
+    pinchStart = { ...info, zoom, scrollLeft: boardContainer.scrollLeft, scrollTop: boardContainer.scrollTop };
+}, { capture: true, passive: false });
+function endPinch(event) {
+    if (event.touches.length < 2) pinchStart = null;
+    if (event.touches.length === 0) zoomGesture = false;
+}
+boardContainer.addEventListener("touchend", endPinch, { capture: true });
+boardContainer.addEventListener("touchcancel", endPinch, { capture: true });
+
+fullscreenButton.addEventListener("click", async function () {
+    try {
+        if (document.fullscreenElement) {
+            await document.exitFullscreen();
+        } else if (boardContainer.requestFullscreen) {
+            await boardContainer.requestFullscreen();
+        } else {
+            statusMessage.textContent = "Vollbild wird von diesem Browser nicht unterstützt";
+        }
+    } catch (error) {
+        statusMessage.textContent = "Vollbild nicht verfügbar";
+    }
+});
+document.addEventListener("fullscreenchange", function () {
+    fullscreenButton.textContent = document.fullscreenElement ? "Vollbild beenden" : "Vollbild";
+    fitBoard();
+});
+board.addEventListener("load", fitBoard);
+window.addEventListener("resize", fitBoard);
+if (board.complete && board.naturalWidth) fitBoard();
