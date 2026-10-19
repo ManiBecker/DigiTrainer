@@ -696,6 +696,14 @@ function resolveSignals() {
         sourceLevels.get(key).add(level);
     }
 
+    // Feste Versorgungspotenziale sind ebenfalls Signalquellen.
+    // Die Verbindung wird ueber das gesamte elektrische Netz aufgeloest:
+    // +5 V = HIGH, GND = LOW. Bei Kurzschluss bleibt der Pegel unbestimmt.
+    drive("vcc1", 1);
+    drive("vcc2", 1);
+    drive("gnd1", 0);
+    drive("gnd2", 0);
+
     switches.forEach(control => {
         if (control.type !== "switch") return;
         const state = switchStates[control.id] === 1 ? 1 : 0;
