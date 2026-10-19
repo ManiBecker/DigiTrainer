@@ -197,6 +197,22 @@ document.addEventListener("keydown", function (event) {
     updateStatus();
 });
 
+document.addEventListener("keydown", function (event) {
+    if (event.ctrlKey || event.altKey || event.metaKey ||
+        event.repeat) return;
+
+    if (event.key === "+" || event.key === "Add") {
+        event.preventDefault();
+        zoomInButton.click();
+    } else if (event.key === "-" || event.key === "Subtract") {
+        event.preventDefault();
+        zoomOutButton.click();
+    } else if (event.key === "0") {
+        event.preventDefault();
+        zoomResetButton.click();
+    }
+});
+
 
 // ------------------------------------------------------------
 // Pointer bewegen
