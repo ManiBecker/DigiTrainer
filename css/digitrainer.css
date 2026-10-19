@@ -1,126 +1,19 @@
-html,
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-}
-
-body {
-    background-color: #202020;
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.app {
-    width: 100%;
-    min-height: 100vh;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    box-sizing: border-box;
-    padding: 12px;
-}
-
-h1 {
-    margin: 0 0 12px 0;
-    font-size: 1.6rem;
-    font-weight: 600;
-}
-
-.board-container {
-    flex: 1;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    overflow: auto;
-}
-
-.board {
-    display: block;
-
-    max-width: 95vw;
-    max-height: calc(100vh - 100px);
-
-    width: auto;
-    height: auto;
-
-    object-fit: contain;
-
-    cursor: crosshair;
-    touch-action: none;
-}
-
-.statusbar {
-    width: 100%;
-    box-sizing: border-box;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    min-height: 32px;
-    padding: 6px 10px;
-
-    background-color: #111;
-    color: #ddd;
-
-    font-family: monospace;
-    font-size: 0.9rem;
-}
-
-.board-area {
-    position: relative;
-    display: inline-block;
-}
-
-.wiring-layer {
-    position: absolute;
-    left: 0;
-    top: 0;
-
-    width: 100%;
-    height: 100%;
-
-    pointer-events: none;
-}
-
-/* Hauptschalter: gemessener Hotspot */
-.power-switch {
-    position: absolute;
-    left: 7.13%;
-    top: 29.74%;
-    width: 4.87%;
-    height: 6.03%;
-
-    cursor: pointer;
-    z-index: 10;
-}
-
-/* Betriebs-LED: gemessener Bereich */
-.power-led {
-    position: absolute;
-    left: 33.08%;
-    top: 28.97%;
-    width: 1.24%;
-    height: 2.05%;
-
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 5;
-}
-
-/* Leuchtende LED bei eingeschaltetem Gerät */
-.power-led.on {
-    background: #ff3030;
-    box-shadow:
-        0 0 6px 3px #ff2020,
-        0 0 14px 6px rgba(255, 0, 0, 0.65);
-}
-.coordinates {
-    white-space: nowrap;
-}
+html, body { margin:0; padding:0; width:100%; height:100%; }
+body { background:#202020; color:white; font-family:Arial,Helvetica,sans-serif; }
+.app { width:100%; height:100dvh; display:flex; flex-direction:column; align-items:center; box-sizing:border-box; padding:12px; }
+h1 { margin:0 0 12px; font-size:1.6rem; font-weight:600; }
+.board-container { position:relative; flex:1; min-height:0; width:100%; overflow:auto; display:block; overscroll-behavior:contain; background:#202020; }
+.board-area { position:relative; width:max-content; height:max-content; margin:0; }
+.board { display:block; width:100%; height:100%; max-width:none; max-height:none; object-fit:fill; cursor:crosshair; touch-action:none; user-select:none; }
+.wiring-layer { position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; }
+.power-switch { position:absolute; left:7.13%; top:29.74%; width:4.87%; height:6.03%; cursor:pointer; z-index:10; }
+.power-led { position:absolute; left:33.08%; top:28.97%; width:1.24%; height:2.05%; border-radius:50%; pointer-events:none; z-index:5; }
+.power-led.on { background:#ff3030; box-shadow:0 0 6px 3px #ff2020,0 0 14px 6px rgba(255,0,0,.65); }
+.coordinates { white-space:nowrap; }
+.statusbar { flex-shrink:0; width:100%; box-sizing:border-box; display:flex; justify-content:space-between; align-items:center; gap:10px; min-height:32px; padding:6px 10px; background:#111; color:#ddd; font-family:monospace; font-size:.9rem; }
+.toolbar { flex-shrink:0; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px; width:100%; padding:0 0 8px; box-sizing:border-box; }
+.toolbar button { background:#333; color:white; border:1px solid #777; border-radius:5px; padding:6px 11px; cursor:pointer; touch-action:manipulation; }
+.toolbar button:active { background:#555; }
+.zoom-value { display:inline-block; min-width:58px; text-align:center; font:13px monospace; }
+.board-container:fullscreen { background:#202020; width:100vw; height:100vh; overflow:auto; }
+@media (max-width:600px) { .app { padding:5px; } h1 { font-size:1.1rem; margin-bottom:5px; } .statusbar { font-size:.7rem; padding:5px; } .toolbar { padding-bottom:5px; } } 
