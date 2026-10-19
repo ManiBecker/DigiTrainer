@@ -711,6 +711,18 @@ function resolveSignals() {
         drive(control.output + "_NOT", 1 - state);
     });
 
+    // SN74LS02N (14 Pins) im 16-poligen IC-Sockel 0:
+    // IC-Pin 14 (VCC) = ic0-pin16, IC-Pin 7 (GND) = ic0-pin7.
+    // Nur die tatsächliche Verbindung mit den Versorgungsbuchsen zählt.
+    // Ein HIGH-Pegel eines Schalters ersetzt keine VCC-Verbindung.
+    const supplyShort =
+        ["vcc1", "vcc2"].some(id =>
+            ["gnd1", "gnd2"].some(gnd => root(id) === root(gnd))
+        );
+    const ic0Powered = !supplyShort &&
+        ["vcc1", "vcc2"].some(id => root("ic0-pin16") === root(id)) &&
+        ["gnd1", "gnd2"].some(id => root("ic0-pin7") === root(id));
+
     // IC-Ausgänge iterativ auswerten: damit funktionieren auch
     // hintereinander geschaltete NOR-Gatter ohne Verzögerungsmodell.
     // Ein unbekannter Eingang bleibt unbekannt. Sobald ein Eingang
@@ -722,7 +734,7 @@ function resolveSignals() {
         for (const [key, values] of sourceLevels) {
             drivers.set(key, new Set(values));
         }
-        norGatesIC0.forEach(gate => {
+        if (ic0Powered) norGatesIC0.forEach(gate => {
             const a = previous.has(root(gate.a)) ? previous.get(root(gate.a)) : null;
             const b = previous.has(root(gate.b)) ? previous.get(root(gate.b)) : null;
             let result = null;
