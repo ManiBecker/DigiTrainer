@@ -937,11 +937,15 @@ function refreshWireGeometry() {
 
 function fitBoard() {
     if (!board.naturalWidth || !board.naturalHeight) return;
-    const availableWidth = Math.max(100, boardContainer.clientWidth - 12);
-    const availableHeight = Math.max(100, boardContainer.clientHeight - 58);
+
+    const availableWidth = Math.max(1, boardContainer.clientWidth - 12);
+    const availableHeight = Math.max(1, boardContainer.clientHeight - 12);
+
     const ratio = board.naturalWidth / board.naturalHeight;
+
     baseWidth = Math.min(availableWidth, availableHeight * ratio);
     baseHeight = baseWidth / ratio;
+
     applyZoom(zoom);
 }
 
