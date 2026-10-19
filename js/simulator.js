@@ -283,13 +283,19 @@ board.addEventListener("pointerup", function (event) {
 
             updateWirePath(currentWire, end.x, end.y);
 
-            // Die SVG-Leitung bleibt sichtbar; zusätzlich elektrische
-            // Verbindung speichern, damit die LED-Simulation sie auswertet.
+            // Erst probeweise elektrisch verbinden. Bei einem Kurzschluss
+            // oder mehreren treibenden Ausgaengen wird das Kabel verworfen.
             wireConnections.push({ from: startHotspot.id, to: endHotspot.id });
-            updateOutputLeds();
-
-            statusMessage.textContent =
-                startHotspot.label + " -> " + endHotspot.label;
+            const wiringError = checkWiringConflict();
+            if (wiringError) {
+                wireConnections.pop();
+                currentWire.remove();
+                statusMessage.textContent = wiringError;
+            } else {
+                updateOutputLeds();
+                statusMessage.textContent =
+                    startHotspot.label + " -> " + endHotspot.label;
+            }
         } else {
             currentWire.remove();
             updateStatus();
@@ -680,6 +686,45 @@ function buildWireNets() {
         nets.get(key).add(id);
     }
     return { nets, root };
+}
+
+// ------------------------------------------------------------
+// Verdrahtung pruefen, bevor ein neues Kabel uebernommen wird.
+// Zwei aktiv treibende Ausgaenge duerfen niemals dasselbe Netz
+// belegen, selbst wenn ihre Pegel momentan uebereinstimmen.
+// Die Versorgungsschienen sind keine frei kombinierbaren Ausgaenge:
+// mehrere VCC- bzw. GND-Buchsen sind dagegen ausdruecklich erlaubt.
+// ------------------------------------------------------------
+function checkWiringConflict() {
+    const { nets } = buildWireNets();
+    const gateOutputs = new Set(norGatesIC0.map(gate => gate.y));
+    const switchOutputs = new Set();
+    switches.forEach(control => {
+        if (control.type === "switch") {
+            switchOutputs.add(control.output);
+            switchOutputs.add(control.output + "_NOT");
+        }
+    });
+
+    for (const ids of nets.values()) {
+        const hasVcc = ids.has("vcc1") || ids.has("vcc2");
+        const hasGnd = ids.has("gnd1") || ids.has("gnd2");
+        if (hasVcc && hasGnd) {
+            return "Kurzschluss: +5 V und GND dürfen nicht verbunden werden!";
+        }
+
+        const outputs = [...ids].filter(id =>
+            switchOutputs.has(id) || gateOutputs.has(id)
+        );
+        if (outputs.length > 1) {
+            return "Ausgangskonflikt: " + outputs.join(" / ") + "!";
+        }
+        if (outputs.length && (hasVcc || hasGnd)) {
+            return "Ausgangskonflikt: " + outputs[0] +
+                " darf nicht direkt an " + (hasVcc ? "+5 V" : "GND") + "!";
+        }
+    }
+    return null;
 }
 
 // 0 = LOW, 1 = HIGH, null = unbestimmt (z.B. offener Eingang).
