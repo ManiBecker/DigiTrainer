@@ -46,6 +46,63 @@ function getHotspotBounds(hotspot) {
 
 
 // ------------------------------------------------------------
+// Buchsen-Tooltips: Label und bei IC0 die Pin-Funktion
+// ------------------------------------------------------------
+const ic0PinFunctions = {
+    1: "1Y – NOR-Ausgang", 2: "1A – NOR-Eingang",
+    3: "1B – NOR-Eingang", 4: "2Y – NOR-Ausgang",
+    5: "2A – NOR-Eingang", 6: "2B – NOR-Eingang",
+    7: "GND – Versorgung", 8: "Nicht belegt",
+    9: "Nicht belegt", 10: "3B – NOR-Eingang",
+    11: "3A – NOR-Eingang", 12: "3Y – NOR-Ausgang",
+    13: "4B – NOR-Eingang", 14: "4A – NOR-Eingang",
+    15: "4Y – NOR-Ausgang", 16: "VCC – +5 V"
+};
+
+const socketTooltip = document.createElement("div");
+socketTooltip.className = "socket-tooltip";
+Object.assign(socketTooltip.style, {
+    position: "fixed", display: "none", pointerEvents: "none",
+    zIndex: "1000", padding: "6px 9px", borderRadius: "5px",
+    background: "rgba(25, 28, 32, 0.94)", color: "white",
+    font: "12px/1.5 sans-serif", whiteSpace: "pre-line",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.35)",
+    maxWidth: "240px"
+});
+document.body.appendChild(socketTooltip);
+
+function hideSocketTooltip() {
+    socketTooltip.style.display = "none";
+}
+
+function showSocketTooltip(event, hotspot) {
+    if (!hotspot || currentWire !== null || event.pointerType === "touch") {
+        hideSocketTooltip();
+        return;
+    }
+
+    const match = /^ic0-pin(\d+)$/.exec(hotspot.id);
+    const lines = [hotspot.label || hotspot.id];
+    if (match) {
+        const socketPin = Number(match[1]);
+        const chipPin = socketPin >= 10 ? socketPin - 2 : socketPin;
+        lines.push("SN74LS02N" + (socketPin === 8 || socketPin === 9 ? "" : " · Pin " + chipPin));
+        lines.push(ic0PinFunctions[socketPin]);
+    }
+    socketTooltip.textContent = lines.join("\n");
+    socketTooltip.style.display = "block";
+
+    // An Bildschirmrändern nach links/oben ausweichen.
+    const rect = socketTooltip.getBoundingClientRect();
+    const left = event.clientX + 15 + rect.width > window.innerWidth
+        ? event.clientX - rect.width - 12 : event.clientX + 15;
+    const top = event.clientY + 18 + rect.height > window.innerHeight
+        ? event.clientY - rect.height - 12 : event.clientY + 18;
+    socketTooltip.style.left = Math.max(4, left) + "px";
+    socketTooltip.style.top = Math.max(4, top) + "px";
+}
+
+// ------------------------------------------------------------
 // Position relativ zum Board ermitteln
 // ------------------------------------------------------------
 
@@ -161,6 +218,12 @@ board.addEventListener("pointermove", function (event) {
         coordinates.textContent = "X: --   Y: --";
     }
 
+    if (insideBoard && event.pointerType !== "touch") {
+        showSocketTooltip(event, findHotspot(pos));
+    } else {
+        hideSocketTooltip();
+    }
+
     if (
         currentWire !== null &&
         event.pointerId === activePointerId
@@ -175,6 +238,7 @@ board.addEventListener("pointermove", function (event) {
 // ------------------------------------------------------------
 
 board.addEventListener("pointerdown", function (event) {
+    hideSocketTooltip();
     if (powerOn || currentWire !== null) {
         return;
     }
@@ -338,6 +402,7 @@ board.addEventListener("pointercancel", function (event) {
 // ------------------------------------------------------------
 
 board.addEventListener("pointerleave", function () {
+    hideSocketTooltip();
     if (currentWire === null) {
         coordinates.textContent = "X: --   Y: --";
     }
@@ -819,3 +884,5 @@ function updateOutputLeds() {
             : "none";
     });
 }
+
+window.addEventListener("blur", hideSocketTooltip);
