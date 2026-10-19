@@ -1,47 +1,34 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>DigiTrainer</title>
-
-    <link rel="stylesheet" href="css/digitrainer.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DigiTrainer</title>
+<link rel="stylesheet" href="css/digitrainer.css">
 </head>
-
 <body>
-
-    <main class="app">
-
-        <h1>DigiTrainer</h1>
-
-        <div class="board-container">
-
-            <div class="board-area">
-
-            <img
-                class="board"
-                src="boards/itt-digitrainer2/board.jpg"
-                alt="ITT Digi-Trainer 2"
-                draggable="false">
-
-            <svg class="wiring-layer"></svg>
-            <div class="power-switch" title="Power ON/OFF"></div>
-            <div class="power-led"></div>
-            
-            </div>
-
-            <div class="statusbar">
-                <span class="status-message">Ready</span>
-                <span class="coordinates">X: -- &nbsp; Y: --</span>
-            </div>
-
-        </div>
-    </main>
-
-    <script src="js/simulator.js"></script>
-
+<main class="app">
+<h1>DigiTrainer</h1>
+<div class="toolbar">
+  <button class="zoom-out" type="button" title="Verkleinern">−</button>
+  <span class="zoom-value">100 %</span>
+  <button class="zoom-in" type="button" title="Vergrößern">+</button>
+  <button class="zoom-reset" type="button">Zurücksetzen</button>
+  <button class="fullscreen-toggle" type="button">Vollbild</button>
+</div>
+<div class="board-container">
+  <div class="board-area">
+    <img class="board" src="boards/itt-digitrainer2/board.jpg" alt="ITT Digi-Trainer 2" draggable="false">
+    <svg class="wiring-layer"></svg>
+    <div class="power-switch" title="Power ON/OFF"></div>
+    <div class="power-led"></div>
+  </div>
+</div>
+<div class="statusbar">
+  <span class="status-message">Ready</span>
+  <span class="coordinates">X: -- &nbsp; Y: --</span>
+</div>
+</main>
+<script src="js/simulator.js"></script>
 </body>
 </html>
