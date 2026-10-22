@@ -2,84 +2,1870 @@
   "id": "itt-digitrainer2",
   "name": "ITT Digi-Trainer 2",
   "hotspots": [
-    {"id": "vcc1","label": "+5V","x": 0.0932,"y": 0.3823,"width": 0.0200,"height": 0.0200},
-    {"id": "vcc2","label": "+5V","x": 0.1818,"y": 0.3823,"width": 0.0200,"height": 0.0200},
-    {"id": "gnd1","label": "GND","x": 0.0932,"y": 0.6737,"width": 0.0200,"height": 0.0200},
-    {"id": "gnd2","label": "GND","x": 0.1818,"y": 0.6737,"width": 0.0200,"height": 0.0200},
-    {"id":"ic0-pin1","label":"IC 0 Pin 1","x":0.0932,"y":0.4233,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin2","label":"IC 0 Pin 2","x":0.0932,"y":0.4546,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin3","label":"IC 0 Pin 3","x":0.0932,"y":0.4859,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin4","label":"IC 0 Pin 4","x":0.0932,"y":0.5172,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin5","label":"IC 0 Pin 5","x":0.0932,"y":0.5485,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin6","label":"IC 0 Pin 6","x":0.0932,"y":0.5798,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin7","label":"IC 0 Pin 7","x":0.0932,"y":0.6111,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin8","label":"IC 0 Pin 8","x":0.0932,"y":0.6424,"width":0.0200,"height":0.0200},
-
-    {"id":"ic0-pin16","label":"IC 0 Pin 16","x":0.1818,"y":0.4233,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin15","label":"IC 0 Pin 15","x":0.1818,"y":0.4546,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin14","label":"IC 0 Pin 14","x":0.1818,"y":0.4859,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin13","label":"IC 0 Pin 13","x":0.1818,"y":0.5172,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin12","label":"IC 0 Pin 12","x":0.1818,"y":0.5485,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin11","label":"IC 0 Pin 11","x":0.1818,"y":0.5798,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin10","label":"IC 0 Pin 10","x":0.1818,"y":0.6111,"width":0.0200,"height":0.0200},
-    {"id":"ic0-pin9","label":"IC 0 Pin 9","x":0.1818,"y":0.6424,"width":0.0200,"height":0.0200},
-
-    {"id":"S0","label":"S 0", "x": 0.2647, "y": 0.6961, "width": 0.0200, "height": 0.0200},
-    {"id":"S1","label":"S 1", "x": 0.3092, "y": 0.6961, "width": 0.0200, "height": 0.0200},
-    {"id":"S2","label":"S 2", "x": 0.3522, "y": 0.6961, "width": 0.0200, "height": 0.0200},
-    {"id":"S3","label":"S 3", "x": 0.3959, "y": 0.6961, "width": 0.0200, "height": 0.0200},
-    {"id":"S4","label":"S 4", "x": 0.4388, "y": 0.6961, "width": 0.0200, "height": 0.0200},
-    {"id":"S5","label":"S 5", "x": 0.4817, "y": 0.6961, "width": 0.0200, "height": 0.0200},
-    {"id":"S6","label":"S 6", "x": 0.5255, "y": 0.6961, "width": 0.0200, "height": 0.0200},
-    {"id":"S7","label":"S 7", "x": 0.5684, "y": 0.6961, "width": 0.0200, "height": 0.0200},
-
-    {"id":"S0_NOT","label":"S 0 NOT", "x": 0.2647, "y": 0.7499, "width": 0.0200, "height": 0.0200},
-    {"id":"S1_NOT","label":"S 1 NOT", "x": 0.3092, "y": 0.7499, "width": 0.0200, "height": 0.0200},
-    {"id":"S2_NOT","label":"S 2 NOT", "x": 0.3522, "y": 0.7499, "width": 0.0200, "height": 0.0200},
-    {"id":"S3_NOT","label":"S 3 NOT", "x": 0.3959, "y": 0.7499, "width": 0.0200, "height": 0.0200},
-    {"id":"S4_NOT","label":"S 4 NOT", "x": 0.4388, "y": 0.7499, "width": 0.0200, "height": 0.0200},
-    {"id":"S5_NOT","label":"S 5 NOT", "x": 0.4817, "y": 0.7499, "width": 0.0200, "height": 0.0200},
-    {"id":"S6_NOT","label":"S 6 NOT", "x": 0.5255, "y": 0.7499, "width": 0.0200, "height": 0.0200},
-    {"id":"S7_NOT","label":"S 7 NOT", "x": 0.5684, "y": 0.7499, "width": 0.0200, "height": 0.0200},
-
-    {"id":"D0","label":"D 0", "x": 0.7484, "y": 0.7403, "width": 0.0200, "height": 0.0200},
-    {"id":"D1","label":"D 1", "x": 0.7690, "y": 0.7403, "width": 0.0200, "height": 0.0200},
-    {"id":"D2","label":"D 2", "x": 0.7872, "y": 0.7403, "width": 0.0200, "height": 0.0200},
-    {"id":"D3","label":"D 3", "x": 0.8103, "y": 0.7403, "width": 0.0200, "height": 0.0200},
-    {"id":"D4","label":"D 4", "x": 0.8317, "y": 0.7403, "width": 0.0200, "height": 0.0200},
-    {"id":"D5","label":"D 5", "x": 0.8515, "y": 0.7403, "width": 0.0200, "height": 0.0200},
-    {"id":"D6","label":"D 6", "x": 0.8730, "y": 0.7403, "width": 0.0200, "height": 0.0200},
-    {"id":"D7","label":"D 7", "x": 0.8961, "y": 0.7403, "width": 0.0200, "height": 0.0200}
+    {
+      "id": "vcc1",
+      "label": "+5V",
+      "x": 0.0932,
+      "y": 0.3823,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "vcc2",
+      "label": "+5V",
+      "x": 0.1818,
+      "y": 0.3823,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd1",
+      "label": "GND",
+      "x": 0.0932,
+      "y": 0.6737,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd2",
+      "label": "GND",
+      "x": 0.1818,
+      "y": 0.6737,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin1",
+      "label": "IC 0 Pin 1",
+      "x": 0.0932,
+      "y": 0.4233,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin2",
+      "label": "IC 0 Pin 2",
+      "x": 0.0932,
+      "y": 0.4546,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin3",
+      "label": "IC 0 Pin 3",
+      "x": 0.0932,
+      "y": 0.4859,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin4",
+      "label": "IC 0 Pin 4",
+      "x": 0.0932,
+      "y": 0.5172,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin5",
+      "label": "IC 0 Pin 5",
+      "x": 0.0932,
+      "y": 0.5485,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin6",
+      "label": "IC 0 Pin 6",
+      "x": 0.0932,
+      "y": 0.5798,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin7",
+      "label": "IC 0 Pin 7",
+      "x": 0.0932,
+      "y": 0.6111,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin8",
+      "label": "IC 0 Pin 8",
+      "x": 0.0932,
+      "y": 0.6424,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin16",
+      "label": "IC 0 Pin 16",
+      "x": 0.1818,
+      "y": 0.4233,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin15",
+      "label": "IC 0 Pin 15",
+      "x": 0.1818,
+      "y": 0.4546,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin14",
+      "label": "IC 0 Pin 14",
+      "x": 0.1818,
+      "y": 0.4859,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin13",
+      "label": "IC 0 Pin 13",
+      "x": 0.1818,
+      "y": 0.5172,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin12",
+      "label": "IC 0 Pin 12",
+      "x": 0.1818,
+      "y": 0.5485,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin11",
+      "label": "IC 0 Pin 11",
+      "x": 0.1818,
+      "y": 0.5798,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin10",
+      "label": "IC 0 Pin 10",
+      "x": 0.1818,
+      "y": 0.6111,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic0-pin9",
+      "label": "IC 0 Pin 9",
+      "x": 0.1818,
+      "y": 0.6424,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S0",
+      "label": "S 0",
+      "x": 0.2647,
+      "y": 0.6961,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S1",
+      "label": "S 1",
+      "x": 0.3092,
+      "y": 0.6961,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S2",
+      "label": "S 2",
+      "x": 0.3522,
+      "y": 0.6961,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S3",
+      "label": "S 3",
+      "x": 0.3959,
+      "y": 0.6961,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S4",
+      "label": "S 4",
+      "x": 0.4388,
+      "y": 0.6961,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S5",
+      "label": "S 5",
+      "x": 0.4817,
+      "y": 0.6961,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S6",
+      "label": "S 6",
+      "x": 0.5255,
+      "y": 0.6961,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S7",
+      "label": "S 7",
+      "x": 0.5684,
+      "y": 0.6961,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S0_NOT",
+      "label": "S 0 NOT",
+      "x": 0.2647,
+      "y": 0.7499,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S1_NOT",
+      "label": "S 1 NOT",
+      "x": 0.3092,
+      "y": 0.7499,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S2_NOT",
+      "label": "S 2 NOT",
+      "x": 0.3522,
+      "y": 0.7499,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S3_NOT",
+      "label": "S 3 NOT",
+      "x": 0.3959,
+      "y": 0.7499,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S4_NOT",
+      "label": "S 4 NOT",
+      "x": 0.4388,
+      "y": 0.7499,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S5_NOT",
+      "label": "S 5 NOT",
+      "x": 0.4817,
+      "y": 0.7499,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S6_NOT",
+      "label": "S 6 NOT",
+      "x": 0.5255,
+      "y": 0.7499,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "S7_NOT",
+      "label": "S 7 NOT",
+      "x": 0.5684,
+      "y": 0.7499,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "D0",
+      "label": "D 0",
+      "x": 0.7484,
+      "y": 0.7403,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "D1",
+      "label": "D 1",
+      "x": 0.769,
+      "y": 0.7403,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "D2",
+      "label": "D 2",
+      "x": 0.7872,
+      "y": 0.7403,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "D3",
+      "label": "D 3",
+      "x": 0.8103,
+      "y": 0.7403,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "D4",
+      "label": "D 4",
+      "x": 0.8317,
+      "y": 0.7403,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "D5",
+      "label": "D 5",
+      "x": 0.8515,
+      "y": 0.7403,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "D6",
+      "label": "D 6",
+      "x": 0.873,
+      "y": 0.7403,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "D7",
+      "label": "D 7",
+      "x": 0.8961,
+      "y": 0.7403,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin1",
+      "label": "IC 1 Pin 1",
+      "x": 0.2395,
+      "y": 0.4197,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin16",
+      "label": "IC 1 Pin 16",
+      "x": 0.3272,
+      "y": 0.4197,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin2",
+      "label": "IC 1 Pin 2",
+      "x": 0.2395,
+      "y": 0.449,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin15",
+      "label": "IC 1 Pin 15",
+      "x": 0.3272,
+      "y": 0.449,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin3",
+      "label": "IC 1 Pin 3",
+      "x": 0.2395,
+      "y": 0.4793,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin14",
+      "label": "IC 1 Pin 14",
+      "x": 0.3272,
+      "y": 0.4793,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin4",
+      "label": "IC 1 Pin 4",
+      "x": 0.2395,
+      "y": 0.5095,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin13",
+      "label": "IC 1 Pin 13",
+      "x": 0.3272,
+      "y": 0.5095,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin5",
+      "label": "IC 1 Pin 5",
+      "x": 0.2395,
+      "y": 0.5398,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin12",
+      "label": "IC 1 Pin 12",
+      "x": 0.3272,
+      "y": 0.5398,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin6",
+      "label": "IC 1 Pin 6",
+      "x": 0.2395,
+      "y": 0.5711,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin11",
+      "label": "IC 1 Pin 11",
+      "x": 0.3272,
+      "y": 0.5711,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin7",
+      "label": "IC 1 Pin 7",
+      "x": 0.2395,
+      "y": 0.6023,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin10",
+      "label": "IC 1 Pin 10",
+      "x": 0.3272,
+      "y": 0.6023,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin8",
+      "label": "IC 1 Pin 8",
+      "x": 0.2395,
+      "y": 0.6336,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic1-pin9",
+      "label": "IC 1 Pin 9",
+      "x": 0.3272,
+      "y": 0.6336,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin1",
+      "label": "IC 2 Pin 1",
+      "x": 0.3811,
+      "y": 0.4197,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin16",
+      "label": "IC 2 Pin 16",
+      "x": 0.4647,
+      "y": 0.4197,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin2",
+      "label": "IC 2 Pin 2",
+      "x": 0.3811,
+      "y": 0.449,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin15",
+      "label": "IC 2 Pin 15",
+      "x": 0.4647,
+      "y": 0.449,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin3",
+      "label": "IC 2 Pin 3",
+      "x": 0.3811,
+      "y": 0.4793,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin14",
+      "label": "IC 2 Pin 14",
+      "x": 0.4647,
+      "y": 0.4793,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin4",
+      "label": "IC 2 Pin 4",
+      "x": 0.3811,
+      "y": 0.5095,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin13",
+      "label": "IC 2 Pin 13",
+      "x": 0.4647,
+      "y": 0.5095,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin5",
+      "label": "IC 2 Pin 5",
+      "x": 0.3811,
+      "y": 0.5398,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin12",
+      "label": "IC 2 Pin 12",
+      "x": 0.4647,
+      "y": 0.5398,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin6",
+      "label": "IC 2 Pin 6",
+      "x": 0.3811,
+      "y": 0.5711,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin11",
+      "label": "IC 2 Pin 11",
+      "x": 0.4647,
+      "y": 0.5711,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin7",
+      "label": "IC 2 Pin 7",
+      "x": 0.3811,
+      "y": 0.6023,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin10",
+      "label": "IC 2 Pin 10",
+      "x": 0.4647,
+      "y": 0.6023,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin8",
+      "label": "IC 2 Pin 8",
+      "x": 0.3811,
+      "y": 0.6336,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic2-pin9",
+      "label": "IC 2 Pin 9",
+      "x": 0.4647,
+      "y": 0.6336,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin1",
+      "label": "IC 3 Pin 1",
+      "x": 0.5227,
+      "y": 0.4197,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin16",
+      "label": "IC 3 Pin 16",
+      "x": 0.609,
+      "y": 0.4197,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin2",
+      "label": "IC 3 Pin 2",
+      "x": 0.5227,
+      "y": 0.449,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin15",
+      "label": "IC 3 Pin 15",
+      "x": 0.609,
+      "y": 0.449,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin3",
+      "label": "IC 3 Pin 3",
+      "x": 0.5227,
+      "y": 0.4793,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin14",
+      "label": "IC 3 Pin 14",
+      "x": 0.609,
+      "y": 0.4793,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin4",
+      "label": "IC 3 Pin 4",
+      "x": 0.5227,
+      "y": 0.5095,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin13",
+      "label": "IC 3 Pin 13",
+      "x": 0.609,
+      "y": 0.5095,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin5",
+      "label": "IC 3 Pin 5",
+      "x": 0.5227,
+      "y": 0.5398,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin12",
+      "label": "IC 3 Pin 12",
+      "x": 0.609,
+      "y": 0.5398,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin6",
+      "label": "IC 3 Pin 6",
+      "x": 0.5227,
+      "y": 0.5711,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin11",
+      "label": "IC 3 Pin 11",
+      "x": 0.609,
+      "y": 0.5711,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin7",
+      "label": "IC 3 Pin 7",
+      "x": 0.5227,
+      "y": 0.6023,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin10",
+      "label": "IC 3 Pin 10",
+      "x": 0.609,
+      "y": 0.6023,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin8",
+      "label": "IC 3 Pin 8",
+      "x": 0.5227,
+      "y": 0.6336,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic3-pin9",
+      "label": "IC 3 Pin 9",
+      "x": 0.609,
+      "y": 0.6336,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin1",
+      "label": "IC 4 Pin 1",
+      "x": 0.6657,
+      "y": 0.4197,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin16",
+      "label": "IC 4 Pin 16",
+      "x": 0.7506,
+      "y": 0.4197,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin2",
+      "label": "IC 4 Pin 2",
+      "x": 0.6657,
+      "y": 0.449,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin15",
+      "label": "IC 4 Pin 15",
+      "x": 0.7506,
+      "y": 0.449,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin3",
+      "label": "IC 4 Pin 3",
+      "x": 0.6657,
+      "y": 0.4793,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin14",
+      "label": "IC 4 Pin 14",
+      "x": 0.7506,
+      "y": 0.4793,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin4",
+      "label": "IC 4 Pin 4",
+      "x": 0.6657,
+      "y": 0.5095,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin13",
+      "label": "IC 4 Pin 13",
+      "x": 0.7506,
+      "y": 0.5095,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin5",
+      "label": "IC 4 Pin 5",
+      "x": 0.6657,
+      "y": 0.5398,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin12",
+      "label": "IC 4 Pin 12",
+      "x": 0.7506,
+      "y": 0.5398,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin6",
+      "label": "IC 4 Pin 6",
+      "x": 0.6657,
+      "y": 0.5711,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin11",
+      "label": "IC 4 Pin 11",
+      "x": 0.7506,
+      "y": 0.5711,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin7",
+      "label": "IC 4 Pin 7",
+      "x": 0.6657,
+      "y": 0.6023,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin10",
+      "label": "IC 4 Pin 10",
+      "x": 0.7506,
+      "y": 0.6023,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin8",
+      "label": "IC 4 Pin 8",
+      "x": 0.6657,
+      "y": 0.6336,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic4-pin9",
+      "label": "IC 4 Pin 9",
+      "x": 0.7506,
+      "y": 0.6336,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin1",
+      "label": "IC 5 Pin 1",
+      "x": 0.8059,
+      "y": 0.3875,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin20",
+      "label": "IC 5 Pin 20",
+      "x": 0.8936,
+      "y": 0.3875,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin2",
+      "label": "IC 5 Pin 2",
+      "x": 0.8059,
+      "y": 0.4177,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin19",
+      "label": "IC 5 Pin 19",
+      "x": 0.8936,
+      "y": 0.4177,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin3",
+      "label": "IC 5 Pin 3",
+      "x": 0.8059,
+      "y": 0.448,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin18",
+      "label": "IC 5 Pin 18",
+      "x": 0.8936,
+      "y": 0.448,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin4",
+      "label": "IC 5 Pin 4",
+      "x": 0.8059,
+      "y": 0.4783,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin17",
+      "label": "IC 5 Pin 17",
+      "x": 0.8936,
+      "y": 0.4783,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin5",
+      "label": "IC 5 Pin 5",
+      "x": 0.8059,
+      "y": 0.5086,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin16",
+      "label": "IC 5 Pin 16",
+      "x": 0.8936,
+      "y": 0.5086,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin6",
+      "label": "IC 5 Pin 6",
+      "x": 0.8059,
+      "y": 0.5388,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin15",
+      "label": "IC 5 Pin 15",
+      "x": 0.8936,
+      "y": 0.5388,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin7",
+      "label": "IC 5 Pin 7",
+      "x": 0.8059,
+      "y": 0.5701,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin14",
+      "label": "IC 5 Pin 14",
+      "x": 0.8936,
+      "y": 0.5701,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin8",
+      "label": "IC 5 Pin 8",
+      "x": 0.8059,
+      "y": 0.6004,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin13",
+      "label": "IC 5 Pin 13",
+      "x": 0.8936,
+      "y": 0.6004,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin9",
+      "label": "IC 5 Pin 9",
+      "x": 0.8059,
+      "y": 0.6306,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin12",
+      "label": "IC 5 Pin 12",
+      "x": 0.8936,
+      "y": 0.6306,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin10",
+      "label": "IC 5 Pin 10",
+      "x": 0.8059,
+      "y": 0.6619,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ic5-pin11",
+      "label": "IC 5 Pin 11",
+      "x": 0.8936,
+      "y": 0.6619,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "vcc3",
+      "label": "+5 V Schiene 3",
+      "x": 0.2395,
+      "y": 0.3777,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "vcc4",
+      "label": "+5 V Schiene 4",
+      "x": 0.3272,
+      "y": 0.3777,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "vcc5",
+      "label": "+5 V Schiene 5",
+      "x": 0.3811,
+      "y": 0.3777,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "vcc6",
+      "label": "+5 V Schiene 6",
+      "x": 0.4647,
+      "y": 0.3777,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "vcc7",
+      "label": "+5 V Schiene 7",
+      "x": 0.5227,
+      "y": 0.3777,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "vcc8",
+      "label": "+5 V Schiene 8",
+      "x": 0.609,
+      "y": 0.3777,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "vcc9",
+      "label": "+5 V Schiene 9",
+      "x": 0.6657,
+      "y": 0.3777,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "vcc10",
+      "label": "+5 V Schiene 10",
+      "x": 0.7506,
+      "y": 0.3777,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "vcc11",
+      "label": "+5 V Schiene 11",
+      "x": 0.8059,
+      "y": 0.3455,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "vcc12",
+      "label": "+5 V Schiene 12",
+      "x": 0.8936,
+      "y": 0.3455,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd3",
+      "label": "GND Schiene 3",
+      "x": 0.2395,
+      "y": 0.6648,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd4",
+      "label": "GND Schiene 4",
+      "x": 0.3272,
+      "y": 0.6648,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd5",
+      "label": "GND Schiene 5",
+      "x": 0.3811,
+      "y": 0.6648,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd6",
+      "label": "GND Schiene 6",
+      "x": 0.4647,
+      "y": 0.6648,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd7",
+      "label": "GND Schiene 7",
+      "x": 0.5227,
+      "y": 0.6648,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd8",
+      "label": "GND Schiene 8",
+      "x": 0.609,
+      "y": 0.6648,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd9",
+      "label": "GND Schiene 9",
+      "x": 0.6657,
+      "y": 0.6648,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd10",
+      "label": "GND Schiene 10",
+      "x": 0.7506,
+      "y": 0.6648,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd11",
+      "label": "GND rechts oben",
+      "x": 0.8936,
+      "y": 0.7019,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "gnd12",
+      "label": "GND rechts innen",
+      "x": 0.8059,
+      "y": 0.7019,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "R0",
+      "label": "R0",
+      "x": 0.2597,
+      "y": 0.3601,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "R1",
+      "label": "R1",
+      "x": 0.2827,
+      "y": 0.3601,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "R2",
+      "label": "R2",
+      "x": 0.3029,
+      "y": 0.3601,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "R3",
+      "label": "R3",
+      "x": 0.3433,
+      "y": 0.3601,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "R4",
+      "label": "R4",
+      "x": 0.3636,
+      "y": 0.3601,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "R5",
+      "label": "R5",
+      "x": 0.4,
+      "y": 0.3601,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "R6",
+      "label": "R6",
+      "x": 0.4202,
+      "y": 0.3601,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "R7",
+      "label": "R7",
+      "x": 0.4404,
+      "y": 0.3601,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "clk-out",
+      "label": "CLK Ausgang",
+      "x": 0.197,
+      "y": 0.6961,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "clk-switch",
+      "label": "CLK Schaltanschluss",
+      "x": 0.197,
+      "y": 0.7468,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-clk",
+      "label": "A/D CLK",
+      "x": 0.6252,
+      "y": 0.8494,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-st",
+      "label": "A/D ST",
+      "x": 0.6252,
+      "y": 0.8806,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-oe",
+      "label": "A/D OE",
+      "x": 0.6252,
+      "y": 0.9119,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-S2",
+      "label": "ALU S2",
+      "x": 0.5868,
+      "y": 0.0867,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-S1",
+      "label": "ALU S1",
+      "x": 0.5868,
+      "y": 0.1091,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-S0",
+      "label": "ALU S0",
+      "x": 0.5868,
+      "y": 0.1306,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-Cn",
+      "label": "ALU Cn",
+      "x": 0.5868,
+      "y": 0.1531,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-A0",
+      "label": "ALU A0",
+      "x": 0.5868,
+      "y": 0.1795,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-B0",
+      "label": "ALU B0",
+      "x": 0.5868,
+      "y": 0.2009,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-A1",
+      "label": "ALU A1",
+      "x": 0.5868,
+      "y": 0.2244,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-B1",
+      "label": "ALU B1",
+      "x": 0.5868,
+      "y": 0.2468,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-A2",
+      "label": "ALU A2",
+      "x": 0.5868,
+      "y": 0.2712,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-B2",
+      "label": "ALU B2",
+      "x": 0.5868,
+      "y": 0.2927,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-A3",
+      "label": "ALU A3",
+      "x": 0.5868,
+      "y": 0.3132,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-B3",
+      "label": "ALU B3",
+      "x": 0.5868,
+      "y": 0.323,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-F0",
+      "label": "ALU F0",
+      "x": 0.6953,
+      "y": 0.1863,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-F1",
+      "label": "ALU F1",
+      "x": 0.6953,
+      "y": 0.2351,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-F2",
+      "label": "ALU F2",
+      "x": 0.6953,
+      "y": 0.2664,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-F3",
+      "label": "ALU F3",
+      "x": 0.6953,
+      "y": 0.3103,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-OVR",
+      "label": "ALU OVR",
+      "x": 0.7088,
+      "y": 0.2927,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "alu-Cn4",
+      "label": "ALU Cn+4",
+      "x": 0.7088,
+      "y": 0.3318,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ctr-R0",
+      "label": "Zähler R0",
+      "x": 0.7439,
+      "y": 0.0906,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ctr-1",
+      "label": "Zähler 1",
+      "x": 0.7439,
+      "y": 0.1209,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ctr-CK",
+      "label": "Zähler CK",
+      "x": 0.7439,
+      "y": 0.1619,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ctr-A",
+      "label": "Zähler A",
+      "x": 0.7439,
+      "y": 0.1902,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ctr-B",
+      "label": "Zähler B",
+      "x": 0.7439,
+      "y": 0.2254,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ctr-Q",
+      "label": "Zähler Q",
+      "x": 0.8201,
+      "y": 0.1629,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ctr-QA",
+      "label": "Zähler QA",
+      "x": 0.8201,
+      "y": 0.1951,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ctr-QB",
+      "label": "Zähler QB",
+      "x": 0.8201,
+      "y": 0.2244,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ctr-QC",
+      "label": "Zähler QC",
+      "x": 0.8201,
+      "y": 0.2537,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "ctr-QD",
+      "label": "Zähler QD",
+      "x": 0.8201,
+      "y": 0.2849,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "b7s-E",
+      "label": "B/7S E",
+      "x": 0.8666,
+      "y": 0.2849,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "b7s-1",
+      "label": "B/7S 1",
+      "x": 0.8545,
+      "y": 0.1638,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "b7s-2",
+      "label": "B/7S 2",
+      "x": 0.8545,
+      "y": 0.1931,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "b7s-4",
+      "label": "B/7S 4",
+      "x": 0.8545,
+      "y": 0.2254,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "b7s-8",
+      "label": "B/7S 8",
+      "x": 0.8545,
+      "y": 0.2566,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-I-upper",
+      "label": "A/D I oben",
+      "x": 0.6252,
+      "y": 0.7068,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-I-lower",
+      "label": "A/D I unten",
+      "x": 0.6252,
+      "y": 0.7488,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-Q5",
+      "label": "A/D Q5",
+      "x": 0.7088,
+      "y": 0.7009,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-Q4",
+      "label": "A/D Q4",
+      "x": 0.7088,
+      "y": 0.7293,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-Q3",
+      "label": "A/D Q3",
+      "x": 0.7088,
+      "y": 0.74,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-Q2",
+      "label": "A/D Q2",
+      "x": 0.7088,
+      "y": 0.7605,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-Q1",
+      "label": "A/D Q1",
+      "x": 0.7088,
+      "y": 0.783,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-Q0",
+      "label": "A/D Q0",
+      "x": 0.7088,
+      "y": 0.8035,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "adc-EOC",
+      "label": "A/D EOC",
+      "x": 0.6967,
+      "y": 0.8504,
+      "width": 0.02,
+      "height": 0.02
+    }
   ],
   "controls": [
-    {"id":"switch0","label":"Schalter S0","type":"switch","output":"S0","initialState":0,"x":0.2598,"y":0.8327,"width":0.0289,"height":0.0920},
-    {"id":"switch1","label":"Schalter S1","type":"switch","output":"S1","initialState":0,"x":0.3044,"y":0.8327,"width":0.0289,"height":0.0920},
-    {"id":"switch2","label":"Schalter S2","type":"switch","output":"S2","initialState":0,"x":0.3473,"y":0.8327,"width":0.0289,"height":0.0920},
-    {"id":"switch3","label":"Schalter S3","type":"switch","output":"S3","initialState":0,"x":0.3919,"y":0.8327,"width":0.0289,"height":0.0920},
-    {"id":"switch4","label":"Schalter S4","type":"switch","output":"S4","initialState":0,"x":0.4348,"y":0.8327,"width":0.0289,"height":0.0920},
-    {"id":"switch5","label":"Schalter S5","type":"switch","output":"S5","initialState":0,"x":0.4777,"y":0.8327,"width":0.0289,"height":0.0920},
-    {"id":"switch6","label":"Schalter S6","type":"switch","output":"S6","initialState":0,"x":0.5215,"y":0.8327,"width":0.0289,"height":0.0920},
-    {"id":"switch7","label":"Schalter S7","type":"switch","output":"S7","initialState":0,"x":0.5644,"y":0.8327,"width":0.0289,"height":0.0920}
+    {
+      "id": "switch0",
+      "label": "Schalter S0",
+      "type": "switch",
+      "output": "S0",
+      "initialState": 0,
+      "x": 0.2598,
+      "y": 0.8327,
+      "width": 0.0289,
+      "height": 0.092
+    },
+    {
+      "id": "switch1",
+      "label": "Schalter S1",
+      "type": "switch",
+      "output": "S1",
+      "initialState": 0,
+      "x": 0.3044,
+      "y": 0.8327,
+      "width": 0.0289,
+      "height": 0.092
+    },
+    {
+      "id": "switch2",
+      "label": "Schalter S2",
+      "type": "switch",
+      "output": "S2",
+      "initialState": 0,
+      "x": 0.3473,
+      "y": 0.8327,
+      "width": 0.0289,
+      "height": 0.092
+    },
+    {
+      "id": "switch3",
+      "label": "Schalter S3",
+      "type": "switch",
+      "output": "S3",
+      "initialState": 0,
+      "x": 0.3919,
+      "y": 0.8327,
+      "width": 0.0289,
+      "height": 0.092
+    },
+    {
+      "id": "switch4",
+      "label": "Schalter S4",
+      "type": "switch",
+      "output": "S4",
+      "initialState": 0,
+      "x": 0.4348,
+      "y": 0.8327,
+      "width": 0.0289,
+      "height": 0.092
+    },
+    {
+      "id": "switch5",
+      "label": "Schalter S5",
+      "type": "switch",
+      "output": "S5",
+      "initialState": 0,
+      "x": 0.4777,
+      "y": 0.8327,
+      "width": 0.0289,
+      "height": 0.092
+    },
+    {
+      "id": "switch6",
+      "label": "Schalter S6",
+      "type": "switch",
+      "output": "S6",
+      "initialState": 0,
+      "x": 0.5215,
+      "y": 0.8327,
+      "width": 0.0289,
+      "height": 0.092
+    },
+    {
+      "id": "switch7",
+      "label": "Schalter S7",
+      "type": "switch",
+      "output": "S7",
+      "initialState": 0,
+      "x": 0.5644,
+      "y": 0.8327,
+      "width": 0.0289,
+      "height": 0.092
+    }
   ],
   "indicators": [
-    {"id":"led0","type":"led","input":"D0","x":0.7460,"y":0.8841,"width":0.0212,"height":0.0275},
-    {"id":"led1","type":"led","input":"D1","x":0.7672,"y":0.8841,"width":0.0212,"height":0.0275},
-    {"id":"led2","type":"led","input":"D2","x":0.7883,"y":0.8841,"width":0.0212,"height":0.0275},
-    {"id":"led3","type":"led","input":"D3","x":0.8095,"y":0.8841,"width":0.0212,"height":0.0275},
-    {"id":"led4","type":"led","input":"D4","x":0.8306,"y":0.8841,"width":0.0212,"height":0.0275},
-    {"id":"led5","type":"led","input":"D5","x":0.8518,"y":0.8841,"width":0.0212,"height":0.0275},
-    {"id":"led6","type":"led","input":"D6","x":0.8729,"y":0.8841,"width":0.0212,"height":0.0275},
-    {"id":"led7","type":"led","input":"D7","x":0.8941,"y":0.8841,"width":0.0212,"height":0.0275},
-
-    {"id":"switch-led0","type":"led","input":"S0","x":0.2639,"y":0.7216,"width":0.0200,"height":0.0200},
-    {"id":"switch-led1","type":"led","input":"S1","x":0.3101,"y":0.7216,"width":0.0200,"height":0.0200},
-    {"id":"switch-led2","type":"led","input":"S2","x":0.3539,"y":0.7216,"width":0.0200,"height":0.0200},
-    {"id":"switch-led3","type":"led","input":"S3","x":0.3960,"y":0.7216,"width":0.0200,"height":0.0200},
-    {"id":"switch-led4","type":"led","input":"S4","x":0.4406,"y":0.7216,"width":0.0200,"height":0.0200},
-    {"id":"switch-led5","type":"led","input":"S5","x":0.4827,"y":0.7216,"width":0.0200,"height":0.0200},
-    {"id":"switch-led6","type":"led","input":"S6","x":0.5248,"y":0.7216,"width":0.0200,"height":0.0200},
-    {"id":"switch-led7","type":"led","input":"S7","x":0.5693,"y":0.7216,"width":0.0200,"height":0.0200}
-
-  ]
+    {
+      "id": "led0",
+      "type": "led",
+      "input": "D0",
+      "x": 0.746,
+      "y": 0.8841,
+      "width": 0.0212,
+      "height": 0.0275
+    },
+    {
+      "id": "led1",
+      "type": "led",
+      "input": "D1",
+      "x": 0.7672,
+      "y": 0.8841,
+      "width": 0.0212,
+      "height": 0.0275
+    },
+    {
+      "id": "led2",
+      "type": "led",
+      "input": "D2",
+      "x": 0.7883,
+      "y": 0.8841,
+      "width": 0.0212,
+      "height": 0.0275
+    },
+    {
+      "id": "led3",
+      "type": "led",
+      "input": "D3",
+      "x": 0.8095,
+      "y": 0.8841,
+      "width": 0.0212,
+      "height": 0.0275
+    },
+    {
+      "id": "led4",
+      "type": "led",
+      "input": "D4",
+      "x": 0.8306,
+      "y": 0.8841,
+      "width": 0.0212,
+      "height": 0.0275
+    },
+    {
+      "id": "led5",
+      "type": "led",
+      "input": "D5",
+      "x": 0.8518,
+      "y": 0.8841,
+      "width": 0.0212,
+      "height": 0.0275
+    },
+    {
+      "id": "led6",
+      "type": "led",
+      "input": "D6",
+      "x": 0.8729,
+      "y": 0.8841,
+      "width": 0.0212,
+      "height": 0.0275
+    },
+    {
+      "id": "led7",
+      "type": "led",
+      "input": "D7",
+      "x": 0.8941,
+      "y": 0.8841,
+      "width": 0.0212,
+      "height": 0.0275
+    },
+    {
+      "id": "switch-led0",
+      "type": "led",
+      "input": "S0",
+      "x": 0.2639,
+      "y": 0.7216,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "switch-led1",
+      "type": "led",
+      "input": "S1",
+      "x": 0.3101,
+      "y": 0.7216,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "switch-led2",
+      "type": "led",
+      "input": "S2",
+      "x": 0.3539,
+      "y": 0.7216,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "switch-led3",
+      "type": "led",
+      "input": "S3",
+      "x": 0.396,
+      "y": 0.7216,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "switch-led4",
+      "type": "led",
+      "input": "S4",
+      "x": 0.4406,
+      "y": 0.7216,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "switch-led5",
+      "type": "led",
+      "input": "S5",
+      "x": 0.4827,
+      "y": 0.7216,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "switch-led6",
+      "type": "led",
+      "input": "S6",
+      "x": 0.5248,
+      "y": 0.7216,
+      "width": 0.02,
+      "height": 0.02
+    },
+    {
+      "id": "switch-led7",
+      "type": "led",
+      "input": "S7",
+      "x": 0.5693,
+      "y": 0.7216,
+      "width": 0.02,
+      "height": 0.02
+    }
+  ],
+  "hotspotExpansionNotes": {
+    "source": "Positions visually estimated from board(2).jpg (1483x1024 display reference), not hardware-verified. Existing entries preserved.",
+    "addedCount": 159,
+    "caution": "New IDs are positional only; simulator.js must explicitly model any new electrical connections. Verify positions using measurement mode before relying on them."
+  }
 }
-
