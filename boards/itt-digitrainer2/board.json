@@ -1028,7 +1028,7 @@
     },
     {
       "id": "vcc3",
-      "label": "+5 V Schiene 3",
+      "label": "+5V",
       "x": 0.2395,
       "y": 0.3777,
       "width": 0.02,
@@ -1036,7 +1036,7 @@
     },
     {
       "id": "vcc4",
-      "label": "+5 V Schiene 4",
+      "label": "+5V",
       "x": 0.3272,
       "y": 0.3777,
       "width": 0.02,
@@ -1044,7 +1044,7 @@
     },
     {
       "id": "vcc5",
-      "label": "+5 V Schiene 5",
+      "label": "+5V",
       "x": 0.3811,
       "y": 0.3777,
       "width": 0.02,
@@ -1052,7 +1052,7 @@
     },
     {
       "id": "vcc6",
-      "label": "+5 V Schiene 6",
+      "label": "+5V",
       "x": 0.4647,
       "y": 0.3777,
       "width": 0.02,
@@ -1060,7 +1060,7 @@
     },
     {
       "id": "vcc7",
-      "label": "+5 V Schiene 7",
+      "label": "+5V",
       "x": 0.5227,
       "y": 0.3777,
       "width": 0.02,
@@ -1068,7 +1068,7 @@
     },
     {
       "id": "vcc8",
-      "label": "+5 V Schiene 8",
+      "label": "+5V",
       "x": 0.609,
       "y": 0.3777,
       "width": 0.02,
@@ -1076,7 +1076,7 @@
     },
     {
       "id": "vcc9",
-      "label": "+5 V Schiene 9",
+      "label": "+5V",
       "x": 0.6657,
       "y": 0.3777,
       "width": 0.02,
@@ -1084,7 +1084,7 @@
     },
     {
       "id": "vcc10",
-      "label": "+5 V Schiene 10",
+      "label": "+5V",
       "x": 0.7506,
       "y": 0.3777,
       "width": 0.02,
@@ -1092,7 +1092,7 @@
     },
     {
       "id": "vcc11",
-      "label": "+5 V Schiene 11",
+      "label": "+5V",
       "x": 0.8059,
       "y": 0.3455,
       "width": 0.02,
@@ -1100,7 +1100,7 @@
     },
     {
       "id": "vcc12",
-      "label": "+5 V Schiene 12",
+      "label": "+5V",
       "x": 0.8936,
       "y": 0.3455,
       "width": 0.02,
@@ -1108,7 +1108,7 @@
     },
     {
       "id": "gnd3",
-      "label": "GND Schiene 3",
+      "label": "GND",
       "x": 0.2395,
       "y": 0.6648,
       "width": 0.02,
@@ -1116,7 +1116,7 @@
     },
     {
       "id": "gnd4",
-      "label": "GND Schiene 4",
+      "label": "GND",
       "x": 0.3272,
       "y": 0.6648,
       "width": 0.02,
@@ -1124,7 +1124,7 @@
     },
     {
       "id": "gnd5",
-      "label": "GND Schiene 5",
+      "label": "GND",
       "x": 0.3811,
       "y": 0.6648,
       "width": 0.02,
@@ -1132,7 +1132,7 @@
     },
     {
       "id": "gnd6",
-      "label": "GND Schiene 6",
+      "label": "GND",
       "x": 0.4647,
       "y": 0.6648,
       "width": 0.02,
@@ -1140,7 +1140,7 @@
     },
     {
       "id": "gnd7",
-      "label": "GND Schiene 7",
+      "label": "GND",
       "x": 0.5227,
       "y": 0.6648,
       "width": 0.02,
@@ -1148,7 +1148,7 @@
     },
     {
       "id": "gnd8",
-      "label": "GND Schiene 8",
+      "label": "GND",
       "x": 0.609,
       "y": 0.6648,
       "width": 0.02,
@@ -1156,7 +1156,7 @@
     },
     {
       "id": "gnd9",
-      "label": "GND Schiene 9",
+      "label": "GND",
       "x": 0.6657,
       "y": 0.6648,
       "width": 0.02,
@@ -1164,7 +1164,7 @@
     },
     {
       "id": "gnd10",
-      "label": "GND Schiene 10",
+      "label": "GND",
       "x": 0.7506,
       "y": 0.6648,
       "width": 0.02,
@@ -1172,7 +1172,7 @@
     },
     {
       "id": "gnd11",
-      "label": "GND rechts oben",
+      "label": "GND",
       "x": 0.8936,
       "y": 0.7019,
       "width": 0.02,
@@ -1180,7 +1180,7 @@
     },
     {
       "id": "gnd12",
-      "label": "GND rechts innen",
+      "label": "GND",
       "x": 0.8059,
       "y": 0.7019,
       "width": 0.02,
