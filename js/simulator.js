@@ -733,6 +733,13 @@ const norGatesIC0 = [
     { a: "ic0-pin14", b: "ic0-pin13", y: "ic0-pin15" }
 ];
 
+// Versorgungsschienen: alle gleichnamigen Buchsen sind intern verbunden.
+// Die IDs stammen aus board.json (vcc1, vcc2, ... / gnd1, gnd2, ...).
+function supplyIds(prefix) {
+    const pattern = new RegExp("^" + prefix + "\\d+$");
+    return hotspots.map(h => h.id).filter(id => pattern.test(id));
+}
+
 // Bestimmt alle elektrisch zusammenhängenden Netze. Die reine
 // Zeichnung der roten Leitungen bleibt davon unabhängig.
 function buildWireNets() {
@@ -749,6 +756,11 @@ function buildWireNets() {
     }
 
     hotspots.forEach(h => root(h.id));
+    // Physische Brücken innerhalb der beiden Versorgungsschienen.
+    for (const prefix of ["vcc", "gnd"]) {
+        const ids = supplyIds(prefix);
+        for (let i = 1; i < ids.length; i++) join(ids[0], ids[i]);
+    }
     wireConnections.forEach(w => join(w.from, w.to));
     norGatesIC0.forEach(g => {
         root(g.a); root(g.b); root(g.y);
@@ -789,8 +801,8 @@ function checkWiringConflict() {
     });
 
     for (const ids of nets.values()) {
-        const hasVcc = ids.has("vcc1") || ids.has("vcc2");
-        const hasGnd = ids.has("gnd1") || ids.has("gnd2");
+        const hasVcc = [...ids].some(id => /^vcc\d+$/.test(id));
+        const hasGnd = [...ids].some(id => /^gnd\d+$/.test(id));
         if (hasVcc && hasGnd) {
             return "Kurzschluss: +5 V und GND dürfen nicht verbunden werden!";
         }
@@ -826,10 +838,8 @@ function resolveSignals() {
     // Feste Versorgungspotenziale sind ebenfalls Signalquellen.
     // Die Verbindung wird ueber das gesamte elektrische Netz aufgeloest:
     // +5 V = HIGH, GND = LOW. Bei Kurzschluss bleibt der Pegel unbestimmt.
-    drive("vcc1", 1);
-    drive("vcc2", 1);
-    drive("gnd1", 0);
-    drive("gnd2", 0);
+    supplyIds("vcc").forEach(id => drive(id, 1));
+    supplyIds("gnd").forEach(id => drive(id, 0));
 
     switches.forEach(control => {
         if (control.type !== "switch") return;
@@ -842,13 +852,14 @@ function resolveSignals() {
     // IC-Pin 14 (VCC) = ic0-pin16, IC-Pin 7 (GND) = ic0-pin7.
     // Nur die tatsächliche Verbindung mit den Versorgungsbuchsen zählt.
     // Ein HIGH-Pegel eines Schalters ersetzt keine VCC-Verbindung.
-    const supplyShort =
-        ["vcc1", "vcc2"].some(id =>
-            ["gnd1", "gnd2"].some(gnd => root(id) === root(gnd))
-        );
+    const vccIds = supplyIds("vcc");
+    const gndIds = supplyIds("gnd");
+    const supplyShort = vccIds.some(id =>
+        gndIds.some(gnd => root(id) === root(gnd))
+    );
     const ic0Powered = !supplyShort &&
-        ["vcc1", "vcc2"].some(id => root("ic0-pin16") === root(id)) &&
-        ["gnd1", "gnd2"].some(id => root("ic0-pin7") === root(id));
+        vccIds.some(id => root("ic0-pin16") === root(id)) &&
+        gndIds.some(id => root("ic0-pin7") === root(id));
 
     // IC-Ausgänge iterativ auswerten: damit funktionieren auch
     // hintereinander geschaltete NOR-Gatter ohne Verzögerungsmodell.
