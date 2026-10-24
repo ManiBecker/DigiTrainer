@@ -1342,7 +1342,7 @@ function createSevenSegmentDisplay(indicator) {
     });
     boardArea.appendChild(svg);
     // Standardbuchse E; alternativ explizite ID aus board.json verwenden.
-    const latch = indicator.latch || "b7s-e";
+    const latch = indicator.latch || "b7s-E";
     sevenSegmentDisplays.push({ inputs: indicator.inputs, latch, paths, stored: null });
 }
 
