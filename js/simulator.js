@@ -556,7 +556,7 @@ function drawWire(x1, y1, x2, y2) {
     path.setAttribute("y1", y1);
     path.setAttribute("data-bend-side", wireConnections.length % 2 === 0 ? 1 : -1);
     path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "#f5d525");
+    path.setAttribute("stroke", "#39FF14");
     path.setAttribute("stroke-width", "3");
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
@@ -945,7 +945,7 @@ function buildWireNets() {
 
 // ------------------------------------------------------------
 // Kabelfarben nach elektrischer Netzzugehoerigkeit.
-// Gelb = Signal, Rot = +5 V, Schwarz = GND.
+// Gruen = Signal, Rot = +5 V, Hellblau = GND.
 // Nicht der momentane Logikpegel, sondern die feste Versorgung
 // entscheidet ueber die Farbe. Dadurch werden auch indirekt
 // angeschlossene Leitungen im selben Netz eingefaerbt.
@@ -959,14 +959,13 @@ function updateWireColors() {
         if (!wire.path) return;
         const net = root(wire.from);
         if (vcc.has(net)) {
-            wire.path.setAttribute("stroke", "#e32929");
+            wire.path.setAttribute("stroke", "#FF3030");
             wire.path.style.filter = "none";
         } else if (gnd.has(net)) {
-            wire.path.setAttribute("stroke", "#111111");
-            // Heller Rand macht schwarze Kabel auf dunklen ICs sichtbar.
-            wire.path.style.filter = "drop-shadow(0 0 1px #e0e0e0)";
+            wire.path.setAttribute("stroke", "#45C8FF");
+            wire.path.style.filter = "none";
         } else {
-            wire.path.setAttribute("stroke", "#f5d525");
+            wire.path.setAttribute("stroke", "#39FF14");
             wire.path.style.filter = "none";
         }
     });
