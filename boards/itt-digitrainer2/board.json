@@ -1419,8 +1419,8 @@
       "height": 0.02
     },
     {
-      "id": "clk-switch",
-      "label": "CLK Schaltanschluss",
+      "id": "clk-out-not",
+      "label": "CLK Ausgang negiert",
       "x": 0.197,
       "y": 0.7468,
       "width": 0.02,
