@@ -1322,9 +1322,11 @@ function createSevenSegmentDisplay(indicator) {
     Object.entries(shapes).forEach(([name, d]) => {
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttribute("d", d);
-        path.setAttribute("fill", "#ff3030");
+        path.setAttribute("fill", "#ffb0a0");
         path.setAttribute("opacity", "0");
-        path.style.filter = "drop-shadow(0 0 3px #ff3030)";
+        path.style.filter =
+            "drop-shadow(0 0 3px #ff2020) " +
+            "drop-shadow(0 0 7px #ff0000)";
         svg.appendChild(path);
         paths[name] = path;
     });
