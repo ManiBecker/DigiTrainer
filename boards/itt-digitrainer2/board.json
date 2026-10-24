@@ -3,30 +3,6 @@
   "name": "ITT Digi-Trainer 2",
   "hotspots": [
     {
-      "id": "clk_f",
-      "label": "CLK 1Hz/20Hz",
-      "x": 0.1126, 
-       "y": 0.8333, 
-       "width": 0.0300, 
-       "height": 0.0900
-    },
-    {
-      "id": "clk_stop",
-      "label": "CLK STOP",
-      "x": 0.1656, 
-      "y": 0.8333, 
-      "width": 0.0300, 
-      "height": 0.0900
-    },
-    {
-      "id": "clk_man",
-      "label": "CLK man",
-      "x": 0.2040, 
-      "y": 0.8463, 
-      "width": 0.0350, 
-      "height": 0.0580
-    },
-    {
       "id": "vcc1",
       "label": "+5V",
       "x": 0.0932,
@@ -1804,6 +1780,30 @@
     }
   ],
   "controls": [
+    {
+      "id": "switch_clk_f",
+      "label": "CLK 1Hz/20Hz",
+      "x": 0.1126, 
+      "y": 0.8327, 
+      "width": 0.0299, 
+      "height": 0.0934
+    },
+    {
+      "id": "switch_clk_stop",
+      "label": "CLK STOP",
+      "x": 0.1126, 
+      "y": 0.8327, 
+      "width": 0.0299, 
+      "height": 0.0934
+    },
+    {
+      "id": "switch_clk_man",
+      "label": "CLK man",
+      "x": 0.2042, 
+      "y": 0.8487, 
+      "width": 0.0357, 
+      "height": 0.0572
+    },
     {
       "id": "switch0",
       "label": "Schalter S0",
