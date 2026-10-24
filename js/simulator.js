@@ -18,6 +18,13 @@ let startHotspot = null;
 let hotspots = [];
 let switches = [];
 const switchStates = {};
+
+// Manueller Takt: Grundpegel LOW, invertierter Ausgang HIGH.
+// STOP = 0 (unten) gibt den manuellen Taster frei.
+function manualClockEnabled() {
+    return powerOn && switchStates.switch_clk_stop === 0;
+}
+
 const switchLeds = [];
 const outputLeds = [];
 const wireConnections = []; // Verbindungen zwischen Buchsen-IDs
@@ -658,7 +665,7 @@ fetch("boards/itt-digitrainer2/board.json")
             if (indicator.type !== "led") return;
             if (switchOutputs.has(indicator.input)) {
                 createSwitchLed(indicator);
-            } else if (/^D[0-7]$/.test(indicator.input)) {
+            } else if (/^D[0-7]$/.test(indicator.input) || indicator.input === "clk-out") {
                 createOutputLed(indicator);
             }
         });
@@ -786,6 +793,9 @@ function createButtonControl(control) {
         switchStates[control.id] = pressed ? 1 : 0;
         element.style.backgroundColor = pressed ? "rgba(0,255,255,0.25)" : "transparent";
         element.style.borderColor = pressed ? "#ffffff" : "rgba(0,255,255,0.8)";
+        if (control.id === "button_clk_man" || control.id === "switch_clk_man") {
+            updateOutputLeds();
+        }
         statusMessage.textContent = (control.label || control.id) +
             (pressed ? " gedrueckt" : " losgelassen");
     }
@@ -793,6 +803,10 @@ function createButtonControl(control) {
     element.addEventListener("pointerdown", function (event) {
         event.stopPropagation();
         if (!powerOn || (event.pointerType === "mouse" && event.button !== 0)) return;
+        if ((control.id === "button_clk_man" || control.id === "switch_clk_man") && !manualClockEnabled()) {
+            statusMessage.textContent = "CLK man: STOP muss unten stehen";
+            return;
+        }
         event.preventDefault();
         element.setPointerCapture(event.pointerId);
         setPressed(true);
@@ -984,7 +998,7 @@ function buildWireNets() {
     notGatesIC5.forEach(g => { root(g.a); root(g.y); });
     outputLeds.forEach(led => root(led.input));
     switches.forEach(control => {
-        if (control.type === "switch") {
+        if (control.type === "switch" && control.output) {
             root(control.output);
             root(control.output + "_NOT");
         }
@@ -1037,9 +1051,11 @@ function updateWireColors() {
 function checkWiringConflict() {
     const { nets } = buildWireNets();
     const gateOutputs = new Set([...norGatesIC0, ...notGatesIC1, ...andGatesIC2, ...xorGatesIC3, ...nandGatesIC4, ...notGatesIC5].map(gate => gate.y));
+    gateOutputs.add("clk-out");
+    gateOutputs.add("clk-out-not");
     const switchOutputs = new Set();
     switches.forEach(control => {
-        if (control.type === "switch") {
+        if (control.type === "switch" && control.output) {
             switchOutputs.add(control.output);
             switchOutputs.add(control.output + "_NOT");
         }
@@ -1087,11 +1103,21 @@ function resolveSignals() {
     supplyIds("gnd").forEach(id => drive(id, 0));
 
     switches.forEach(control => {
-        if (control.type !== "switch") return;
+        if (control.type !== "switch" || !control.output) return;
         const state = switchStates[control.id] === 1 ? 1 : 0;
         drive(control.output, state);
         drive(control.output + "_NOT", 1 - state);
     });
+
+    // Manueller Takt, solange STOP unten steht.
+    // Beim Druecken HIGH am CLK, LOW am negierten CLK.
+    // Beim Loslassen genau umgekehrt.
+    if (manualClockEnabled()) {
+        const pressed = switchStates.button_clk_man === 1 ||
+                        switchStates.switch_clk_man === 1;
+        drive("clk-out", pressed ? 1 : 0);
+        drive("clk-out-not", pressed ? 0 : 1);
+    }
 
     // SN74LS02N (14 Pins) im 16-poligen IC-Sockel 0:
     // IC-Pin 14 (VCC) = ic0-pin16, IC-Pin 7 (GND) = ic0-pin7.
