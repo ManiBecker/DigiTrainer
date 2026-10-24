@@ -25,13 +25,12 @@ function manualClockEnabled() {
     return powerOn && switchStates.switch_clk_stop === 0;
 }
 
-// Automatischer 1-Hz-Takt: STOP oben, Frequenzschalter f unten.
-// Eine volle Periode dauert 1000 ms (500 ms HIGH, 500 ms LOW).
+// Automatischer Takt: STOP oben, f unten = 1 Hz, f oben = 10 Hz.
+// Halbperioden: 500 ms bei 1 Hz, 50 ms bei 10 Hz.
 let clockTimer = null;
 let clockLevel = 0;
 function automaticClockEnabled() {
-    return powerOn && switchStates.switch_clk_stop === 1 &&
-        switchStates.switch_clk_f === 0;
+    return powerOn && switchStates.switch_clk_stop === 1;
 }
 function refreshClockGenerator() {
     if (clockTimer !== null) {
@@ -49,7 +48,7 @@ function refreshClockGenerator() {
             }
             clockLevel = 1 - clockLevel;
             updateOutputLeds();
-        }, 500);
+        }, switchStates.switch_clk_f === 1 ? 50 : 500);
     }
     updateOutputLeds();
 }
