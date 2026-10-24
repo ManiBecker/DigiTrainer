@@ -1325,10 +1325,10 @@ function createSevenSegmentDisplay(indicator) {
     Object.entries(shapes).forEach(([name, d]) => {
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttribute("d", d);
-        path.setAttribute("fill", "#ffb0a0");
+        path.setAttribute("fill", "#ff2020");
         // Leuchtende Segmente etwas breiter darstellen
-        path.setAttribute("stroke", "#ffb0a0");
-        path.setAttribute("stroke-width", "8");
+        path.setAttribute("stroke", "#ff2020");
+        path.setAttribute("stroke-width", "6");
         path.setAttribute("stroke-linejoin", "round");
         path.setAttribute("opacity", "0");
         path.style.filter =
