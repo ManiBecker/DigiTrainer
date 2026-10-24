@@ -55,6 +55,7 @@ function refreshClockGenerator() {
 
 const switchLeds = [];
 const outputLeds = [];
+const sevenSegmentDisplays = [];
 const wireConnections = []; // Verbindungen zwischen Buchsen-IDs
 let boardLoaded = false;
 
@@ -690,6 +691,10 @@ fetch("boards/itt-digitrainer2/board.json")
                 .map(control => control.output)
         );
         indicators.forEach(function (indicator) {
+            if (indicator.type === "seven-segment") {
+                createSevenSegmentDisplay(indicator);
+                return;
+            }
             if (indicator.type !== "led") return;
             if (switchOutputs.has(indicator.input)) {
                 createSwitchLed(indicator);
@@ -1029,6 +1034,10 @@ function buildWireNets() {
     });
     notGatesIC5.forEach(g => { root(g.a); root(g.y); });
     outputLeds.forEach(led => root(led.input));
+    sevenSegmentDisplays.forEach(display => {
+        display.inputs.forEach(id => root(id));
+        root(display.latch);
+    });
     switches.forEach(control => {
         if (control.type === "switch" && control.output) {
             root(control.output);
@@ -1281,8 +1290,83 @@ function resolveSignals() {
     return { levels: new Map([...nets.keys()].map(k => [k, null])), root };
 }
 
+// ------------------------------------------------------------
+// MC14495P: vier Binäreingänge, LE (LOW = transparent,
+// HIGH = gespeicherter Wert). Anzeige bleibt im Originalfoto.
+// Nur leuchtende Segmente werden darüber gezeichnet.
+// ------------------------------------------------------------
+function createSevenSegmentDisplay(indicator) {
+    if (!Array.isArray(indicator.inputs) || indicator.inputs.length !== 4 || !indicator.latch) {
+        console.warn("Seven-segment configuration incomplete:", indicator.id);
+        return;
+    }
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 100 160");
+    svg.setAttribute("preserveAspectRatio", "none");
+    Object.assign(svg.style, {
+        position: "absolute", left: (indicator.x * 100) + "%",
+        top: (indicator.y * 100) + "%", width: (indicator.width * 100) + "%",
+        height: (indicator.height * 100) + "%", pointerEvents: "none", zIndex: "11"
+    });
+    // Sieben Grundsegmente; die optionale h/i-Segmentdarstellung
+    // des MC14495P kann später anhand des Originalfotos ergänzt werden.
+    const shapes = {
+        a: "M 20 8 L 84 8 L 74 18 L 27 18 Z",
+        b: "M 86 12 L 92 20 L 82 72 L 73 79 L 76 66 Z",
+        c: "M 81 84 L 87 92 L 77 144 L 67 151 L 70 137 Z",
+        d: "M 16 146 L 73 146 L 65 156 L 8 156 Z",
+        e: "M 14 84 L 23 92 L 14 142 L 5 150 L 8 137 Z",
+        f: "M 24 13 L 32 22 L 23 73 L 13 80 L 16 65 Z",
+        g: "M 23 77 L 77 77 L 69 88 L 16 88 Z"
+    };
+    const paths = {};
+    Object.entries(shapes).forEach(([name, d]) => {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", d);
+        path.setAttribute("fill", "#ff3030");
+        path.setAttribute("opacity", "0");
+        path.style.filter = "drop-shadow(0 0 3px #ff3030)";
+        svg.appendChild(path);
+        paths[name] = path;
+    });
+    boardArea.appendChild(svg);
+    sevenSegmentDisplays.push({ inputs: indicator.inputs, latch: indicator.latch, paths, stored: null });
+}
+
+// Übliche 7-Segment-Glyphen für 0..F. Das Original verwendet
+// bei einigen Hex-Zeichen zusätzlich h/i; das ist ein erster Stand.
+const hexSegmentPatterns = [
+    "abcdef", "bc", "abdeg", "abcdg", "bcfg", "acdfg", "acdefg", "abc",
+    "abcdefg", "abcdfg", "abcefg", "cdefg", "adef", "bcdeg", "adefg", "aefg"
+];
+
+function updateSevenSegmentDisplays(signals) {
+    sevenSegmentDisplays.forEach(display => {
+        if (!signals) {
+            display.stored = null;
+        } else {
+            const read = id => signals.levels.get(signals.root(id)) ?? null;
+            const latch = read(display.latch);
+            if (latch === 0) {
+                const bits = display.inputs.map(read);
+                display.stored = bits.every(bit => bit === 0 || bit === 1)
+                    ? bits.reduce((value, bit, i) => value | (bit << i), 0)
+                    : null;
+            }
+            // LE=HIGH hält den zuletzt bei LE=LOW übernommenen Wert.
+            // Ein offener LE-Eingang ist kein gültiges Freigabesignal.
+            if (latch === null) display.stored = null;
+        }
+        const lit = display.stored === null ? "" : hexSegmentPatterns[display.stored];
+        Object.entries(display.paths).forEach(([name, path]) => {
+            path.setAttribute("opacity", lit.includes(name) ? "0.95" : "0");
+        });
+    });
+}
+
 function updateOutputLeds() {
     const signals = powerOn ? resolveSignals() : null;
+    updateSevenSegmentDisplays(signals);
     outputLeds.forEach(function (led) {
         const on = signals && signals.levels.get(signals.root(led.input)) === 1;
         led.element.style.backgroundColor = on
