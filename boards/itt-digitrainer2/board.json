@@ -1906,8 +1906,7 @@
     {
       "id": "display_7seg",
       "type": "seven-segment",
-      "inputs": ["seg-1", "seg-2", "seg-4", "seg-8"],
-      "latch": "seg-e",
+      "inputs": ["b7s-1", "b7s-2", "b7s-4", "b7s-8"],
       "x": 0.8944,
       "y": 0.1022,
       "width": 0.0358,
