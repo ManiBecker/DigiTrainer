@@ -455,6 +455,7 @@ board.addEventListener("pointerup", function (event) {
                 currentWire.remove();
                 statusMessage.textContent = wiringError;
             } else {
+                updateWireColors();
                 updateOutputLeds();
                 statusMessage.textContent =
                     startHotspot.label + " -> " + endHotspot.label;
@@ -555,7 +556,7 @@ function drawWire(x1, y1, x2, y2) {
     path.setAttribute("y1", y1);
     path.setAttribute("data-bend-side", wireConnections.length % 2 === 0 ? 1 : -1);
     path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "red");
+    path.setAttribute("stroke", "#f5d525");
     path.setAttribute("stroke-width", "3");
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
@@ -940,6 +941,35 @@ function buildWireNets() {
         nets.get(key).add(id);
     }
     return { nets, root };
+}
+
+// ------------------------------------------------------------
+// Kabelfarben nach elektrischer Netzzugehoerigkeit.
+// Gelb = Signal, Rot = +5 V, Schwarz = GND.
+// Nicht der momentane Logikpegel, sondern die feste Versorgung
+// entscheidet ueber die Farbe. Dadurch werden auch indirekt
+// angeschlossene Leitungen im selben Netz eingefaerbt.
+// ------------------------------------------------------------
+function updateWireColors() {
+    const { root } = buildWireNets();
+    const vcc = new Set(supplyIds("vcc").map(id => root(id)));
+    const gnd = new Set(supplyIds("gnd").map(id => root(id)));
+
+    wireConnections.forEach(function (wire) {
+        if (!wire.path) return;
+        const net = root(wire.from);
+        if (vcc.has(net)) {
+            wire.path.setAttribute("stroke", "#e32929");
+            wire.path.style.filter = "none";
+        } else if (gnd.has(net)) {
+            wire.path.setAttribute("stroke", "#111111");
+            // Heller Rand macht schwarze Kabel auf dunklen ICs sichtbar.
+            wire.path.style.filter = "drop-shadow(0 0 1px #e0e0e0)";
+        } else {
+            wire.path.setAttribute("stroke", "#f5d525");
+            wire.path.style.filter = "none";
+        }
+    });
 }
 
 // ------------------------------------------------------------
