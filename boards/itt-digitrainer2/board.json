@@ -1904,6 +1904,16 @@
   ],
   "indicators": [
     {
+      "id": "display_7seg",
+      "type": "seven-segment",
+      "inputs": ["seg-1", "seg-2", "seg-4", "seg-8"],
+      "latch": "seg-e",
+      "x": 0.8944,
+      "y": 0.1022,
+      "width": 0.0358,
+      "height": 0.0777
+    },
+    {
       "id": "led_clk",
       "type": "led",
       "input": "clk-out",
