@@ -71,6 +71,15 @@ const ic1PinFunctions = {
     15: "6A – NOT-Eingang", 16: "VCC – +5 V"
 };
 
+const ic2PinFunctions = {
+    1: "1A – AND-Eingang", 2: "1B – AND-Eingang", 3: "1Y – AND-Ausgang",
+    4: "2A – AND-Eingang", 5: "2B – AND-Eingang", 6: "2Y – AND-Ausgang",
+    7: "GND – Versorgung", 8: "Nicht belegt", 9: "Nicht belegt",
+    10: "3Y – AND-Ausgang", 11: "3A – AND-Eingang", 12: "3B – AND-Eingang",
+    13: "4Y – AND-Ausgang", 14: "4A – AND-Eingang", 15: "4B – AND-Eingang",
+    16: "VCC – +5 V"
+};
+
 const socketTooltip = document.createElement("div");
 socketTooltip.className = "socket-tooltip";
 Object.assign(socketTooltip.style, {
@@ -93,15 +102,17 @@ function showSocketTooltip(event, hotspot) {
         return;
     }
 
-    const match = /^ic([01])-pin(\d+)$/.exec(hotspot.id);
+    const match = /^ic([012])-pin(\d+)$/.exec(hotspot.id);
     const lines = [hotspot.label || hotspot.id];
     if (match) {
         const socket = Number(match[1]);
         const socketPin = Number(match[2]);
         const chipPin = socketPin >= 10 ? socketPin - 2 : socketPin;
-        lines.push((socket === 0 ? "SN74LS02N" : "SN74LS04N") +
+        const chipNames = ["SN74LS02N", "SN74LS04N", "SN74LS08N"];
+        const pinFunctions = [ic0PinFunctions, ic1PinFunctions, ic2PinFunctions];
+        lines.push(chipNames[socket] +
             (socketPin === 8 || socketPin === 9 ? "" : " · Pin " + chipPin));
-        lines.push((socket === 0 ? ic0PinFunctions : ic1PinFunctions)[socketPin]);
+        lines.push(pinFunctions[socket][socketPin]);
     }
     socketTooltip.textContent = lines.join("\n");
     socketTooltip.style.display = "block";
@@ -757,6 +768,15 @@ const notGatesIC1 = [
     { a: "ic1-pin15", y: "ic1-pin14" }
 ];
 
+// IC 2: SN74LS08N – vier AND-Gatter (14-polig im 16-poligen Sockel).
+// Sockelpositionen 8 und 9 sind unbenutzt.
+const andGatesIC2 = [
+    { a: "ic2-pin1",  b: "ic2-pin2",  y: "ic2-pin3"  },
+    { a: "ic2-pin4",  b: "ic2-pin5",  y: "ic2-pin6"  },
+    { a: "ic2-pin11", b: "ic2-pin12", y: "ic2-pin10" },
+    { a: "ic2-pin14", b: "ic2-pin15", y: "ic2-pin13" }
+];
+
 // Versorgungsschienen: alle gleichnamigen Buchsen sind intern verbunden.
 // Die IDs stammen aus board.json (vcc1, vcc2, ... / gnd1, gnd2, ...).
 function supplyIds(prefix) {
@@ -792,6 +812,9 @@ function buildWireNets() {
     notGatesIC1.forEach(g => {
         root(g.a); root(g.y);
     });
+    andGatesIC2.forEach(g => {
+        root(g.a); root(g.b); root(g.y);
+    });
     outputLeds.forEach(led => root(led.input));
     switches.forEach(control => {
         if (control.type === "switch") {
@@ -818,7 +841,7 @@ function buildWireNets() {
 // ------------------------------------------------------------
 function checkWiringConflict() {
     const { nets } = buildWireNets();
-    const gateOutputs = new Set([...norGatesIC0, ...notGatesIC1].map(gate => gate.y));
+    const gateOutputs = new Set([...norGatesIC0, ...notGatesIC1, ...andGatesIC2].map(gate => gate.y));
     const switchOutputs = new Set();
     switches.forEach(control => {
         if (control.type === "switch") {
@@ -890,6 +913,9 @@ function resolveSignals() {
     const ic1Powered = !supplyShort &&
         vccIds.some(id => root("ic1-pin16") === root(id)) &&
         gndIds.some(id => root("ic1-pin7") === root(id));
+    const ic2Powered = !supplyShort &&
+        vccIds.some(id => root("ic2-pin16") === root(id)) &&
+        gndIds.some(id => root("ic2-pin7") === root(id));
 
     // IC-Ausgänge iterativ auswerten: damit funktionieren auch
     // hintereinander geschaltete NOR-Gatter ohne Verzögerungsmodell.
@@ -922,6 +948,20 @@ function resolveSignals() {
             const key = root(gate.y);
             if (!drivers.has(key)) drivers.set(key, new Set());
             drivers.get(key).add(1 - input);
+        });
+        // IC 2: AND – LOW an einem Eingang erzwingt LOW.
+        // HIGH entsteht nur, wenn beide Eingänge HIGH sind.
+        if (ic2Powered) andGatesIC2.forEach(gate => {
+            const a = previous.has(root(gate.a)) ? previous.get(root(gate.a)) : null;
+            const b = previous.has(root(gate.b)) ? previous.get(root(gate.b)) : null;
+            let result = null;
+            if (a === 0 || b === 0) result = 0;
+            else if (a === 1 && b === 1) result = 1;
+            if (result !== null) {
+                const key = root(gate.y);
+                if (!drivers.has(key)) drivers.set(key, new Set());
+                drivers.get(key).add(result);
+            }
         });
         levels.clear();
         for (const key of nets.keys()) {
