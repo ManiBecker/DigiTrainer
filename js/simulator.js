@@ -640,9 +640,13 @@ fetch("boards/itt-digitrainer2/board.json")
         boardLoaded = true;
 
         switches.forEach(function (control) {
-            if (control.type !== "switch") return;
+            if (control.type !== "switch" && control.type !== "button") return;
             switchStates[control.id] = control.initialState ?? 0;
-            createSwitchControl(control);
+            if (control.type === "button") {
+                createButtonControl(control);
+            } else {
+                createSwitchControl(control);
+            }
         });
 
         // Schalter-LEDs und die acht Ausgab LEDs D0 bis D7 laden.
@@ -753,6 +757,58 @@ function createSwitchControl(control) {
     });
 
     updateSwitchDisplay();
+    boardArea.appendChild(element);
+}
+
+// ------------------------------------------------------------
+// Momenttaster aus board.json: gedrueckt nur waehrend Pointer-Kontakt.
+// Noch keine CLK-Signalerzeugung; diese wird separat ergaenzt.
+// ------------------------------------------------------------
+function createButtonControl(control) {
+    const element = document.createElement("div");
+    element.className = "momentary-button";
+    Object.assign(element.style, {
+        position: "absolute",
+        left: (control.x * 100) + "%",
+        top: (control.y * 100) + "%",
+        width: (control.width * 100) + "%",
+        height: (control.height * 100) + "%",
+        boxSizing: "border-box",
+        border: "1px solid rgba(0,255,255,0.8)",
+        backgroundColor: "transparent",
+        cursor: "pointer",
+        zIndex: "20",
+        touchAction: "none"
+    });
+    element.title = control.label || control.id;
+
+    function setPressed(pressed) {
+        switchStates[control.id] = pressed ? 1 : 0;
+        element.style.backgroundColor = pressed ? "rgba(0,255,255,0.25)" : "transparent";
+        element.style.borderColor = pressed ? "#ffffff" : "rgba(0,255,255,0.8)";
+        statusMessage.textContent = (control.label || control.id) +
+            (pressed ? " gedrueckt" : " losgelassen");
+    }
+
+    element.addEventListener("pointerdown", function (event) {
+        event.stopPropagation();
+        if (!powerOn || (event.pointerType === "mouse" && event.button !== 0)) return;
+        event.preventDefault();
+        element.setPointerCapture(event.pointerId);
+        setPressed(true);
+    });
+    element.addEventListener("pointerup", function (event) {
+        event.stopPropagation();
+        if (switchStates[control.id] === 1) setPressed(false);
+    });
+    element.addEventListener("pointercancel", function (event) {
+        event.stopPropagation();
+        if (switchStates[control.id] === 1) setPressed(false);
+    });
+    element.addEventListener("lostpointercapture", function () {
+        if (switchStates[control.id] === 1) setPressed(false);
+    });
+    element.addEventListener("click", event => event.stopPropagation());
     boardArea.appendChild(element);
 }
 
