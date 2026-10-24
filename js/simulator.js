@@ -557,7 +557,7 @@ function drawWire(x1, y1, x2, y2) {
     path.setAttribute("data-bend-side", wireConnections.length % 2 === 0 ? 1 : -1);
     path.setAttribute("fill", "none");
     path.setAttribute("stroke", "#39FF14");
-    path.setAttribute("stroke-width", "3");
+    path.setAttribute("stroke-width", String(3 * zoom));
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
     updateWirePath(path, x2, y2);
@@ -1194,6 +1194,14 @@ let baseHeight = 0;
 let zoomGesture = false;
 let pinchStart = null;
 
+// SVG uses pixel coordinates without a viewBox. Therefore its stroke width
+// must be adjusted explicitly when the board is resized.
+function refreshWireWidths() {
+    wiringLayer.querySelectorAll("path").forEach(function (path) {
+        path.setAttribute("stroke-width", String(3 * zoom));
+    });
+}
+
 function refreshWireGeometry() {
     wireConnections.forEach(function (wire) {
         if (!wire.path) return;
@@ -1233,6 +1241,7 @@ function applyZoom(value, clientX, clientY) {
     boardArea.style.height = (baseHeight * zoom) + "px";
     zoomDisplay.textContent = Math.round(zoom * 100) + " %";
     refreshWireGeometry();
+    refreshWireWidths();
     // Mittelpunkt bzw. Mausposition beim Zoomen festhalten.
     boardContainer.scrollLeft += relativeX * (baseWidth * zoom - oldWidth);
     boardContainer.scrollTop += relativeY * (baseHeight * zoom - oldHeight);
