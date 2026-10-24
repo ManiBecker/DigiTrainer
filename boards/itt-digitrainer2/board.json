@@ -1904,6 +1904,15 @@
   ],
   "indicators": [
     {
+      "id": "led_clk",
+      "type": "led",
+      "input": "clk-out",
+      "x": 0.2007, 
+      "y": 0.7221, 
+      "width": 0.0160, 
+      "height": 0.0204
+    },
+    {
       "id": "led0",
       "type": "led",
       "input": "D0",
