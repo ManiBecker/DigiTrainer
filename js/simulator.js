@@ -234,6 +234,30 @@ function updateStatus() {
 }
 
 
+// Gemeinsame Umschaltung für Tastatur und Toolbar.
+const modeButton = document.querySelector(".mode-toggle");
+
+function updateModeDisplay() {
+    if (modeButton) {
+        modeButton.textContent = measureMode ? "Mode: Measure" : "Mode: Wiring";
+        modeButton.setAttribute("aria-pressed", String(measureMode));
+    }
+    // Die Markierungen sind nur eine visuelle Hilfe.
+    // Die elektrische Hotspot-Erkennung bleibt immer aktiv.
+    if (typeof hotspotLayer !== "undefined") {
+        hotspotLayer.style.display = measureMode ? "block" : "none";
+    }
+}
+
+function toggleMeasureMode() {
+    if (currentWire !== null) return;
+    measureMode = !measureMode;
+    updateModeDisplay();
+    updateStatus();
+}
+
+if (modeButton) modeButton.addEventListener("click", toggleMeasureMode);
+
 // ------------------------------------------------------------
 // Taste M: Vermessungsmodus umschalten
 // ------------------------------------------------------------
@@ -252,8 +276,7 @@ document.addEventListener("keydown", function (event) {
         return;
     }
 
-    measureMode = !measureMode;
-    updateStatus();
+    toggleMeasureMode();
 });
 
 document.addEventListener("keydown", function (event) {
@@ -560,6 +583,7 @@ Object.assign(hotspotLayer.style, {
 });
 
 boardArea.appendChild(hotspotLayer);
+updateModeDisplay();
 
 // LED-Anzeigen über dem Board; blockieren keine Maus-/Touch-Eingaben
 const switchLedLayer = document.createElement("div");
