@@ -1783,26 +1783,35 @@
     {
       "id": "switch_clk_f",
       "label": "CLK 1Hz/20Hz",
-      "x": 0.1126, 
+      "type": "switch",
+      "output": "",
+      "initialState": 0,      
+      "x": 0.1108, 
       "y": 0.8327, 
-      "width": 0.0299, 
-      "height": 0.0934
+      "width": 0.0303, 
+      "height": 0.0930
     },
     {
       "id": "switch_clk_stop",
       "label": "CLK STOP",
-      "x": 0.1126, 
-      "y": 0.8327, 
-      "width": 0.0299, 
-      "height": 0.0934
+      "type": "switch",
+      "output": "",
+      "initialState": 0,
+      "x": 0.1646, 
+      "y": 0.8306, 
+      "width": 0.0314, 
+      "height": 0.0936
     },
     {
       "id": "switch_clk_man",
       "label": "CLK man",
-      "x": 0.2042, 
-      "y": 0.8487, 
-      "width": 0.0357, 
-      "height": 0.0572
+      "type": "button",
+      "output": "",
+      "initialState": 0,
+      "x": 0.2039, 
+      "y": 0.8458, 
+      "width": 0.0358, 
+      "height": 0.0607
     },
     {
       "id": "switch0",
