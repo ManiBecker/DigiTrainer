@@ -1782,7 +1782,7 @@
   "controls": [
     {
       "id": "switch_clk_f",
-      "label": "CLK 1Hz/20Hz",
+      "label": "CLK 1Hz/10Hz",
       "type": "switch",
       "output": "",
       "initialState": 0,      
