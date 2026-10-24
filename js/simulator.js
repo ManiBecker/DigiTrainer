@@ -1328,7 +1328,7 @@ function createSevenSegmentDisplay(indicator) {
         path.setAttribute("fill", "#ffb0a0");
         // Leuchtende Segmente etwas breiter darstellen
         path.setAttribute("stroke", "#ffb0a0");
-        path.setAttribute("stroke-width", "4");
+        path.setAttribute("stroke-width", "8");
         path.setAttribute("stroke-linejoin", "round");
         path.setAttribute("opacity", "0");
         path.style.filter =
