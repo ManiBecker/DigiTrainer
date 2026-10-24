@@ -90,6 +90,31 @@ const ic3PinFunctions = {
     16: "VCC – +5 V"
 };
 
+// IC 4: 74LS00PC – vier NAND-Gatter.
+const ic4PinFunctions = {
+    1: "1A – NAND-Eingang", 2: "1B – NAND-Eingang", 3: "1Y – NAND-Ausgang",
+    4: "2A – NAND-Eingang", 5: "2B – NAND-Eingang", 6: "2Y – NAND-Ausgang",
+    7: "GND – Versorgung", 8: "Nicht belegt", 9: "Nicht belegt",
+    10: "3Y – NAND-Ausgang", 11: "3A – NAND-Eingang", 12: "3B – NAND-Eingang",
+    13: "4Y – NAND-Ausgang", 14: "4A – NAND-Eingang", 15: "4B – NAND-Eingang",
+    16: "VCC – +5 V"
+};
+
+// IC 5: RCA CD4069UBE – sechs CMOS-Inverter (14-polig im 20-poligen Sockel).
+// Links: IC-Pins 1–7 = Sockelpositionen 1–7.
+// Rechts: IC-Pins 8–14 = Sockelpositionen 14–20.
+const ic5PinFunctions = {
+    1: "1A – CMOS-NOT-Eingang", 2: "1Y – CMOS-NOT-Ausgang",
+    3: "2A – CMOS-NOT-Eingang", 4: "2Y – CMOS-NOT-Ausgang",
+    5: "3A – CMOS-NOT-Eingang", 6: "3Y – CMOS-NOT-Ausgang",
+    7: "VSS – GND",
+    14: "4Y – CMOS-NOT-Ausgang", 15: "4A – CMOS-NOT-Eingang",
+    16: "5Y – CMOS-NOT-Ausgang", 17: "5A – CMOS-NOT-Eingang",
+    18: "6Y – CMOS-NOT-Ausgang", 19: "6A – CMOS-NOT-Eingang",
+    20: "VDD – +5 V"
+};
+for (let pin = 8; pin <= 13; pin++) ic5PinFunctions[pin] = "Nicht belegt";
+
 const socketTooltip = document.createElement("div");
 socketTooltip.className = "socket-tooltip";
 Object.assign(socketTooltip.style, {
@@ -112,16 +137,16 @@ function showSocketTooltip(event, hotspot) {
         return;
     }
 
-    const match = /^ic([0123])-pin(\d+)$/.exec(hotspot.id);
+    const match = /^ic([012345])-pin(\d+)$/.exec(hotspot.id);
     const lines = [hotspot.label || hotspot.id];
     if (match) {
         const socket = Number(match[1]);
         const socketPin = Number(match[2]);
-        const chipPin = socketPin >= 10 ? socketPin - 2 : socketPin;
-        const chipNames = ["SN74LS02N", "SN74LS04N", "SN74LS08N", "SN74LS86AN"];
-        const pinFunctions = [ic0PinFunctions, ic1PinFunctions, ic2PinFunctions, ic3PinFunctions];
+        const chipPin = socket === 5 ? (socketPin >= 14 ? socketPin - 6 : socketPin) : (socketPin >= 10 ? socketPin - 2 : socketPin);
+        const chipNames = ["SN74LS02N", "SN74LS04N", "SN74LS08N", "SN74LS86AN", "74LS00PC", "CD4069UBE"];
+        const pinFunctions = [ic0PinFunctions, ic1PinFunctions, ic2PinFunctions, ic3PinFunctions, ic4PinFunctions, ic5PinFunctions];
         lines.push(chipNames[socket] +
-            (socketPin === 8 || socketPin === 9 ? "" : " · Pin " + chipPin));
+            ((socket === 5 ? socketPin >= 8 && socketPin <= 13 : socketPin === 8 || socketPin === 9) ? "" : " · Pin " + chipPin));
         lines.push(pinFunctions[socket][socketPin]);
     }
     socketTooltip.textContent = lines.join("\n");
@@ -796,6 +821,26 @@ const xorGatesIC3 = [
     { a: "ic3-pin14", b: "ic3-pin15", y: "ic3-pin13" }
 ];
 
+// IC 4: 74LS00PC – vier NAND-Gatter (14-polig im 16-poligen Sockel).
+// Sockelpositionen 8 und 9 sind nicht belegt.
+const nandGatesIC4 = [
+    { a: "ic4-pin1",  b: "ic4-pin2",  y: "ic4-pin3"  },
+    { a: "ic4-pin4",  b: "ic4-pin5",  y: "ic4-pin6"  },
+    { a: "ic4-pin11", b: "ic4-pin12", y: "ic4-pin10" },
+    { a: "ic4-pin14", b: "ic4-pin15", y: "ic4-pin13" }
+];
+
+// IC 5: CD4069UBE – sechs CMOS-Inverter (14 Pins im 20-poligen Sockel).
+// Nicht belegte Sockelpositionen: 8–13.
+const notGatesIC5 = [
+    { a: "ic5-pin1",  y: "ic5-pin2"  },
+    { a: "ic5-pin3",  y: "ic5-pin4"  },
+    { a: "ic5-pin5",  y: "ic5-pin6"  },
+    { a: "ic5-pin15", y: "ic5-pin14" },
+    { a: "ic5-pin17", y: "ic5-pin16" },
+    { a: "ic5-pin19", y: "ic5-pin18" }
+];
+
 // Versorgungsschienen: alle gleichnamigen Buchsen sind intern verbunden.
 // Die IDs stammen aus board.json (vcc1, vcc2, ... / gnd1, gnd2, ...).
 function supplyIds(prefix) {
@@ -837,6 +882,10 @@ function buildWireNets() {
     xorGatesIC3.forEach(g => {
         root(g.a); root(g.b); root(g.y);
     });
+    nandGatesIC4.forEach(g => {
+        root(g.a); root(g.b); root(g.y);
+    });
+    notGatesIC5.forEach(g => { root(g.a); root(g.y); });
     outputLeds.forEach(led => root(led.input));
     switches.forEach(control => {
         if (control.type === "switch") {
@@ -863,7 +912,7 @@ function buildWireNets() {
 // ------------------------------------------------------------
 function checkWiringConflict() {
     const { nets } = buildWireNets();
-    const gateOutputs = new Set([...norGatesIC0, ...notGatesIC1, ...andGatesIC2, ...xorGatesIC3].map(gate => gate.y));
+    const gateOutputs = new Set([...norGatesIC0, ...notGatesIC1, ...andGatesIC2, ...xorGatesIC3, ...nandGatesIC4, ...notGatesIC5].map(gate => gate.y));
     const switchOutputs = new Set();
     switches.forEach(control => {
         if (control.type === "switch") {
@@ -942,6 +991,13 @@ function resolveSignals() {
     const ic3Powered = !supplyShort &&
         vccIds.some(id => root("ic3-pin16") === root(id)) &&
         gndIds.some(id => root("ic3-pin7") === root(id));
+    const ic4Powered = !supplyShort &&
+        vccIds.some(id => root("ic4-pin16") === root(id)) &&
+        gndIds.some(id => root("ic4-pin7") === root(id));
+
+    const ic5Powered = !supplyShort &&
+        vccIds.some(id => root("ic5-pin20") === root(id)) &&
+        gndIds.some(id => root("ic5-pin7") === root(id));
 
     // IC-Ausgänge iterativ auswerten: damit funktionieren auch
     // hintereinander geschaltete NOR-Gatter ohne Verzögerungsmodell.
@@ -998,6 +1054,29 @@ function resolveSignals() {
             const key = root(gate.y);
             if (!drivers.has(key)) drivers.set(key, new Set());
             drivers.get(key).add(a ^ b);
+        });
+        // IC 4: NAND – LOW nur bei zwei HIGH-Eingängen.
+        // Ein LOW-Eingang erzwingt HIGH; sonst bleibt ein offener Eingang unbekannt.
+        if (ic4Powered) nandGatesIC4.forEach(gate => {
+            const a = previous.has(root(gate.a)) ? previous.get(root(gate.a)) : null;
+            const b = previous.has(root(gate.b)) ? previous.get(root(gate.b)) : null;
+            let result = null;
+            if (a === 0 || b === 0) result = 1;
+            else if (a === 1 && b === 1) result = 0;
+            if (result !== null) {
+                const key = root(gate.y);
+                if (!drivers.has(key)) drivers.set(key, new Set());
+                drivers.get(key).add(result);
+            }
+        });
+        // IC 5: CD4069UBE – CMOS-Inverter.
+        // Unversorgte oder offene Eingänge liefern keinen definierten Pegel.
+        if (ic5Powered) notGatesIC5.forEach(gate => {
+            const input = previous.has(root(gate.a)) ? previous.get(root(gate.a)) : null;
+            if (input === null) return;
+            const key = root(gate.y);
+            if (!drivers.has(key)) drivers.set(key, new Set());
+            drivers.get(key).add(1 - input);
         });
         levels.clear();
         for (const key of nets.keys()) {
