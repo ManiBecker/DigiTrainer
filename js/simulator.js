@@ -1036,7 +1036,6 @@ function buildWireNets() {
     outputLeds.forEach(led => root(led.input));
     sevenSegmentDisplays.forEach(display => {
         display.inputs.forEach(id => root(id));
-        root(display.latch);
     });
     switches.forEach(control => {
         if (control.type === "switch" && control.output) {
@@ -1291,12 +1290,12 @@ function resolveSignals() {
 }
 
 // ------------------------------------------------------------
-// MC14495P: vier Binäreingänge, LE (LOW = transparent,
-// HIGH = gespeicherter Wert). Anzeige bleibt im Originalfoto.
-// Nur leuchtende Segmente werden darüber gezeichnet.
+// MC14495P: vier Binäreingänge, zunächst ohne Latch-Funktion.
+// Nur bei vier definierten Pegeln (LOW/HIGH) leuchten Segmente.
+// Die Anzeige bleibt im unveränderten Originalfoto.
 // ------------------------------------------------------------
 function createSevenSegmentDisplay(indicator) {
-    if (!Array.isArray(indicator.inputs) || indicator.inputs.length !== 4 || !indicator.latch) {
+    if (!Array.isArray(indicator.inputs) || indicator.inputs.length !== 4) {
         console.warn("Seven-segment configuration incomplete:", indicator.id);
         return;
     }
@@ -1330,7 +1329,7 @@ function createSevenSegmentDisplay(indicator) {
         paths[name] = path;
     });
     boardArea.appendChild(svg);
-    sevenSegmentDisplays.push({ inputs: indicator.inputs, latch: indicator.latch, paths, stored: null });
+    sevenSegmentDisplays.push({ inputs: indicator.inputs, paths });
 }
 
 // Übliche 7-Segment-Glyphen für 0..F. Das Original verwendet
@@ -1342,22 +1341,17 @@ const hexSegmentPatterns = [
 
 function updateSevenSegmentDisplays(signals) {
     sevenSegmentDisplays.forEach(display => {
-        if (!signals) {
-            display.stored = null;
-        } else {
-            const read = id => signals.levels.get(signals.root(id)) ?? null;
-            const latch = read(display.latch);
-            if (latch === 0) {
-                const bits = display.inputs.map(read);
-                display.stored = bits.every(bit => bit === 0 || bit === 1)
-                    ? bits.reduce((value, bit, i) => value | (bit << i), 0)
-                    : null;
+        let value = null;
+        if (signals) {
+            const bits = display.inputs.map(id =>
+                signals.levels.get(signals.root(id)) ?? null
+            );
+            // Offene oder widerspruechliche Eingaenge bleiben dunkel.
+            if (bits.every(bit => bit === 0 || bit === 1)) {
+                value = bits.reduce((number, bit, i) => number | (bit << i), 0);
             }
-            // LE=HIGH hält den zuletzt bei LE=LOW übernommenen Wert.
-            // Ein offener LE-Eingang ist kein gültiges Freigabesignal.
-            if (latch === null) display.stored = null;
         }
-        const lit = display.stored === null ? "" : hexSegmentPatterns[display.stored];
+        const lit = value === null ? "" : hexSegmentPatterns[value];
         Object.entries(display.paths).forEach(([name, path]) => {
             path.setAttribute("opacity", lit.includes(name) ? "0.95" : "0");
         });
