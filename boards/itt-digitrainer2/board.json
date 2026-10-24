@@ -1667,7 +1667,7 @@
       "height": 0.02
     },
     {
-      "id": "b7s-E",
+      "id": "",
       "label": "B/7S E",
       "x": 0.8626,
       "y": 0.2849,
@@ -1907,7 +1907,7 @@
       "id": "display_7seg",
       "type": "seven-segment",
       "inputs": ["b7s-1", "b7s-2", "b7s-4", "b7s-8"],
-      "latch": "b7s-e",
+      "latch": "b7s-E",
       "x": 0.8944,
       "y": 0.1022,
       "width": 0.0358,
