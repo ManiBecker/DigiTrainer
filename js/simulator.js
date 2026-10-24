@@ -25,6 +25,35 @@ function manualClockEnabled() {
     return powerOn && switchStates.switch_clk_stop === 0;
 }
 
+// Automatischer 1-Hz-Takt: STOP oben, Frequenzschalter f unten.
+// Eine volle Periode dauert 1000 ms (500 ms HIGH, 500 ms LOW).
+let clockTimer = null;
+let clockLevel = 0;
+function automaticClockEnabled() {
+    return powerOn && switchStates.switch_clk_stop === 1 &&
+        switchStates.switch_clk_f === 0;
+}
+function refreshClockGenerator() {
+    if (clockTimer !== null) {
+        clearInterval(clockTimer);
+        clockTimer = null;
+    }
+    clockLevel = 0;
+    if (automaticClockEnabled()) {
+        clockLevel = 1;
+        clockTimer = setInterval(function () {
+            if (!automaticClockEnabled()) {
+                refreshClockGenerator();
+                updateOutputLeds();
+                return;
+            }
+            clockLevel = 1 - clockLevel;
+            updateOutputLeds();
+        }, 500);
+    }
+    updateOutputLeds();
+}
+
 const switchLeds = [];
 const outputLeds = [];
 const wireConnections = []; // Verbindungen zwischen Buchsen-IDs
@@ -583,7 +612,7 @@ powerSwitch.addEventListener("click", function () {
 
     powerLed.classList.toggle("on", powerOn);
     updateSwitchLeds();
-    updateOutputLeds();
+    refreshClockGenerator();
     updateStatus();
 });
 
@@ -758,7 +787,11 @@ function createSwitchControl(control) {
         switchStates[control.id] = switchStates[control.id] === 0 ? 1 : 0;
         updateSwitchDisplay();
         updateSwitchLeds();
-        updateOutputLeds();
+        if (control.id === "switch_clk_stop" || control.id === "switch_clk_f") {
+            refreshClockGenerator();
+        } else {
+            updateOutputLeds();
+        }
         statusMessage.textContent =
             (control.label || control.id) + " = " + switchStates[control.id];
     });
@@ -769,7 +802,7 @@ function createSwitchControl(control) {
 
 // ------------------------------------------------------------
 // Momenttaster aus board.json: gedrueckt nur waehrend Pointer-Kontakt.
-// Noch keine CLK-Signalerzeugung; diese wird separat ergaenzt.
+// Manueller Taster treibt CLK nur bei STOP unten.
 // ------------------------------------------------------------
 function createButtonControl(control) {
     const element = document.createElement("div");
@@ -1117,6 +1150,10 @@ function resolveSignals() {
                         switchStates.switch_clk_man === 1;
         drive("clk-out", pressed ? 1 : 0);
         drive("clk-out-not", pressed ? 0 : 1);
+    }
+    else if (automaticClockEnabled()) {
+        drive("clk-out", clockLevel);
+        drive("clk-out-not", 1 - clockLevel);
     }
 
     // SN74LS02N (14 Pins) im 16-poligen IC-Sockel 0:
