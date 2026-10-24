@@ -512,22 +512,36 @@ board.addEventListener("pointerleave", function () {
 // SVG-Leitung zeichnen
 // ------------------------------------------------------------
 
-// Leicht durchhängendes Patchkabel als kubischer Bézier-Pfad.
-// Endpunkte bleiben exakt auf den Buchsenmitten.
+// Kabelbogen quer zur Verbindungsrichtung: auch vertikale Leitungen
+// erhalten so einen sichtbaren seitlichen Abstand. Die Endpunkte bleiben
+// exakt auf den Buchsenmitten. Die Bogenrichtung ist pro Kabel stabil.
 function updateWirePath(path, x2, y2) {
     const x1 = Number(path.getAttribute("x1"));
     const y1 = Number(path.getAttribute("y1"));
     const dx = x2 - x1;
     const dy = y2 - y1;
     const length = Math.hypot(dx, dy);
-    // Mehr Durchhang bei langen Kabeln, unabhängig von der Ziehrichtung.
-    const sag = Math.min(55, length * 0.20);
 
     path.setAttribute("x2", x2);
     path.setAttribute("y2", y2);
+
+    if (length < 1) {
+        path.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2}`);
+        return;
+    }
+
+    // Senkrechter Einheitsvektor: (-dy, dx) / length.
+    // Unterschiedliche Kabel werden abwechselnd nach beiden Seiten gebogen.
+    const side = Number(path.getAttribute("data-bend-side")) || 1;
+    const bend = Math.min(65, Math.max(14, length * 0.22));
+    const offsetX = (-dy / length) * bend * side;
+    const offsetY = (dx / length) * bend * side;
+
     path.setAttribute("d",
-        `M ${x1} ${y1} C ${x1 + dx / 3} ${y1 + sag}, ` +
-        `${x1 + 2 * dx / 3} ${y2 + sag}, ${x2} ${y2}`
+        `M ${x1} ${y1} ` +
+        `C ${x1 + dx / 3 + offsetX} ${y1 + dy / 3 + offsetY}, ` +
+        `${x1 + 2 * dx / 3 + offsetX} ${y1 + 2 * dy / 3 + offsetY}, ` +
+        `${x2} ${y2}`
     );
 }
 
@@ -539,6 +553,7 @@ function drawWire(x1, y1, x2, y2) {
     // x1/y1 bleiben für den Vermessungsmodus abrufbar.
     path.setAttribute("x1", x1);
     path.setAttribute("y1", y1);
+    path.setAttribute("data-bend-side", wireConnections.length % 2 === 0 ? 1 : -1);
     path.setAttribute("fill", "none");
     path.setAttribute("stroke", "red");
     path.setAttribute("stroke-width", "3");
