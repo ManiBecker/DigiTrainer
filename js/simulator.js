@@ -1036,6 +1036,7 @@ function buildWireNets() {
     outputLeds.forEach(led => root(led.input));
     sevenSegmentDisplays.forEach(display => {
         display.inputs.forEach(id => root(id));
+        if (display.latch) root(display.latch);
     });
     switches.forEach(control => {
         if (control.type === "switch" && control.output) {
@@ -1290,8 +1291,10 @@ function resolveSignals() {
 }
 
 // ------------------------------------------------------------
-// MC14495P: vier Binäreingänge, zunächst ohne Latch-Funktion.
-// Nur bei vier definierten Pegeln (LOW/HIGH) leuchten Segmente.
+// MC14495P: vier Binäreingänge und Latch Enable (E).
+// E=LOW: transparent; E=HIGH: zuletzt gültigen Wert halten.
+// E offen: Anzeige dunkel (definierte Simulatorregel).
+// Nur bei vier definierten Pegeln (LOW/HIGH) wird ein neuer Wert übernommen.
 // Die Anzeige bleibt im unveränderten Originalfoto.
 // ------------------------------------------------------------
 function createSevenSegmentDisplay(indicator) {
@@ -1338,7 +1341,9 @@ function createSevenSegmentDisplay(indicator) {
         paths[name] = path;
     });
     boardArea.appendChild(svg);
-    sevenSegmentDisplays.push({ inputs: indicator.inputs, paths });
+    // Standardbuchse E; alternativ explizite ID aus board.json verwenden.
+    const latch = indicator.latch || "b7s-e";
+    sevenSegmentDisplays.push({ inputs: indicator.inputs, latch, paths, stored: null });
 }
 
 // Übliche 7-Segment-Glyphen für 0..F. Das Original verwendet
@@ -1350,17 +1355,27 @@ const hexSegmentPatterns = [
 
 function updateSevenSegmentDisplays(signals) {
     sevenSegmentDisplays.forEach(display => {
-        let value = null;
-        if (signals) {
-            const bits = display.inputs.map(id =>
-                signals.levels.get(signals.root(id)) ?? null
-            );
-            // Offene oder widerspruechliche Eingaenge bleiben dunkel.
-            if (bits.every(bit => bit === 0 || bit === 1)) {
-                value = bits.reduce((number, bit, i) => number | (bit << i), 0);
+        if (!signals) {
+            // Ohne Versorgung erlischt die Anzeige; gespeicherter Wert wird gelöscht.
+            display.stored = null;
+        } else {
+            const read = id => signals.levels.get(signals.root(id)) ?? null;
+            const latch = read(display.latch);
+
+            if (latch === 0) {
+                // Transparent: Die Anzeige folgt den vier Binäreingängen.
+                const bits = display.inputs.map(read);
+                display.stored = bits.every(bit => bit === 0 || bit === 1)
+                    ? bits.reduce((number, bit, i) => number | (bit << i), 0)
+                    : null;
+            } else if (latch === null) {
+                // E ist offen/undefiniert: Anzeige dunkel, kein gültiger Latch-Zustand.
+                display.stored = null;
             }
+            // E=HIGH: Der zuletzt bei E=LOW übernommene Wert bleibt erhalten.
         }
-        const lit = value === null ? "" : hexSegmentPatterns[value];
+
+        const lit = display.stored === null ? "" : hexSegmentPatterns[display.stored];
         Object.entries(display.paths).forEach(([name, path]) => {
             path.setAttribute("opacity", lit.includes(name) ? "0.95" : "0");
         });
