@@ -1302,8 +1302,8 @@ function createSevenSegmentDisplay(indicator) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 100 160");
     svg.setAttribute("preserveAspectRatio", "none");
-    // Anzeige um 20 % verkleinern, Mittelpunkt beibehalten
-    svg.style.transform = "scale(0.80)";
+    // Anzeige um 30 % verkleinern, Mittelpunkt beibehalten
+    svg.style.transform = "scale(0.70)";
     svg.style.transformOrigin = "center center";
     Object.assign(svg.style, {
         position: "absolute", left: (indicator.x * 100) + "%",
