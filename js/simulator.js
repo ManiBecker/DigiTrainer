@@ -1026,6 +1026,14 @@ function buildWireNets() {
         const ids = supplyIds(prefix);
         for (let i = 1; i < ids.length; i++) join(ids[0], ids[i]);
     }
+    // Fuenf passive Verteilerschienen L0 bis L4.
+    // Jeweils vier Buchsen sind intern miteinander verbunden;
+    // die Schienen bleiben untereinander und von VCC/GND getrennt.
+    for (let rail = 0; rail <= 4; rail++) {
+        const ids = hotspots.map(h => h.id)
+            .filter(id => new RegExp("^l" + rail + "_[1-4]$").test(id));
+        for (let i = 1; i < ids.length; i++) join(ids[0], ids[i]);
+    }
     wireConnections.forEach(w => join(w.from, w.to));
     norGatesIC0.forEach(g => {
         root(g.a); root(g.b); root(g.y);
