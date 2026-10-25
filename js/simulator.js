@@ -56,6 +56,9 @@ function refreshClockGenerator() {
 const switchLeds = [];
 const outputLeds = [];
 const sevenSegmentDisplays = [];
+// SN74LS293N: QA ist ein 1-Bit-Teiler, QB/QC/QD ein 3-Bit-Zaehler.
+// Beide Stufen reagieren auf fallende Taktflanken.
+const counter293 = { a: 0, b: 0, prevA: null, prevB: null };
 const wireConnections = []; // Verbindungen zwischen Buchsen-IDs
 let boardLoaded = false;
 
@@ -1038,6 +1041,8 @@ function buildWireNets() {
         display.inputs.forEach(id => root(id));
         if (display.latch) root(display.latch);
     });
+    ["ctr-RO0", "ctr-RO1", "ctr-CKA", "ctr-CKB",
+     "ctr-QA", "ctr-QB", "ctr-QC", "ctr-QD"].forEach(root);
     switches.forEach(control => {
         if (control.type === "switch" && control.output) {
             root(control.output);
@@ -1092,6 +1097,7 @@ function updateWireColors() {
 function checkWiringConflict() {
     const { nets } = buildWireNets();
     const gateOutputs = new Set([...norGatesIC0, ...notGatesIC1, ...andGatesIC2, ...xorGatesIC3, ...nandGatesIC4, ...notGatesIC5].map(gate => gate.y));
+    ["ctr-QA", "ctr-QB", "ctr-QC", "ctr-QD"].forEach(id => gateOutputs.add(id));
     gateOutputs.add("clk-out");
     gateOutputs.add("clk-out-not");
     const switchOutputs = new Set();
@@ -1142,6 +1148,12 @@ function resolveSignals() {
     // +5 V = HIGH, GND = LOW. Bei Kurzschluss bleibt der Pegel unbestimmt.
     supplyIds("vcc").forEach(id => drive(id, 1));
     supplyIds("gnd").forEach(id => drive(id, 0));
+
+    // Zaehlerausgaenge treiben ihre Buchsen auch ohne externe Verdrahtung.
+    drive("ctr-QA", counter293.a);
+    drive("ctr-QB", counter293.b & 1);
+    drive("ctr-QC", (counter293.b >> 1) & 1);
+    drive("ctr-QD", (counter293.b >> 2) & 1);
 
     switches.forEach(control => {
         if (control.type !== "switch" || !control.output) return;
@@ -1382,7 +1394,52 @@ function updateSevenSegmentDisplays(signals) {
     });
 }
 
+// Einen Simulationsschritt des SN74LS293N auswerten.
+// R0(1) und R0(2) gemeinsam HIGH setzen den Zaehler asynchron zurueck.
+function updateCounter293(signals) {
+    if (!signals) {
+        counter293.a = 0;
+        counter293.b = 0;
+        counter293.prevA = null;
+        counter293.prevB = null;
+        return;
+    }
+    const read = id => signals.levels.get(signals.root(id)) ?? null;
+    const reset = read("ctr-RO0") === 1 && read("ctr-RO1") === 1;
+    if (reset) {
+        counter293.a = 0;
+        counter293.b = 0;
+        // Bei Reset keine Flanke nachholen.
+        counter293.prevA = read("ctr-CKA");
+        counter293.prevB = read("ctr-CKB");
+        return;
+    }
+
+    const aClock = read("ctr-CKA");
+    const bClock = read("ctr-CKB");
+    const fallingA = counter293.prevA === 1 && aClock === 0;
+    let fallingB = counter293.prevB === 1 && bClock === 0;
+    if (fallingA) {
+        const oldA = counter293.a;
+        counter293.a ^= 1;
+        // QA->CKB ist die uebliche Kaskadierung zum 4-Bit-Zaehler.
+        if (oldA === 1 && counter293.a === 0 &&
+            signals.root("ctr-QA") === signals.root("ctr-CKB")) {
+            fallingB = true;
+        }
+    }
+    if (fallingB) counter293.b = (counter293.b + 1) & 7;
+    // Nur definierte Pegel als neue Flankenbasis akzeptieren.
+    counter293.prevA = aClock;
+    counter293.prevB = signals.root("ctr-QA") === signals.root("ctr-CKB")
+        ? counter293.a : bClock;
+}
+
 function updateOutputLeds() {
+    // Vorherigen Zustand lesen, Taktflanken verarbeiten, dann neue
+    // Zaehlerausgaenge fuer LEDs, Gatter und 7-Segment erneut aufloesen.
+    const before = powerOn ? resolveSignals() : null;
+    updateCounter293(before);
     const signals = powerOn ? resolveSignals() : null;
     updateSevenSegmentDisplays(signals);
     outputLeds.forEach(function (led) {
