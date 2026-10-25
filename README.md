@@ -2,6 +2,12 @@
 
 **A web-based simulator of the ITT Digi-Trainer 2 digital electronics training system.**
 
+<a href="https://manibecker.github.io/DigiTrainer/">
+  <img src="images/digitrainer-0.58.jpg"
+       alt="DigiTrainer Live-Demo"
+       width="800">
+</a>
+
 Der **DigiTrainer** ist ein browserbasierter Simulator des historischen **ITT Digi-Trainer 2**, eines Lehr- und Experimentiersystems für digitale Elektronik.
 
 Ziel des Projekts ist es, die Funktionen und Experimente des Originals möglichst realitätsnah am Bildschirm nachzubilden. Dazu gehören Schalter, LEDs, Steckbuchsen, Patchkabel und verschiedene digitale Logikbausteine.
