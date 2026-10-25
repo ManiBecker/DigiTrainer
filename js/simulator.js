@@ -59,6 +59,13 @@ const sevenSegmentDisplays = [];
 // SN74LS293N: QA ist ein 1-Bit-Teiler, QB/QC/QD ein 3-Bit-Zaehler.
 // Beide Stufen reagieren auf fallende Taktflanken.
 const counter293 = { a: 0, b: 0, prevA: null, prevB: null };
+// NE5037N: einfaches zeitdiskretes 6-Bit-ADC-Modell.
+// Annahme fuer die unbekannte DigiTrainer-Platinenbeschaltung:
+// I' = VREF, I = VIN, Massebuchse = AGND/DGND, CS intern LOW.
+// 0V/5V werden aus den Versorgungsschienen abgeleitet.
+const adc5037 = { busy: false, ready: false, cycles: 0,
+    value: 0, sample: null, prevStart: null, prevClock: null }; 
+const adc5037Outputs = Array.from({length: 6}, (_, i) => "adc-Q" + i);
 const wireConnections = []; // Verbindungen zwischen Buchsen-IDs
 let boardLoaded = false;
 
@@ -1045,6 +1052,8 @@ function buildWireNets() {
      "ctr-QA", "ctr-QB", "ctr-QC", "ctr-QD"].forEach(root);
     // Fest eingebauter SN74LS382N: ALU-Buchsen als Netzknoten registrieren.
     [...alu382Inputs, ...alu382Outputs].forEach(root);
+    ["adc-I'", "adc-I", "adc-a-gnd", "adc-clk", "adc-st", "adc-oe", "adc-EOC",
+     ...adc5037Outputs].forEach(root);
     switches.forEach(control => {
         if (control.type === "switch" && control.output) {
             root(control.output);
@@ -1101,6 +1110,8 @@ function checkWiringConflict() {
     const gateOutputs = new Set([...norGatesIC0, ...notGatesIC1, ...andGatesIC2, ...xorGatesIC3, ...nandGatesIC4, ...notGatesIC5].map(gate => gate.y));
     ["ctr-QA", "ctr-QB", "ctr-QC", "ctr-QD"].forEach(id => gateOutputs.add(id));
     alu382Outputs.forEach(id => gateOutputs.add(id));
+    adc5037Outputs.forEach(id => gateOutputs.add(id));
+    gateOutputs.add("adc-EOC");
     gateOutputs.add("clk-out");
     gateOutputs.add("clk-out-not");
     const switchOutputs = new Set();
@@ -1191,6 +1202,11 @@ function resolveSignals() {
     drive("ctr-QB", counter293.b & 1);
     drive("ctr-QC", (counter293.b >> 1) & 1);
     drive("ctr-QD", (counter293.b >> 2) & 1);
+    // ADC-Datenbus: OE LOW schaltet die Ausgaenge frei (sonst hochohmig).
+    // EOC LOW meldet fertig; bei OE LOW wird EOC wieder HIGH.
+    if (adc5037.ready) {
+        // OE wird unten aus den geloesten Pegeln gelesen (zweiter Durchlauf).
+    }
 
     switches.forEach(control => {
         if (control.type !== "switch" || !control.output) return;
@@ -1322,6 +1338,23 @@ function resolveSignals() {
             if (!drivers.has(key)) drivers.set(key, new Set());
             drivers.get(key).add(1 - input);
         });
+        // NE5037N: Daten erst nach abgeschlossener Wandlung und OE=LOW.
+        // EOC wird bei OE=LOW quittiert (HIGH); ansonsten LOW bei fertig.
+        if (!supplyShort) {
+            const adcRead = id => previous.get(root(id)) ?? null;
+            const oe = adcRead("adc-oe");
+            if (adc5037.ready && oe === 0) {
+                adc5037Outputs.forEach((id, bit) => {
+                    const key = root(id);
+                    if (!drivers.has(key)) drivers.set(key, new Set());
+                    drivers.get(key).add((adc5037.value >> bit) & 1);
+                });
+            }
+            const eoc = adc5037.ready && oe !== 0 ? 0 : 1;
+            const key = root("adc-EOC");
+            if (!drivers.has(key)) drivers.set(key, new Set());
+            drivers.get(key).add(eoc);
+        }
         // ALU mit den Pegeln der vorherigen Iteration auswerten.
         // Dadurch sind auch vorgeschaltete Logikgatter nutzbar.
         if (!supplyShort) {
@@ -1487,11 +1520,59 @@ function updateCounter293(signals) {
         ? counter293.a : bClock;
 }
 
+// Analogmodell: nur feste 0-V-/5-V-Quellen. Nicht angeschlossen = ungueltig.
+// Bei VREF=5V liegt der Referenzwert ausserhalb des empfohlenen
+// Genauigkeitsbereichs (1,5..2,5V), ist aber als Lehrmodell verwendbar.
+function adc5037Voltage(signals, id) {
+    if (!signals) return null;
+    const net = signals.root(id);
+    const onVcc = supplyIds("vcc").some(x => signals.root(x) === net);
+    const onGnd = supplyIds("gnd").some(x => signals.root(x) === net);
+    if (onVcc && !onGnd) return 5;
+    if (onGnd && !onVcc) return 0;
+    return null;
+}
+function updateAdc5037(signals) {
+    if (!signals) {
+        Object.assign(adc5037, {busy:false, ready:false, cycles:0,
+            value:0, sample:null, prevStart:null, prevClock:null});
+        return;
+    }
+    const read = id => signals.levels.get(signals.root(id)) ?? null;
+    const start = read("adc-st");
+    const clock = read("adc-clk");
+    // Negative START-Flanke startet die Wandlung. CS wird auf dem
+    // Originalboard vorlaeufig als fest aktiv (LOW) angenommen.
+    if (adc5037.prevStart === 1 && start === 0) {
+        const vin = adc5037Voltage(signals, "adc-I");
+        const vref = adc5037Voltage(signals, "adc-I'");
+        const gnd = adc5037Voltage(signals, "adc-a-gnd");
+        adc5037.sample = vin !== null && vref !== null && vref > 0 && gnd === 0
+            ? Math.max(0, Math.min(63, Math.floor(vin / vref * 64))) : null;
+        adc5037.busy = true;
+        adc5037.ready = false;
+        adc5037.cycles = 0;
+    }
+    if (adc5037.busy && adc5037.prevClock === 1 && clock === 0) {
+        adc5037.cycles++;
+        if (adc5037.cycles >= 9) {
+            adc5037.busy = false;
+            if (adc5037.sample !== null) {
+                adc5037.value = adc5037.sample;
+                adc5037.ready = true;
+            }
+        }
+    }
+    if (start === 0 || start === 1) adc5037.prevStart = start;
+    if (clock === 0 || clock === 1) adc5037.prevClock = clock;
+}
+
 function updateOutputLeds() {
     // Vorherigen Zustand lesen, Taktflanken verarbeiten, dann neue
     // Zaehlerausgaenge fuer LEDs, Gatter und 7-Segment erneut aufloesen.
     const before = powerOn ? resolveSignals() : null;
     updateCounter293(before);
+    updateAdc5037(before);
     const signals = powerOn ? resolveSignals() : null;
     updateSevenSegmentDisplays(signals);
     outputLeds.forEach(function (led) {
