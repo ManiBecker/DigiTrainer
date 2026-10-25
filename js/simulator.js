@@ -492,19 +492,35 @@ board.addEventListener("pointerup", function (event) {
 
             updateWirePath(currentWire, end.x, end.y);
 
-            // Erst probeweise elektrisch verbinden. Bei einem Kurzschluss
-            // oder mehreren treibenden Ausgaengen wird das Kabel verworfen.
-            wireConnections.push({ from: startHotspot.id, to: endHotspot.id, path: currentWire });
-            const wiringError = checkWiringConflict();
-            if (wiringError) {
-                wireConnections.pop();
+            // Dieselbe Verbindung erneut ziehen entfernt das vorhandene Kabel.
+            // Die Richtung der Verbindung spielt dabei keine Rolle.
+            const existingIndex = wireConnections.findIndex(wire =>
+                (wire.from === startHotspot.id && wire.to === endHotspot.id) ||
+                (wire.from === endHotspot.id && wire.to === startHotspot.id)
+            );
+
+            if (existingIndex !== -1) {
+                const existingWire = wireConnections.splice(existingIndex, 1)[0];
+                if (existingWire.path) existingWire.path.remove();
                 currentWire.remove();
-                statusMessage.textContent = wiringError;
-            } else {
                 updateWireColors();
                 updateOutputLeds();
                 statusMessage.textContent =
-                    startHotspot.label + " -> " + endHotspot.label;
+                    "Cable removed: " + startHotspot.label + " - " + endHotspot.label;
+            } else {
+                // Neue Verbindung probeweise anlegen und elektrisch pruefen.
+                wireConnections.push({ from: startHotspot.id, to: endHotspot.id, path: currentWire });
+                const wiringError = checkWiringConflict();
+                if (wiringError) {
+                    wireConnections.pop();
+                    currentWire.remove();
+                    statusMessage.textContent = wiringError;
+                } else {
+                    updateWireColors();
+                    updateOutputLeds();
+                    statusMessage.textContent =
+                        startHotspot.label + " -> " + endHotspot.label;
+                }
             }
         } else {
             currentWire.remove();
