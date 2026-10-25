@@ -5,7 +5,8 @@
 <a href="https://manibecker.github.io/DigiTrainer/">
   <img src="images/digitrainer-v0.58.jpg"
        alt="DigiTrainer Live-Demo"
-       width="800">
+       width="800"
+       style="max-width: 100%; height: auto;">
 </a>
 
 Der **DigiTrainer** ist ein browserbasierter Simulator des historischen **ITT Digi-Trainer 2**, eines Lehr- und Experimentiersystems für digitale Elektronik.
