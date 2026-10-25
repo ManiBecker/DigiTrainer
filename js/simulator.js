@@ -1043,6 +1043,8 @@ function buildWireNets() {
     });
     ["ctr-RO0", "ctr-RO1", "ctr-CKA", "ctr-CKB",
      "ctr-QA", "ctr-QB", "ctr-QC", "ctr-QD"].forEach(root);
+    // Fest eingebauter SN74LS382N: ALU-Buchsen als Netzknoten registrieren.
+    [...alu382Inputs, ...alu382Outputs].forEach(root);
     switches.forEach(control => {
         if (control.type === "switch" && control.output) {
             root(control.output);
@@ -1098,6 +1100,7 @@ function checkWiringConflict() {
     const { nets } = buildWireNets();
     const gateOutputs = new Set([...norGatesIC0, ...notGatesIC1, ...andGatesIC2, ...xorGatesIC3, ...nandGatesIC4, ...notGatesIC5].map(gate => gate.y));
     ["ctr-QA", "ctr-QB", "ctr-QC", "ctr-QD"].forEach(id => gateOutputs.add(id));
+    alu382Outputs.forEach(id => gateOutputs.add(id));
     gateOutputs.add("clk-out");
     gateOutputs.add("clk-out-not");
     const switchOutputs = new Set();
@@ -1127,6 +1130,40 @@ function checkWiringConflict() {
         }
     }
     return null;
+}
+
+// SN74LS382N: fest eingebaute 4-Bit-ALU auf dem DigiTrainer.
+const alu382Inputs = ["alu-S0", "alu-S1", "alu-S2", "alu-Cn",
+    ...Array.from({length: 4}, (_, i) => "alu-A" + i),
+    ...Array.from({length: 4}, (_, i) => "alu-B" + i)];
+const alu382Outputs = ["alu-F0", "alu-F1", "alu-F2", "alu-F3", "alu-OVR", "alu-Cn4"];
+
+// Alle Eingangssignale müssen definiert sein. Cn ist bei der Addition
+// der Übertrag und bei der Subtraktion der invertierte Borrow-Eingang.
+function calculateAlu382(read) {
+    const selectBits = ["alu-S0", "alu-S1", "alu-S2"].map(read);
+    if (selectBits.some(bit => bit !== 0 && bit !== 1)) return null;
+    const mode = selectBits[0] | (selectBits[1] << 1) | (selectBits[2] << 2);
+    if (mode === 0 || mode === 7) return { f: mode === 0 ? 0 : 15, carry: 0, overflow: 0 };
+    const aBits = [0,1,2,3].map(i => read("alu-A" + i));
+    const bBits = [0,1,2,3].map(i => read("alu-B" + i));
+    if ([...aBits, ...bBits].some(bit => bit !== 0 && bit !== 1)) return null;
+    const a = aBits.reduce((v, bit, i) => v | (bit << i), 0);
+    const b = bBits.reduce((v, bit, i) => v | (bit << i), 0);
+    if (mode >= 4) {
+        const f = mode === 4 ? a ^ b : mode === 5 ? a | b : a & b;
+        return { f, carry: 0, overflow: 0 };
+    }
+    const cin = read("alu-Cn");
+    if (cin !== 0 && cin !== 1) return null;
+    // Subtraktion: X - Y = X + (~Y & 15) + Cn; Cn=1: ohne Borrow.
+    const x = mode === 1 ? b : a;
+    const y = mode === 1 ? a : b;
+    const operand2 = mode === 3 ? b : (~y & 15);
+    const sum = x + operand2 + cin;
+    const carry = (sum >> 4) & 1;
+    const carryIntoMsb = ((x & 7) + (operand2 & 7) + cin) >> 3;
+    return { f: sum & 15, carry, overflow: carryIntoMsb ^ carry };
 }
 
 // 0 = LOW, 1 = HIGH, null = unbestimmt (z.B. offener Eingang).
@@ -1285,6 +1322,21 @@ function resolveSignals() {
             if (!drivers.has(key)) drivers.set(key, new Set());
             drivers.get(key).add(1 - input);
         });
+        // ALU mit den Pegeln der vorherigen Iteration auswerten.
+        // Dadurch sind auch vorgeschaltete Logikgatter nutzbar.
+        if (!supplyShort) {
+            const readAlu = id => previous.get(root(id)) ?? null;
+            const result = calculateAlu382(readAlu);
+            if (result !== null) {
+                const bits = [0, 1, 2, 3].map(i => (result.f >> i) & 1);
+                const values = [...bits, result.overflow, result.carry];
+                alu382Outputs.forEach((id, index) => {
+                    const key = root(id);
+                    if (!drivers.has(key)) drivers.set(key, new Set());
+                    drivers.get(key).add(values[index]);
+                });
+            }
+        }
         levels.clear();
         for (const key of nets.keys()) {
             const values = drivers.get(key);
