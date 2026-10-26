@@ -39,13 +39,16 @@ Der aktuelle Entwicklungsstand kann direkt im Browser ausprobiert werden:
 - Simulation der Schalter- und Ausgangs-LEDs D0–D7
 - Mehr als 200 definierte Steckbuchsen (Hotspots)
 - Patchkabel durch Ziehen zwischen zwei Buchsen stecken
+- Einzelne Patchkabel durch erneutes Ziehen derselben Verbindung entfernen
+- Die Steckrichtung ist dabei unerheblich: A → B entspricht B → A
 - Grafische Darstellung der Kabel mit leichtem Durchhang
 - Elektrische Auswertung der gesteckten Verbindungen
 - Gemeinsame +5-V- und GND-Versorgungsschienen
+- Fünf passive Verbindungsschienen L0–L4 mit jeweils vier elektrisch verbundenen Buchsen
 - Erkennung von Kurzschlüssen und Ausgangskonflikten
 - Anzeige von Anschlussbezeichnungen und IC-Pinfunktionen
 
-Die Verdrahtung erfolgt bei ausgeschaltetem DigiTrainer. Nach dem Einschalten können die Schalter betätigt und die logischen Zustände beobachtet werden.
+Die Verdrahtung und das Entfernen von Patchkabeln erfolgen bei ausgeschaltetem DigiTrainer. Nach dem Einschalten können die Schalter betätigt und die logischen Zustände beobachtet werden.
 
 ### Digitale Logikbausteine
 
@@ -120,6 +123,23 @@ Unterstützt werden arithmetische und logische Operationen, darunter Addition, S
 
 Das Ergebnis wurde über Patchkabel an die 7-Segment-Anzeige übertragen und dort korrekt dargestellt.
 
+### 6-Bit-A/D-Wandler – NE5037N (experimentell)
+
+Der integrierte **NE5037N** ist inzwischen als vereinfachtes Modell eines 6-Bit-Analog-Digital-Wandlers implementiert.
+
+- Berücksichtigung des analogen Eingangssignals im vereinfachten Simulationsmodell
+- Sechs digitale Ausgänge Q0–Q5
+- Start-, Takt- und Freigabesignale
+- Wandlungsablauf über mehrere Taktzyklen
+- Darstellung des Wandlungsergebnisses über die Ausgangs-LEDs
+
+**Erfolgreich getestete Grenzwerte:**
+
+- 0 V am Eingang → `000000`
+- +5 V am Eingang → `111111`
+
+Die Modellierung ist noch **experimentell**. Insbesondere die tatsächliche analoge Beschaltung des Originalgeräts, Zwischenwerte und zeitliche Details müssen weiter untersucht und verifiziert werden.
+
 ## 🔍 Zoom und Vollbild
 
 - Zoom von 100 % bis 400 %
@@ -144,7 +164,8 @@ Im Vermessungsmodus lassen sich Positionen und rechteckige Bereiche auf der Plat
 | Aktion | Funktion |
 |---|---|
 | Hauptschalter | DigiTrainer ein- oder ausschalten |
-| Ziehen von Buchse zu Buchse | Patchkabel stecken |
+| Ziehen von Buchse A zu Buchse B | Patchkabel stecken |
+| Erneutes Ziehen zwischen denselben Buchsen | Vorhandenes Patchkabel entfernen (auch B → A) |
 | Schiebeschalter anklicken | Logischen Zustand ändern |
 | Taktgenerator bedienen | Manuellen oder automatischen Takt erzeugen |
 | M | Vermessungsmodus umschalten |
@@ -153,6 +174,8 @@ Im Vermessungsmodus lassen sich Positionen und rechteckige Bereiche auf der Plat
 | Mausrad | Zoom am Mauszeiger |
 | Zwei-Finger-Geste | Zoom auf Touchscreens |
 | Vollbild | Vollbildmodus aktivieren oder beenden |
+
+**Hinweis:** Patchkabel lassen sich nur bei ausgeschaltetem DigiTrainer stecken oder entfernen.
 
 ## 🛠 Technische Umsetzung
 
@@ -172,6 +195,7 @@ DigiTrainer/
 │       ├── board.jpg
 │       └── board.json
 └── images/
+    ├── digitrainer-v0.58.jpg
     └── digitrainer-qr.jpg
 ```
 
@@ -183,9 +207,9 @@ Die Aufgaben der einzelnen Dateien:
 - `boards/itt-digitrainer2/board.jpg` – Foto des Originalgeräts
 - `boards/itt-digitrainer2/board.json` – Positionen und Definitionen der Steckbuchsen, Schalter und LEDs
 
-Die Simulation arbeitet mit einem Verbindungsmodell, das die über Patchkabel zusammengeschalteten Anschlüsse zu elektrischen Netzen zusammenfasst.
+Die Simulation arbeitet mit einem Verbindungsmodell, das die über Patchkabel zusammengeschalteten Anschlüsse zu elektrischen Netzen zusammenfasst. Dazu gehören auch die passiven Verbindungsschienen L0–L4.
 
-Auf dieser Grundlage werden die Eingangssignale, Logikfunktionen und Ausgangszustände berechnet.
+Auf dieser Grundlage werden die Eingangssignale, Logikfunktionen und Ausgangszustände berechnet. Bei Änderungen der Verdrahtung wird die Netzstruktur neu ausgewertet.
 
 Der Schwerpunkt liegt derzeit auf dem logischen Verhalten der Schaltungen. Analoge Eigenschaften wie reale Signallaufzeiten, Stromaufnahme oder elektrische Belastbarkeit werden nicht vollständig nachgebildet.
 
@@ -193,30 +217,30 @@ Das Projekt wird über **GitHub Pages** bereitgestellt.
 
 ## 📋 Geplante Erweiterungen
 
-- A/D-Wandler NE5037N (6 Bit)
-- Untersuchung und Simulation des Widerstandsnetzwerks
-- Bereits gesteckte Patchkabel einzeln entfernen
+- Untersuchung und Simulation des Widerstandsnetzwerks R0–R7
+- Verfeinerung und Validierung des analogen Modells des NE5037N
+- Farbliche Kennzeichnung der logischen Pegel (HIGH/LOW/undefiniert) an den Steckbuchsen
+- Optionaler virtueller Signalprüfer oder digitales Oszilloskop
 - Schaltungen beziehungsweise Verdrahtungen speichern und wieder laden
 - Experimente aus dem originalen ITT-Lehrmaterial nachbilden
 - Weitere Verbesserungen der elektrischen Simulation
 - Ergänzung von Beispielschaltungen und Bedienungshinweisen
 
-Besonders der **NE5037N** stellt eine interessante Herausforderung dar, da für seine Simulation neben digitalen Signalen auch analoge Spannungswerte berücksichtigt werden müssen.
-
 ## 📌 Projektstatus
 
-**Work in Progress – Stand Oktober 2026**
+**Work in Progress – Version 0.61, Oktober 2026**
 
-Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind implementiert.
-
-Darüber hinaus funktionieren inzwischen:
+Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind implementiert. Darüber hinaus wurden folgende Funktionen bereits in grundlegenden Funktionstests erprobt:
 
 - Taktgenerator
 - 4-Bit-Binärzähler SN74LS293N
 - 7-Segment-Anzeige mit MC14495P
-- 4-Bit-ALU SN74LS382N
+- 4-Bit-ALU SN74LS382N (unter anderem Test `3 + 2 = 5`)
+- Experimenteller 6-Bit-A/D-Wandler NE5037N (Grenzwerte 0 V und +5 V)
+- Passive Verbindungsschienen L0–L4
+- Gezieltes Entfernen einzelner Patchkabel durch erneutes Ziehen der Verbindung
 
-Der A/D-Wandler und weitere Funktionen befinden sich noch in Planung.
+Die wesentlichen digitalen Funktionsgruppen des Originalgeräts sind damit im Simulator abgebildet. Einige Details – insbesondere die analoge Beschaltung, das Widerstandsnetzwerk und das Verhalten bei Grenzfällen – müssen noch weiter untersucht werden.
 
 Der DigiTrainer ist ein privates Hobby- und Lernprojekt. Die Simulation wird schrittweise erweitert und erhebt noch keinen Anspruch auf vollständige elektrische Genauigkeit.
 
