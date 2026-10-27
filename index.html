@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DigiTrainer v0.61</title>
+<title>DigiTrainer v0.62</title>
 <link rel="stylesheet" href="css/digitrainer.css">
 </head>
 <body>
 <main class="app">
-<h1>DigiTrainer v0.61</h1>
+<h1>DigiTrainer v0.62</h1>
 <div id="visitor-counter">
   Besuche seit 26.10.2026:
   <span id="visitor-count">–</span>
@@ -29,6 +29,7 @@ fetch("https://digitrainer.goatcounter.com/counter//DigiTrainer.json")
   <button class="zoom-in" type="button" title="Vergrößern">+</button>
   <button class="zoom-reset" type="button">Zurücksetzen</button>
   <button class="mode-toggle" type="button" aria-pressed="false">Mode: Wiring</button>
+  <button class="help-toggle" type="button" aria-haspopup="dialog" aria-controls="help-dialog">Hilfe ?</button>
   <button class="fullscreen-toggle" type="button">Vollbild</button>
 </div>
 <button class="pseudo-fullscreen-exit" type="button" aria-label="Pseudo-Vollbild beenden">Vollbild beenden</button>
@@ -45,6 +46,23 @@ fetch("https://digitrainer.goatcounter.com/counter//DigiTrainer.json")
   <span class="coordinates">X: -- &nbsp; Y: --</span>
 </div>
 </main>
+<dialog id="help-dialog" aria-labelledby="help-title">
+  <div class="help-header">
+    <strong id="help-title">DigiTrainer – Online-Hilfe</strong>
+    <button type="button" id="help-close" aria-label="Hilfe schließen">✕</button>
+  </div>
+  <iframe class="help-frame" src="help.html" title="DigiTrainer Bedienungsanleitung"></iframe>
+</dialog>
+<script>
+(() => {
+  const dialog = document.getElementById('help-dialog');
+  const open = document.querySelector('.help-toggle');
+  const close = document.getElementById('help-close');
+  open.addEventListener('click', () => dialog.showModal());
+  close.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+})();
+</script>
 <script src="js/simulator.js?v=5"></script>
 <!-- GoatCounter Besucherstatistik -->
 <script data-goatcounter="https://digitrainer.goatcounter.com/count"
