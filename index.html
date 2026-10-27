@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DigiTrainer v0.62</title>
+<title>DigiTrainer v0.63</title>
 <link rel="stylesheet" href="css/digitrainer.css">
 </head>
 <body>
 <main class="app">
-<h1>DigiTrainer v0.62</h1>
+<h1>DigiTrainer v0.63</h1>
 <div id="visitor-counter">
   Besuche seit 26.10.2026:
   <span id="visitor-count">–</span>
@@ -29,6 +29,7 @@ fetch("https://digitrainer.goatcounter.com/counter//DigiTrainer.json")
   <button class="zoom-in" type="button" title="Vergrößern">+</button>
   <button class="zoom-reset" type="button">Zurücksetzen</button>
   <button class="mode-toggle" type="button" aria-pressed="false">Mode: Wiring</button>
+  <label class="debug-toggle" title="Pegelanzeige auf Kabeln und gelben Feldern"><input type="checkbox" id="debug-toggle"> Debug</label>
   <button class="help-toggle" type="button" aria-haspopup="dialog" aria-controls="help-dialog">Hilfe ?</button>
   <button class="fullscreen-toggle" type="button">Vollbild</button>
 </div>
@@ -63,7 +64,7 @@ fetch("https://digitrainer.goatcounter.com/counter//DigiTrainer.json")
   dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
 })();
 </script>
-<script src="js/simulator.js?v=5"></script>
+<script src="js/simulator.js?v=63"></script>
 <!-- GoatCounter Besucherstatistik -->
 <script data-goatcounter="https://digitrainer.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>
