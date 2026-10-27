@@ -631,7 +631,7 @@ function drawWire(x1, y1, x2, y2) {
     path.setAttribute("data-measure", measureMode ? "true" : "false");
     path.setAttribute("fill", "none");
     path.setAttribute("stroke", measureMode ? "#FF3030" : "#39FF14");
-    path.setAttribute("stroke-width", String(3 * zoom));
+    path.setAttribute("stroke-width", path.getAttribute("data-measure") === "true" ? "1" : String(3 * zoom));
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
     updateWirePath(path, x2, y2);
@@ -1644,7 +1644,7 @@ let pinchStart = null;
 // must be adjusted explicitly when the board is resized.
 function refreshWireWidths() {
     wiringLayer.querySelectorAll("path").forEach(function (path) {
-        path.setAttribute("stroke-width", String(3 * zoom));
+        path.setAttribute("stroke-width", path.getAttribute("data-measure") === "true" ? "1" : String(3 * zoom));
     });
 }
 
