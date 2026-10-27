@@ -588,6 +588,12 @@ function updateWirePath(path, x2, y2) {
     path.setAttribute("x2", x2);
     path.setAttribute("y2", y2);
 
+    // Im Vermessungsmodus eine gerade Messlinie statt eines Kabelbogens zeichnen.
+    if (path.getAttribute("data-measure") === "true") {
+        path.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2}`);
+        return;
+    }
+
     if (length < 1) {
         path.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2}`);
         return;
@@ -617,8 +623,9 @@ function drawWire(x1, y1, x2, y2) {
     path.setAttribute("x1", x1);
     path.setAttribute("y1", y1);
     path.setAttribute("data-bend-side", wireConnections.length % 2 === 0 ? 1 : -1);
+    path.setAttribute("data-measure", measureMode ? "true" : "false");
     path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "#39FF14");
+    path.setAttribute("stroke", measureMode ? "#FF3030" : "#39FF14");
     path.setAttribute("stroke-width", String(3 * zoom));
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
