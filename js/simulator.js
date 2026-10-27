@@ -588,9 +588,14 @@ function updateWirePath(path, x2, y2) {
     path.setAttribute("x2", x2);
     path.setAttribute("y2", y2);
 
-    // Im Vermessungsmodus eine gerade Messlinie statt eines Kabelbogens zeichnen.
+    // Vermessungsmodus: rotes, achsenparalleles Rechteck von Start- bis Endpunkt.
+    // Die Verdrahtungsdarstellung bleibt unverändert.
     if (path.getAttribute("data-measure") === "true") {
-        path.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2}`);
+        const left = Math.min(x1, x2);
+        const top = Math.min(y1, y2);
+        const right = Math.max(x1, x2);
+        const bottom = Math.max(y1, y2);
+        path.setAttribute("d", `M ${left} ${top} H ${right} V ${bottom} H ${left} Z`);
         return;
     }
 
