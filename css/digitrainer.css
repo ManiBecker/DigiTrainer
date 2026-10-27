@@ -60,3 +60,9 @@ body.pseudo-fullscreen .statusbar { padding-bottom:max(5px, env(safe-area-inset-
 .help-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#303030; border-bottom:1px solid #555; font-size:1rem; }
 #help-close { background:#444; color:white; border:1px solid #777; border-radius:5px; padding:6px 11px; cursor:pointer; }
 .help-frame { display:block; width:100%; height:calc(100% - 51px); border:0; background:#242424; }
+
+/* v0.63: optionale Pegelvisualisierung */
+.debug-toggle { display:inline-flex; align-items:center; gap:5px; color:#eee; font-size:13px; padding:5px 9px; border:1px solid #777; border-radius:5px; background:#333; cursor:pointer; user-select:none; }
+.debug-toggle input { accent-color:#39ff14; cursor:pointer; }
+.logic-label-layer { position:absolute; inset:0; pointer-events:none; }
+.logic-label { position:absolute; display:flex; align-items:center; justify-content:center; color:#111; font-family:Arial,sans-serif; font-weight:800; line-height:1; pointer-events:none; }
