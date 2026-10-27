@@ -66,6 +66,54 @@ const counter293 = { a: 0, b: 0, prevA: null, prevB: null };
 const adc5037 = { busy: false, ready: false, cycles: 0,
     value: 0, sample: null, prevStart: null, prevClock: null }; 
 const adc5037Outputs = Array.from({length: 6}, (_, i) => "adc-Q" + i);
+// v0.63: rein optische Debug-Anzeige (keine Aenderung der Simulation).
+let debugEnabled = false;
+const logicLabels = [];
+const debugToggle = document.getElementById("debug-toggle");
+debugToggle.addEventListener("change", function () {
+    debugEnabled = debugToggle.checked;
+    updateOutputLeds();
+});
+const logicLabelLayer = document.createElement("div");
+logicLabelLayer.className = "logic-label-layer";
+boardArea.appendChild(logicLabelLayer);
+function createLogicLabels() {
+    if (logicLabels.length) return;
+    // Aufdruck-Felder direkt unter S0-S7 bzw. D0-D7 (normierte Board-Koordinaten).
+    for (let i = 0; i < 8; i++) {
+        const sw = switches.find(c => c.id === "switch" + i);
+        if (sw) addLogicLabel(sw.x + sw.width / 2, 0.944, 0.027, "switch", sw.id);
+        const led = outputLeds.find(l => l.input === "D" + i);
+        if (led) addLogicLabel(0.7566 + i * 0.02115, 0.944, 0.0185, "led", led.input);
+    }
+}
+function addLogicLabel(cx, cy, width, type, id) {
+    const el = document.createElement("div");
+    el.className = "logic-label";
+    Object.assign(el.style, {left: ((cx-width/2)*100)+"%", top: ((cy-0.015)*100)+"%",
+        width:(width*100)+"%", height:"3%", fontSize:"clamp(8px, 1.2vw, 18px)"});
+    logicLabelLayer.appendChild(el);
+    logicLabels.push({el, type, id});
+}
+function updateDebugView(signals) {
+    const visible = debugEnabled && powerOn;
+    logicLabels.forEach(item => {
+        let level = null;
+        if (visible && item.type === "switch") level = switchStates[item.id];
+        if (visible && item.type === "led" && signals) level = signals.levels.get(signals.root(item.id));
+        item.el.textContent = level === 0 || level === 1 ? String(level) : "";
+    });
+    wireConnections.forEach(wire => {
+        if (!wire.path) return;
+        let color = "#39FF14";
+        if (visible && signals) {
+            const level = signals.levels.get(signals.root(wire.from));
+            color = level === 1 ? "#FF3030" : level === 0 ? "#45A6FF" : "#999999";
+        }
+        wire.path.setAttribute("stroke", color);
+        if (wire.plugs) wire.plugs.forEach(plug => plug.setAttribute("fill", color));
+    });
+}
 const wireConnections = []; // Verbindungen zwischen Buchsen-IDs
 let boardLoaded = false;
 
@@ -502,6 +550,7 @@ board.addEventListener("pointerup", function (event) {
             if (existingIndex !== -1) {
                 const existingWire = wireConnections.splice(existingIndex, 1)[0];
                 if (existingWire.path) existingWire.path.remove();
+                if (existingWire.plugs) existingWire.plugs.forEach(plug => plug.remove());
                 currentWire.remove();
                 updateWireColors();
                 updateOutputLeds();
@@ -516,6 +565,8 @@ board.addEventListener("pointerup", function (event) {
                     currentWire.remove();
                     statusMessage.textContent = wiringError;
                 } else {
+                    const wire = wireConnections[wireConnections.length - 1];
+                    wire.plugs = [createWirePlug(currentWire, "x1", "y1"), createWirePlug(currentWire, "x2", "y2")];
                     updateWireColors();
                     updateOutputLeds();
                     statusMessage.textContent =
@@ -588,17 +639,6 @@ function updateWirePath(path, x2, y2) {
     path.setAttribute("x2", x2);
     path.setAttribute("y2", y2);
 
-    // Vermessungsmodus: rotes, achsenparalleles Rechteck von Start- bis Endpunkt.
-    // Die Verdrahtungsdarstellung bleibt unverändert.
-    if (path.getAttribute("data-measure") === "true") {
-        const left = Math.min(x1, x2);
-        const top = Math.min(y1, y2);
-        const right = Math.max(x1, x2);
-        const bottom = Math.max(y1, y2);
-        path.setAttribute("d", `M ${left} ${top} H ${right} V ${bottom} H ${left} Z`);
-        return;
-    }
-
     if (length < 1) {
         path.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2}`);
         return;
@@ -619,6 +659,18 @@ function updateWirePath(path, x2, y2) {
     );
 }
 
+function createWirePlug(path, xAttr, yAttr) {
+    const plug = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    plug.setAttribute("cx", path.getAttribute(xAttr));
+    plug.setAttribute("cy", path.getAttribute(yAttr));
+    plug.setAttribute("r", String(6 * zoom));
+    plug.setAttribute("fill", "#39FF14");
+    plug.setAttribute("stroke", "#202020");
+    plug.setAttribute("stroke-width", String(1.2 * zoom));
+    plug.style.pointerEvents = "none";
+    wiringLayer.appendChild(plug);
+    return plug;
+}
 function drawWire(x1, y1, x2, y2) {
     const path = document.createElementNS(
         "http://www.w3.org/2000/svg", "path"
@@ -628,10 +680,9 @@ function drawWire(x1, y1, x2, y2) {
     path.setAttribute("x1", x1);
     path.setAttribute("y1", y1);
     path.setAttribute("data-bend-side", wireConnections.length % 2 === 0 ? 1 : -1);
-    path.setAttribute("data-measure", measureMode ? "true" : "false");
     path.setAttribute("fill", "none");
-    path.setAttribute("stroke", measureMode ? "#FF3030" : "#39FF14");
-    path.setAttribute("stroke-width", path.getAttribute("data-measure") === "true" ? "1" : String(3 * zoom));
+    path.setAttribute("stroke", "#39FF14");
+    path.setAttribute("stroke-width", String(3 * zoom));
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
     updateWirePath(path, x2, y2);
@@ -740,6 +791,7 @@ fetch("boards/itt-digitrainer2/board.json")
                 createOutputLed(indicator);
             }
         });
+        createLogicLabels();
         updateSwitchLeds();
         updateOutputLeds();
 
@@ -1132,6 +1184,7 @@ function updateWireColors() {
             wire.path.style.filter = "none";
         }
     });
+    if (debugEnabled) updateDebugView(powerOn ? resolveSignals() : null);
 }
 
 // ------------------------------------------------------------
@@ -1619,6 +1672,7 @@ function updateOutputLeds() {
             ? "0 0 6px 3px rgba(255, 0, 0, 0.85), 0 0 12px 5px rgba(255, 0, 0, 0.35)"
             : "none";
     });
+    updateDebugView(signals);
 }
 
 window.addEventListener("blur", hideSocketTooltip);
@@ -1644,7 +1698,11 @@ let pinchStart = null;
 // must be adjusted explicitly when the board is resized.
 function refreshWireWidths() {
     wiringLayer.querySelectorAll("path").forEach(function (path) {
-        path.setAttribute("stroke-width", path.getAttribute("data-measure") === "true" ? "1" : String(3 * zoom));
+        path.setAttribute("stroke-width", String(3 * zoom));
+    });
+    wiringLayer.querySelectorAll("circle").forEach(function (plug) {
+        plug.setAttribute("r", String(6 * zoom));
+        plug.setAttribute("stroke-width", String(1.2 * zoom));
     });
 }
 
@@ -1659,6 +1717,12 @@ function refreshWireGeometry() {
         wire.path.setAttribute("x1", start.x);
         wire.path.setAttribute("y1", start.y);
         updateWirePath(wire.path, end.x, end.y);
+        if (wire.plugs) {
+            wire.plugs[0].setAttribute("cx", start.x);
+            wire.plugs[0].setAttribute("cy", start.y);
+            wire.plugs[1].setAttribute("cx", end.x);
+            wire.plugs[1].setAttribute("cy", end.y);
+        }
     });
 }
 
