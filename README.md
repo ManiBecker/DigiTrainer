@@ -3,7 +3,7 @@
 **A web-based simulator of the ITT Digi-Trainer 2 digital electronics training system.**
 
 <a href="https://manibecker.github.io/DigiTrainer/">
-  <img src="images/digitrainer-v0.61.jpg"
+  <img src="images/digitrainer-v0.64.jpg"
        alt="DigiTrainer Live-Demo"
        width="800"
        style="max-width: 100%; height: auto;">
@@ -140,6 +140,26 @@ Der integrierte **NE5037N** ist inzwischen als vereinfachtes Modell eines 6-Bit-
 
 Die Modellierung ist noch **experimentell**. Insbesondere die tatsächliche analoge Beschaltung des Originalgeräts, Zwischenwerte und zeitliche Details müssen weiter untersucht und verifiziert werden.
 
+## 💾 Projekte speichern und laden
+
+Ab **v0.64** lassen sich aufgebaute Schaltungen über den Button **Projekt** speichern und später wiederherstellen.
+
+- **Im Browser speichern:** Projekte unter einem frei wählbaren Namen im lokalen Browserspeicher (`localStorage`) ablegen, aus einer Liste laden oder löschen.
+- **Als Datei exportieren:** Die aktuelle Schaltung als lesbare **JSON-Datei** herunterladen.
+- **Datei importieren:** Eine zuvor exportierte JSON-Datei auswählen und die Schaltung wiederherstellen – auch auf einem anderen Rechner oder in einem anderen Browser.
+
+Gespeichert werden die Verbindungen zwischen den Steckbuchsen, die Stellungen der Schalter **S0–S7**, die Einstellungen **f** und **STOP** des Taktgenerators sowie die **Debug-Anzeige**. Die Dateien enthalten Buchsen-IDs und Schalterzustände, keine Bildschirmfotos.
+
+Beim Laden wird der DigiTrainer ausgeschaltet. Interne Laufzeitzustände der simulierten Bausteine, etwa ein aktueller Zählerstand, werden nicht gespeichert. Im Browser abgelegte Projekte sind an den jeweiligen Browser und die Website gebunden und können beim Löschen der Browserdaten verloren gehen. Für eine dauerhafte Sicherung empfiehlt sich der JSON-Export.
+
+Die Projektverwaltung wurde von **[Lutz (lschulze)](https://github.com/lschulze)** als erster externer Beitrag über **[Pull Request #1](https://github.com/ManiBecker/DigiTrainer/pull/1)** beigesteuert.
+
+## 🐞 Debug-Anzeige
+
+Über die Checkbox **Debug** lassen sich bei eingeschaltetem Gerät die logischen Zustände der Verdrahtung farblich anzeigen: **Rot** für HIGH (1), **Hellblau** für LOW (0) und **Hellgrau** für einen unbestimmten Zustand. Zusätzlich erscheinen die binären Zustände **0/1** unter den Schaltern S0–S7 und den Ausgangs-LEDs D0–D7.
+
+Ohne Debug-Anzeige bleiben die üblichen Kabelfarben für Versorgung und Verdrahtung erhalten.
+
 ## 🔍 Zoom und Vollbild
 
 - Zoom von 100 % bis 400 %
@@ -174,6 +194,8 @@ Im Vermessungsmodus lassen sich Positionen und rechteckige Bereiche auf der Plat
 | Mausrad | Zoom am Mauszeiger |
 | Zwei-Finger-Geste | Zoom auf Touchscreens |
 | Vollbild | Vollbildmodus aktivieren oder beenden |
+| Debug | Logikpegel und binäre Zustände ein- oder ausblenden |
+| Projekt | Schaltung im Browser speichern/laden oder als JSON-Datei exportieren/importieren |
 
 **Hinweis:** Patchkabel lassen sich nur bei ausgeschaltetem DigiTrainer stecken oder entfernen.
 
@@ -186,16 +208,18 @@ Die wichtigsten Projektdateien sind:
 ```text
 DigiTrainer/
 ├── index.html
+├── help.html
 ├── css/
 │   └── digitrainer.css
 ├── js/
-│   └── simulator.js
+│   ├── simulator.js
+│   └── projekt.js
 ├── boards/
 │   └── itt-digitrainer2/
 │       ├── board.jpg
 │       └── board.json
 └── images/
-    ├── digitrainer-v0.58.jpg
+    ├── digitrainer-v0.61.jpg
     └── digitrainer-qr.jpg
 ```
 
@@ -204,6 +228,8 @@ Die Aufgaben der einzelnen Dateien:
 - `index.html` – Benutzeroberfläche
 - `css/digitrainer.css` – Darstellung und Layout
 - `js/simulator.js` – Bedienung, Verdrahtung und elektrische Simulation
+- `js/projekt.js` – Projektverwaltung, Browserspeicher sowie JSON-Import und -Export
+- `help.html` – Bedienungshinweise und Hilfe
 - `boards/itt-digitrainer2/board.jpg` – Foto des Originalgeräts
 - `boards/itt-digitrainer2/board.json` – Positionen und Definitionen der Steckbuchsen, Schalter und LEDs
 
@@ -221,14 +247,13 @@ Das Projekt wird über **GitHub Pages** bereitgestellt.
 - Verfeinerung und Validierung des analogen Modells des NE5037N
 - Farbliche Kennzeichnung der logischen Pegel (HIGH/LOW/undefiniert) an den Steckbuchsen
 - Optionaler virtueller Signalprüfer oder digitales Oszilloskop
-- Schaltungen beziehungsweise Verdrahtungen speichern und wieder laden
 - Experimente aus dem originalen ITT-Lehrmaterial nachbilden
 - Weitere Verbesserungen der elektrischen Simulation
 - Ergänzung von Beispielschaltungen und Bedienungshinweisen
 
 ## 📌 Projektstatus
 
-**Work in Progress – Version 0.61, Oktober 2026**
+**Work in Progress – Version 0.64, Oktober 2026**
 
 Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind implementiert. Darüber hinaus wurden folgende Funktionen bereits in grundlegenden Funktionstests erprobt:
 
@@ -239,6 +264,9 @@ Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind 
 - Experimenteller 6-Bit-A/D-Wandler NE5037N (Grenzwerte 0 V und +5 V)
 - Passive Verbindungsschienen L0–L4
 - Gezieltes Entfernen einzelner Patchkabel durch erneutes Ziehen der Verbindung
+- Debug-Anzeige mit Logikpegeln und binären Zustandsanzeigen
+- Speichern und Laden mehrerer Projekte im Browser
+- Export und Import von Schaltungen als JSON-Dateien
 
 Die wesentlichen digitalen Funktionsgruppen des Originalgeräts sind damit im Simulator abgebildet. Einige Details – insbesondere die analoge Beschaltung, das Widerstandsnetzwerk und das Verhalten bei Grenzfällen – müssen noch weiter untersucht werden.
 
@@ -253,6 +281,8 @@ Ein besonderer Dank gilt **jobi23 aus dem Classic-Computing-Forum**, der Fotogra
 Ohne diese Bilder wäre die originalgetreue Darstellung des Geräts in dieser Form nicht möglich gewesen.
 
 Vielen Dank auch an die Mitglieder des Classic-Computing-Forums für die Anregungen und Diskussionen rund um dieses Projekt.
+
+Ein herzliches Dankeschön an **[Lutz (lschulze)](https://github.com/lschulze)** für die Entwicklung der Projektverwaltung mit Browserspeicher und JSON-Import/-Export – den ersten externen Pull Request für den DigiTrainer. Lutz hat dabei auch KI-Unterstützung durch Grok genutzt.
 
 ## 🔗 Links
 
