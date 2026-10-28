@@ -1362,11 +1362,23 @@ function resolveSignals() {
         vccIds.some(id => root("ic5-pin20") === root(id)) &&
         gndIds.some(id => root("ic5-pin7") === root(id));
 
+    // v0.65: Offene TTL-Eingaenge als HIGH interpretieren.
     // IC-Ausgänge iterativ auswerten: damit funktionieren auch
     // hintereinander geschaltete NOR-Gatter ohne Verzögerungsmodell.
-    // Ein unbekannter Eingang bleibt unbekannt. Sobald ein Eingang
-    // HIGH ist, ist der NOR-Ausgang jedoch sicher LOW.
+    // Offene TTL-Eingaenge werden lokal als HIGH gelesen.
+    // Das elektrische Netz selbst bleibt ungetrieben.
     let previous = new Map();
+    // Merkt, ob ein Netz in der vorherigen Runde aktiv getrieben wurde.
+    // Ein ungetriebenes Netz wird nur am TTL-Eingang als HIGH gelesen.
+    let previousDrivers = new Map();
+    function readTtlInput(id) {
+        const key = root(id);
+        const level = previous.has(key) ? previous.get(key) : null;
+        if (level === 0 || level === 1) return level;
+        // Konflikte zwischen Treibern bleiben undefiniert.
+        const drivers = previousDrivers.get(key);
+        return !drivers || drivers.size === 0 ? 1 : null;
+    }
     const maxIterations = 32;
     for (let i = 0; i < maxIterations; i++) {
         const drivers = new Map();
@@ -1374,8 +1386,8 @@ function resolveSignals() {
             drivers.set(key, new Set(values));
         }
         if (ic0Powered) norGatesIC0.forEach(gate => {
-            const a = previous.has(root(gate.a)) ? previous.get(root(gate.a)) : null;
-            const b = previous.has(root(gate.b)) ? previous.get(root(gate.b)) : null;
+            const a = readTtlInput(gate.a);
+            const b = readTtlInput(gate.b);
             let result = null;
             if (a === 1 || b === 1) result = 0;
             else if (a === 0 && b === 0) result = 1;
@@ -1385,10 +1397,9 @@ function resolveSignals() {
                 drivers.get(key).add(result);
             }
         });
-        // IC 1: Inverter – bei fehlender Versorgung oder unbekanntem
-        // Eingang wird kein definierter Ausgangspegel erzeugt.
+        // IC 1: Inverter – offener TTL-Eingang entspricht HIGH.
         if (ic1Powered) notGatesIC1.forEach(gate => {
-            const input = previous.has(root(gate.a)) ? previous.get(root(gate.a)) : null;
+            const input = readTtlInput(gate.a);
             if (input === null) return;
             const key = root(gate.y);
             if (!drivers.has(key)) drivers.set(key, new Set());
@@ -1397,8 +1408,8 @@ function resolveSignals() {
         // IC 2: AND – LOW an einem Eingang erzwingt LOW.
         // HIGH entsteht nur, wenn beide Eingänge HIGH sind.
         if (ic2Powered) andGatesIC2.forEach(gate => {
-            const a = previous.has(root(gate.a)) ? previous.get(root(gate.a)) : null;
-            const b = previous.has(root(gate.b)) ? previous.get(root(gate.b)) : null;
+            const a = readTtlInput(gate.a);
+            const b = readTtlInput(gate.b);
             let result = null;
             if (a === 0 || b === 0) result = 0;
             else if (a === 1 && b === 1) result = 1;
@@ -1411,18 +1422,18 @@ function resolveSignals() {
         // IC 3: XOR – HIGH genau dann, wenn die Eingänge verschieden sind.
         // Bei einem unbekannten Eingang bleibt der Ausgang unbekannt.
         if (ic3Powered) xorGatesIC3.forEach(gate => {
-            const a = previous.has(root(gate.a)) ? previous.get(root(gate.a)) : null;
-            const b = previous.has(root(gate.b)) ? previous.get(root(gate.b)) : null;
+            const a = readTtlInput(gate.a);
+            const b = readTtlInput(gate.b);
             if (a === null || b === null) return;
             const key = root(gate.y);
             if (!drivers.has(key)) drivers.set(key, new Set());
             drivers.get(key).add(a ^ b);
         });
         // IC 4: NAND – LOW nur bei zwei HIGH-Eingängen.
-        // Ein LOW-Eingang erzwingt HIGH; sonst bleibt ein offener Eingang unbekannt.
+        // Ein LOW-Eingang erzwingt HIGH; offene TTL-Eingaenge gelten als HIGH.
         if (ic4Powered) nandGatesIC4.forEach(gate => {
-            const a = previous.has(root(gate.a)) ? previous.get(root(gate.a)) : null;
-            const b = previous.has(root(gate.b)) ? previous.get(root(gate.b)) : null;
+            const a = readTtlInput(gate.a);
+            const b = readTtlInput(gate.b);
             let result = null;
             if (a === 0 || b === 0) result = 1;
             else if (a === 1 && b === 1) result = 0;
@@ -1484,6 +1495,7 @@ function resolveSignals() {
         }
         if (unchanged) return { levels, root };
         previous = new Map(levels);
+        previousDrivers = drivers;
     }
     // Nicht konvergierende Rückkopplungen werden nicht als stabile
     // HIGH-Pegel ausgegeben.
