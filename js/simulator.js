@@ -656,6 +656,16 @@ function updateWirePath(path, x2, y2) {
     path.setAttribute("x2", x2);
     path.setAttribute("y2", y2);
 
+    // Vermessungsmodus: achsenparalleles rotes Rechteck, keine Kabelkurve.
+    if (path.getAttribute("data-measure") === "true") {
+        const left = Math.min(x1, x2);
+        const top = Math.min(y1, y2);
+        const right = Math.max(x1, x2);
+        const bottom = Math.max(y1, y2);
+        path.setAttribute("d", `M ${left} ${top} H ${right} V ${bottom} H ${left} Z`);
+        return;
+    }
+
     if (length < 1) {
         path.setAttribute("d", `M ${x1} ${y1} L ${x2} ${y2}`);
         return;
@@ -697,9 +707,11 @@ function drawWire(x1, y1, x2, y2) {
     path.setAttribute("x1", x1);
     path.setAttribute("y1", y1);
     path.setAttribute("data-bend-side", wireConnections.length % 2 === 0 ? 1 : -1);
+    path.setAttribute("data-measure", measureMode ? "true" : "false");
     path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "#39FF14");
-    path.setAttribute("stroke-width", String(3 * zoom));
+    path.setAttribute("stroke", measureMode ? "#FF3030" : "#39FF14");
+    path.setAttribute("stroke-width", measureMode ? "1" : String(3 * zoom));
+    if (measureMode) path.setAttribute("vector-effect", "non-scaling-stroke");
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
     updateWirePath(path, x2, y2);
