@@ -920,6 +920,7 @@ function createSwitchControl(control) {
     });
 
     updateSwitchDisplay();
+    control.updateDisplay = updateSwitchDisplay; // fuer js/projekt.js
     boardArea.appendChild(element);
 }
 
