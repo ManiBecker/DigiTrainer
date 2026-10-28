@@ -114,6 +114,24 @@ function assignWireColor(wire) {
     return wire.color;
 }
 
+// Eine Farbe pro elektrischem Netz, nicht pro einzelner Leitung.
+// Bereits bestehende Netzfarben haben Vorrang vor neuen Verbindungen.
+// Bei einer Trennung behalten die Teilnetze ihre bisherige Farbe.
+function synchronizeNetColors(root) {
+    const netColors = new Map();
+    // Zuerst die vorhandenen Farben erfassen. Bei Zusammenfuehrung
+    // zweier Netze gewinnt die Farbe der aelteren Leitung.
+    wireConnections.forEach(wire => {
+        const net = root(wire.from);
+        if (wire.color && !netColors.has(net)) netColors.set(net, wire.color);
+    });
+    wireConnections.forEach(wire => {
+        const net = root(wire.from);
+        if (!netColors.has(net)) netColors.set(net, assignWireColor(wire));
+        wire.color = netColors.get(net);
+    });
+}
+
 // Lichteinfall von links: Kabel werfen einen weichen Schatten nach rechts unten.
 // Die Steckerköpfe und temporäre Messlinien bleiben ohne Schatten.
 function applyWireShadow(path) {
@@ -134,6 +152,7 @@ function updateDebugView(signals) {
     // Ohne Debug: feste Versorgungszugehoerigkeit, auch ueber indirekte
     // Verbindungen. Mit Debug und Power ON: tatsaechlicher Logikpegel.
     const {root} = buildWireNets();
+    synchronizeNetColors(root);
     const vcc = new Set(supplyIds("vcc").map(id => root(id)));
     const gnd = new Set(supplyIds("gnd").map(id => root(id)));
     wireConnections.forEach(wire => {
@@ -604,7 +623,6 @@ board.addEventListener("pointerup", function (event) {
                     statusMessage.textContent = wiringError;
                 } else {
                     const wire = wireConnections[wireConnections.length - 1];
-                    assignWireColor(wire);
                     wire.plugs = [createWirePlug(currentWire, "x1", "y1"), createWirePlug(currentWire, "x2", "y2")];
                     updateWireColors();
                     updateOutputLeds();
