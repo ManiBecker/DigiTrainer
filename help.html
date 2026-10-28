@@ -1,30 +1,106 @@
 <!DOCTYPE html>
-<html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>DigiTrainer – Hilfe</title>
-<style>body{background:#242424;color:#eee;font:15px/1.55 Arial,Helvetica,sans-serif;margin:0;padding:14px 22px 30px}h2{color:#fff;font-size:1.12rem;margin:24px 0 7px;border-bottom:1px solid #555;padding-bottom:4px}h2:first-child{margin-top:0}p{margin:7px 0}li{margin:5px 0}code{background:#393939;padding:2px 5px;border-radius:3px}a{color:#9bd0ff}strong{color:white}table{border-collapse:collapse;width:100%;margin:10px 0}td,th{border:1px solid #555;padding:6px;text-align:left}@media(max-width:500px){body{padding:12px;font-size:14px}}</style></head><body>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DigiTrainer – Hilfe</title>
+<style>
+body{background:#242424;color:#eee;font:15px/1.55 Arial,Helvetica,sans-serif;margin:0;padding:14px 22px 30px}
+h2{color:#fff;font-size:1.12rem;margin:24px 0 7px;border-bottom:1px solid #555;padding-bottom:4px}
+h2:first-child{margin-top:0}
+p{margin:7px 0}
+li{margin:5px 0}
+code{background:#393939;padding:2px 5px;border-radius:3px}
+a{color:#9bd0ff}
+strong{color:white}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+td,th{border:1px solid #555;padding:6px;text-align:left}
+@media(max-width:500px){body{padding:12px;font-size:14px}}
+</style>
+</head>
+<body>
 <h2>1. Erste Schritte</h2>
 <p>Der DigiTrainer bildet den ITT Digi-Trainer 2 im Browser nach. Schalte das Gerät mit dem Hauptschalter links am Board ein oder aus. Die Schiebeschalter S0–S7 liefern digitale Eingangssignale.</p>
 <p><strong>Wichtig:</strong> Patchkabel dürfen nur bei <strong>ausgeschaltetem</strong> DigiTrainer gesteckt oder entfernt werden.</p>
+
 <h2>2. Patchkabel stecken und entfernen</h2>
-<ol><li>Gerät ausschalten.</li><li>Von einer Steckbuchse zur gewünschten zweiten Buchse ziehen.</li><li>Zum <strong>Entfernen</strong> dieselbe Verbindung ein zweites Mal ziehen. Die Richtung ist egal (A → B oder B → A).</li><li>Gerät einschalten und die Schaltung testen.</li></ol>
+<ol>
+<li>Gerät ausschalten.</li>
+<li>Von einer Steckbuchse zur gewünschten zweiten Buchse ziehen.</li>
+<li>Zum <strong>Entfernen</strong> dieselbe Verbindung ein zweites Mal ziehen. Die Richtung ist egal (A → B oder B → A).</li>
+<li>Gerät einschalten und die Schaltung testen.</li>
+</ol>
 <p>Der Simulator fasst miteinander verbundene Buchsen zu elektrischen Netzen zusammen. Die fünf Verbindungsschienen L0–L4 verbinden jeweils ihre zugehörigen Buchsen untereinander, sind aber voneinander getrennt. Kurzschlüsse und konkurrierende Ausgänge werden geprüft.</p>
+
 <h2>3. Stromversorgung der Logik-ICs</h2>
 <p>Die Logik-ICs benötigen eine korrekt verdrahtete Versorgung mit <strong>+5 V und GND</strong>. Ein Gatter ohne Stromversorgung liefert auch dann kein gültiges Ergebnis, wenn seine Eingänge und sein Ausgang bereits angeschlossen sind.</p>
-<p>Bei den 14-poligen Logik-ICs liegen die Versorgungspins üblicherweise an Pin 14 (+5 V) und Pin 7 (GND); bei den hier verwendeten 14-poligen Bausteinen gilt diese Belegung. Beim CD4069UBE liegen VDD an Pin 14 und VSS an Pin 7 (14-poliges Gehäuse). Beachte die Pin-Funktionsanzeige am jeweiligen Anschluss.</p>
+<p>Bei den verwendeten 14-poligen Logik-ICs liegen die Versorgungspins an Pin 14 (+5 V) und Pin 7 (GND). Beim CD4069UBE heißen diese Anschlüsse VDD (Pin 14) und VSS (Pin 7). Die Sockel auf der Platine können mehr Kontaktpositionen besitzen als die eingesetzten ICs. Beachte daher die Pin-Funktionsanzeige am jeweiligen Anschluss.</p>
+
 <h2>4. Pinbelegung und Logikgatter</h2>
 <p>Bewege den Mauszeiger über eine Steckbuchse, um die Anschlussbezeichnung und – soweit definiert – die Pin-Funktion anzuzeigen. Auf Touchgeräten kann die Anzeige je nach Browser eingeschränkt sein.</p>
-<table><tr><th>Sockel</th><th>Baustein</th><th>Funktion</th></tr><tr><td>0</td><td>SN74LS02N</td><td>4 × NOR</td></tr><tr><td>1</td><td>SN74LS04N</td><td>6 × NOT</td></tr><tr><td>2</td><td>SN74LS08N</td><td>4 × AND</td></tr><tr><td>3</td><td>SN74LS86AN</td><td>4 × XOR</td></tr><tr><td>4</td><td>74LS00PC</td><td>4 × NAND</td></tr><tr><td>5</td><td>CD4069UBE</td><td>6 × CMOS-NOT</td></tr></table>
+<table>
+<tr><th>Sockel</th><th>Baustein</th><th>Funktion</th></tr>
+<tr><td>0</td><td>SN74LS02N</td><td>4 × NOR</td></tr>
+<tr><td>1</td><td>SN74LS04N</td><td>6 × NOT</td></tr>
+<tr><td>2</td><td>SN74LS08N</td><td>4 × AND</td></tr>
+<tr><td>3</td><td>SN74LS86AN</td><td>4 × XOR</td></tr>
+<tr><td>4</td><td>74LS00PC</td><td>4 × NAND</td></tr>
+<tr><td>5</td><td>CD4069UBE</td><td>6 × CMOS-NOT</td></tr>
+</table>
 <p>Unbeschaltete Eingänge können einen undefinierten logischen Zustand haben.</p>
+
 <h2>5. Taktgenerator und Zähler</h2>
-<p>Der Taktgenerator unterstützt manuelle Impulse sowie automatischen Takt mit 1 Hz oder 10 Hz. Über START/STOP kann der automatische Takt angehalten werden. Es stehen ein Taktsignal und sein invertiertes Signal zur Verfügung.</p>
+<p>Der Taktgenerator unterstützt manuelle Impulse sowie automatischen Takt mit 1 Hz oder 10 Hz. Über STOP kann der automatische Takt angehalten werden. Es stehen ein Taktsignal und sein invertiertes Signal zur Verfügung.</p>
 <p>Der 4-Bit-Zähler SN74LS293N besitzt zwei Takteingänge (CK A, CK B), vier Ausgänge QA–QD und zwei asynchrone Reset-Eingänge. Zum Durchzählen von 0 bis 15 kann QA mit CK B verbunden werden, während CK A den Takt erhält.</p>
+
 <h2>6. Anzeige, ALU und A/D-Wandler</h2>
 <p><strong>7-Segment-Anzeige:</strong> Vier Binäreingänge mit den Wertigkeiten 1, 2, 4 und 8 stellen die Hexadezimalwerte 0–F dar. Der Eingang E steuert die Latch-Funktion.</p>
 <p><strong>ALU SN74LS382N:</strong> Verarbeitet zwei 4-Bit-Operanden A und B. Über S0–S2 werden arithmetische oder logische Operationen ausgewählt.</p>
 <p><strong>A/D-Wandler NE5037N:</strong> Ein vereinfachtes experimentelles 6-Bit-Modell ist implementiert. Das analoge Verhalten des Originals wird nicht vollständig nachgebildet.</p>
+
 <h2>7. Zoom und Bedienung</h2>
-<table><tr><th>Bedienung</th><th>Funktion</th></tr><tr><td>+ / −</td><td>Vergrößern / verkleinern</td></tr><tr><td>0</td><td>Zoom auf 100 %</td></tr><tr><td>M</td><td>Verdrahtungs-/Vermessungsmodus</td></tr><tr><td>Mausrad</td><td>Zoom am Mauszeiger</td></tr><tr><td>Vollbild</td><td>Board größer anzeigen</td></tr><tr><td>Hilfe ?</td><td>Diese Hilfe öffnen</td></tr><tr><td>Esc</td><td>Hilfe schließen</td></tr></table>
+<table>
+<tr><th>Bedienung</th><th>Funktion</th></tr>
+<tr><td>+ / −</td><td>Vergrößern / verkleinern</td></tr>
+<tr><td>0</td><td>Zoom auf 100 %</td></tr>
+<tr><td>M</td><td>Verdrahtungs-/Vermessungsmodus</td></tr>
+<tr><td>Mausrad</td><td>Zoom am Mauszeiger</td></tr>
+<tr><td>Debug</td><td>Logische Signalzustände anzeigen</td></tr>
+<tr><td>Projekt</td><td>Schaltungen speichern und laden</td></tr>
+<tr><td>Vollbild</td><td>Board größer anzeigen</td></tr>
+<tr><td>Hilfe ?</td><td>Diese Hilfe öffnen</td></tr>
+<tr><td>Esc</td><td>Hilfe schließen</td></tr>
+</table>
 <p>Der Vermessungsmodus dient zur Bestimmung von Koordinaten und Bereichen auf dem Board, nicht zur Verdrahtung.</p>
-<h2>8. Hinweise und Rückmeldungen</h2>
+
+<h2>8. Debug-Anzeige</h2>
+<p>Über die Checkbox <strong>Debug</strong> in der Werkzeugleiste kann die Anzeige der logischen Signalzustände aktiviert werden.</p>
+<p>Bei eingeschaltetem DigiTrainer werden die Patchkabel entsprechend ihrem logischen Zustand eingefärbt:</p>
+<ul>
+<li><strong>Rot:</strong> HIGH (logisch 1)</li>
+<li><strong>Hellblau:</strong> LOW (logisch 0)</li>
+<li><strong>Hellgrau:</strong> undefinierter Zustand</li>
+</ul>
+<p>Zusätzlich erscheinen die Werte 0 und 1 unter den Schiebeschaltern S0–S7 und den Ausgangs-LEDs D0–D7, sofern ein eindeutiger Pegel vorliegt.</p>
+<p>Bei deaktiviertem Debug-Modus werden die Kabel in ihren normalen Farben dargestellt: Rot für +5 V, Blau für GND und Grün für sonstige Verbindungen.</p>
+
+<h2>9. Projekte speichern und laden</h2>
+<p>Über den Button <strong>Projekt</strong> in der Werkzeugleiste können selbst erstellte Schaltungen gespeichert und später wieder geladen werden.</p>
+<p>Gespeichert werden:</p>
+<ul>
+<li>Alle gesteckten Patchkabel</li>
+<li>Die Stellungen der Schalter S0–S7</li>
+<li>Die Einstellungen des Taktgenerators (f und STOP)</li>
+<li>Die Einstellung der Debug-Anzeige</li>
+</ul>
+<p><strong>Im Browser speichern:</strong> Einen Projektnamen eingeben und auf „Im Browser speichern“ klicken. Gespeicherte Projekte erscheinen in einer Liste und können dort geladen oder gelöscht werden.</p>
+<p><strong>Als Datei exportieren:</strong> Die aktuelle Schaltung wird als JSON-Datei heruntergeladen. Damit lassen sich Projekte archivieren oder an andere Nutzer weitergeben.</p>
+<p><strong>Datei importieren:</strong> Eine zuvor exportierte JSON-Datei auswählen. Die darin enthaltene Schaltung wird wiederhergestellt.</p>
+<p><strong>Wichtig:</strong> Beim Laden eines Projekts wird der DigiTrainer ausgeschaltet. Der interne Zustand simulierter Bausteine, beispielsweise der aktuelle Zählerstand, wird nicht gespeichert.</p>
+<p>Im Browser gespeicherte Projekte sind an den jeweiligen Browser und die Website gebunden. Für eine dauerhafte Sicherung empfiehlt sich der JSON-Export.</p>
+
+<h2>10. Hinweise und Rückmeldungen</h2>
 <p>Der DigiTrainer ist ein Hobby- und Lernprojekt. Er simuliert vor allem das logische Verhalten; analoge Effekte, Verzögerungszeiten und elektrische Belastbarkeit sind nicht vollständig modelliert.</p>
 <p>Projekt und Fehlermeldungen: <a href="https://github.com/ManiBecker/DigiTrainer" target="_blank" rel="noopener">GitHub – DigiTrainer</a>.</p>
-</body></html>
+</body>
+</html>
