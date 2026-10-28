@@ -100,6 +100,19 @@ const WIRE_HIGH = "#FF3030";
 const WIRE_LOW = "#75D9FF";
 const WIRE_UNDEFINED = "#D0D0D0";
 const WIRE_NORMAL = "#39FF14";
+// Signalkabel erhalten zyklisch unterschiedliche Farben.
+// Rot und Hellblau bleiben fuer Versorgung und Debug reserviert.
+const WIRE_PALETTE = [
+    "#39FF14", "#FFE24A", "#FF9A32", "#B77CFF",
+    "#28E8BD", "#FF75BC", "#F4F4EA", "#D5B348"
+];
+let nextWireColor = 0;
+function assignWireColor(wire) {
+    if (wire.color) return wire.color;
+    wire.color = WIRE_PALETTE[nextWireColor % WIRE_PALETTE.length];
+    nextWireColor++;
+    return wire.color;
+}
 
 // Lichteinfall von links: Kabel werfen einen weichen Schatten nach rechts unten.
 // Die Steckerköpfe und temporäre Messlinien bleiben ohne Schatten.
@@ -131,7 +144,7 @@ function updateDebugView(signals) {
             const level = signals.levels.get(signals.root(wire.from));
             color = level === 1 ? WIRE_HIGH : level === 0 ? WIRE_LOW : WIRE_UNDEFINED;
         } else {
-            color = vcc.has(net) ? WIRE_HIGH : gnd.has(net) ? WIRE_LOW : WIRE_NORMAL;
+            color = vcc.has(net) ? WIRE_HIGH : gnd.has(net) ? WIRE_LOW : assignWireColor(wire);
         }
         wire.path.setAttribute("stroke", color);
         applyWireShadow(wire.path);
@@ -591,6 +604,7 @@ board.addEventListener("pointerup", function (event) {
                     statusMessage.textContent = wiringError;
                 } else {
                     const wire = wireConnections[wireConnections.length - 1];
+                    assignWireColor(wire);
                     wire.plugs = [createWirePlug(currentWire, "x1", "y1"), createWirePlug(currentWire, "x2", "y2")];
                     updateWireColors();
                     updateOutputLeds();
