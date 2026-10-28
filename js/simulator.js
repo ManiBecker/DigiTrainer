@@ -95,25 +95,42 @@ function addLogicLabel(cx, cy, width, type, id) {
     logicLabelLayer.appendChild(el);
     logicLabels.push({el, type, id});
 }
+// Farben fuer die gut lesbare Darstellung auf der blauen Platine.
+const WIRE_HIGH = "#FF3030";
+const WIRE_LOW = "#75D9FF";
+const WIRE_UNDEFINED = "#D0D0D0";
+const WIRE_NORMAL = "#39FF14";
+
 function updateDebugView(signals) {
-    const visible = debugEnabled && powerOn;
+    const showLevels = debugEnabled && powerOn;
     logicLabels.forEach(item => {
         let level = null;
-        if (visible && item.type === "switch") level = switchStates[item.id];
-        if (visible && item.type === "led" && signals) level = signals.levels.get(signals.root(item.id));
+        if (showLevels && item.type === "switch") level = switchStates[item.id];
+        if (showLevels && item.type === "led" && signals) level = signals.levels.get(signals.root(item.id));
         item.el.textContent = level === 0 || level === 1 ? String(level) : "";
     });
+
+    // Ohne Debug: feste Versorgungszugehoerigkeit, auch ueber indirekte
+    // Verbindungen. Mit Debug und Power ON: tatsaechlicher Logikpegel.
+    const {root} = buildWireNets();
+    const vcc = new Set(supplyIds("vcc").map(id => root(id)));
+    const gnd = new Set(supplyIds("gnd").map(id => root(id)));
     wireConnections.forEach(wire => {
         if (!wire.path) return;
-        let color = "#39FF14";
-        if (visible && signals) {
+        const net = root(wire.from);
+        let color;
+        if (showLevels && signals) {
             const level = signals.levels.get(signals.root(wire.from));
-            color = level === 1 ? "#FF3030" : level === 0 ? "#45A6FF" : "#999999";
+            color = level === 1 ? WIRE_HIGH : level === 0 ? WIRE_LOW : WIRE_UNDEFINED;
+        } else {
+            color = vcc.has(net) ? WIRE_HIGH : gnd.has(net) ? WIRE_LOW : WIRE_NORMAL;
         }
         wire.path.setAttribute("stroke", color);
+        wire.path.style.filter = "none";
         if (wire.plugs) wire.plugs.forEach(plug => plug.setAttribute("fill", color));
     });
 }
+
 const wireConnections = []; // Verbindungen zwischen Buchsen-IDs
 let boardLoaded = false;
 
@@ -1166,25 +1183,9 @@ function buildWireNets() {
 // angeschlossene Leitungen im selben Netz eingefaerbt.
 // ------------------------------------------------------------
 function updateWireColors() {
-    const { root } = buildWireNets();
-    const vcc = new Set(supplyIds("vcc").map(id => root(id)));
-    const gnd = new Set(supplyIds("gnd").map(id => root(id)));
-
-    wireConnections.forEach(function (wire) {
-        if (!wire.path) return;
-        const net = root(wire.from);
-        if (vcc.has(net)) {
-            wire.path.setAttribute("stroke", "#FF3030");
-            wire.path.style.filter = "none";
-        } else if (gnd.has(net)) {
-            wire.path.setAttribute("stroke", "#45C8FF");
-            wire.path.style.filter = "none";
-        } else {
-            wire.path.setAttribute("stroke", "#39FF14");
-            wire.path.style.filter = "none";
-        }
-    });
-    if (debugEnabled) updateDebugView(powerOn ? resolveSignals() : null);
+    // Eine gemeinsame Farbroutine fuer Kabel UND Steckerkopf vermeidet
+    // voneinander abweichende Farben beim Umschalten des Debug-Modus.
+    updateDebugView(debugEnabled && powerOn ? resolveSignals() : null);
 }
 
 // ------------------------------------------------------------
