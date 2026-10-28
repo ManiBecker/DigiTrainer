@@ -106,7 +106,7 @@ const WIRE_NORMAL = "#39FF14";
 function applyWireShadow(path) {
     if (path.getAttribute("data-measure") === "true") return;
     const scale = typeof zoom === "number" ? zoom : 1;
-    path.style.filter = `drop-shadow(${4 * scale}px ${2 * scale}px ${2 * scale}px rgba(0,0,0,0.6))`;
+    path.style.filter = `drop-shadow(${6 * scale}px ${3 * scale}px ${3 * scale}px rgba(0,0,0,0.85))`;
 }
 
 function updateDebugView(signals) {
