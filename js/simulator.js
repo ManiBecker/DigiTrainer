@@ -101,6 +101,14 @@ const WIRE_LOW = "#75D9FF";
 const WIRE_UNDEFINED = "#D0D0D0";
 const WIRE_NORMAL = "#39FF14";
 
+// Lichteinfall von links: Kabel werfen einen weichen Schatten nach rechts unten.
+// Die Steckerköpfe und temporäre Messlinien bleiben ohne Schatten.
+function applyWireShadow(path) {
+    if (path.getAttribute("data-measure") === "true") return;
+    const scale = typeof zoom === "number" ? zoom : 1;
+    path.style.filter = `drop-shadow(${4 * scale}px ${2 * scale}px ${2 * scale}px rgba(0,0,0,0.6))`;
+}
+
 function updateDebugView(signals) {
     const showLevels = debugEnabled && powerOn;
     logicLabels.forEach(item => {
@@ -126,7 +134,7 @@ function updateDebugView(signals) {
             color = vcc.has(net) ? WIRE_HIGH : gnd.has(net) ? WIRE_LOW : WIRE_NORMAL;
         }
         wire.path.setAttribute("stroke", color);
-        wire.path.style.filter = "none";
+        applyWireShadow(wire.path);
         if (wire.plugs) wire.plugs.forEach(plug => plug.setAttribute("fill", color));
     });
 }
@@ -715,6 +723,7 @@ function drawWire(x1, y1, x2, y2) {
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("stroke-linejoin", "round");
     updateWirePath(path, x2, y2);
+    applyWireShadow(path);
 
     wiringLayer.appendChild(path);
     return path;
@@ -1725,6 +1734,7 @@ let pinchStart = null;
 function refreshWireWidths() {
     wiringLayer.querySelectorAll("path").forEach(function (path) {
         path.setAttribute("stroke-width", String(3 * zoom));
+        applyWireShadow(path);
     });
     wiringLayer.querySelectorAll("circle").forEach(function (plug) {
         plug.setAttribute("r", String(6 * zoom));
