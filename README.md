@@ -15,7 +15,7 @@ Ziel des Projekts ist es, die Funktionen und Experimente des Originals möglichs
 
 Der Simulator basiert auf Fotografien eines originalen ITT Digi-Trainer 2. Die Bedienelemente und Steckbuchsen wurden durch interaktive Elemente ergänzt. Die gesteckten Verbindungen werden elektrisch ausgewertet, sodass sich digitale Schaltungen aufbauen und unmittelbar ausprobieren lassen.
 
-**Keine Installation, keine zusätzliche Hardware – ein moderner Browser genügt.**
+**Für die Online-Version ist keine Installation und keine zusätzliche Hardware erforderlich – ein moderner Browser genügt.**
 
 ## 🚀 Live-Demo
 
@@ -39,16 +39,21 @@ Der aktuelle Entwicklungsstand kann direkt im Browser ausprobiert werden:
 - Simulation der Schalter- und Ausgangs-LEDs D0–D7
 - Mehr als 200 definierte Steckbuchsen (Hotspots)
 - Patchkabel durch Ziehen zwischen zwei Buchsen stecken
-- Einzelne Patchkabel durch erneutes Ziehen derselben Verbindung entfernen
-- Die Steckrichtung ist dabei unerheblich: A → B entspricht B → A
-- Grafische Darstellung der Kabel mit leichtem Durchhang
+- Einzelne Patchkabel durch erneutes Ziehen derselben Verbindung entfernen (A → B oder B → A)
+- Patchkabel durch Antippen oder Anklicken markieren; erneutes Antippen entfernt die markierte Leitung
+- Markierte Kabel mit **Entf**, **Rücktaste** oder per **Rechtsklick** entfernen
+- Stecker eines markierten Kabels abziehen und auf eine andere Buchse umstecken; Loslassen im Leeren entfernt das Kabel
+- **Rückgängig** über **Strg+Z** (bzw. ⌘+Z) oder die Schaltfläche **↶**, bis zu 50 Kabeländerungen
+- Bedienung der Kabelbearbeitung mit Maus und Touch
+- Grafische Darstellung der Kabel mit leichtem Durchhang und Schatten
+- Unterschiedliche Kabelfarben: elektrisch zusammenhängende Leitungen werden gleichfarbig dargestellt
 - Elektrische Auswertung der gesteckten Verbindungen
 - Gemeinsame +5-V- und GND-Versorgungsschienen
 - Fünf passive Verbindungsschienen L0–L4 mit jeweils vier elektrisch verbundenen Buchsen
 - Erkennung von Kurzschlüssen und Ausgangskonflikten
 - Anzeige von Anschlussbezeichnungen und IC-Pinfunktionen
 
-Die Verdrahtung und das Entfernen von Patchkabeln erfolgen bei ausgeschaltetem DigiTrainer. Nach dem Einschalten können die Schalter betätigt und die logischen Zustände beobachtet werden.
+Das Stecken, Markieren, Entfernen und Umstecken von Patchkabeln ist nur bei ausgeschaltetem DigiTrainer und außerhalb des Vermessungsmodus möglich. Nach dem Einschalten können die Schalter betätigt und die logischen Zustände beobachtet werden.
 
 ### Digitale Logikbausteine
 
@@ -65,7 +70,7 @@ Die sechs Logik-IC-Sockel des DigiTrainers sind bereits implementiert:
 
 Die Logikgatter können über Patchkabel miteinander kombiniert werden. Ihre Ausgangszustände werden anhand der Eingangssignale berechnet.
 
-Die ICs benötigen eine korrekte Verbindung zu +5 V und GND. Nicht angeschlossene Eingänge können einen unbestimmten Zustand annehmen.
+Die ICs benötigen eine korrekte Verbindung zu +5 V und GND. Offene Eingänge der simulierten 74LS-TTL-Gatter werden bei der logischen Auswertung als HIGH interpretiert; offene CMOS-Eingänge des CD4069 bleiben undefiniert.
 
 ### Taktgenerator
 
@@ -158,7 +163,7 @@ Die Projektverwaltung wurde von **[Lutz (lschulze)](https://github.com/lschulze)
 
 Über die Checkbox **Debug** lassen sich bei eingeschaltetem Gerät die logischen Zustände der Verdrahtung farblich anzeigen: **Rot** für HIGH (1), **Hellblau** für LOW (0) und **Hellgrau** für einen unbestimmten Zustand. Zusätzlich erscheinen die binären Zustände **0/1** unter den Schaltern S0–S7 und den Ausgangs-LEDs D0–D7.
 
-Ohne Debug-Anzeige bleiben die üblichen Kabelfarben für Versorgung und Verdrahtung erhalten.
+Ohne Debug-Anzeige bleiben die Kabelfarben sichtbar: Zusammenhängende elektrische Netze erhalten dieselbe Farbe; Versorgung und Masse haben eigene Farben. Die Patchkabel werden außerdem mit Schatten dargestellt.
 
 ## 🔍 Zoom und Vollbild
 
@@ -186,6 +191,13 @@ Im Vermessungsmodus lassen sich Positionen und rechteckige Bereiche auf der Plat
 | Hauptschalter | DigiTrainer ein- oder ausschalten |
 | Ziehen von Buchse A zu Buchse B | Patchkabel stecken |
 | Erneutes Ziehen zwischen denselben Buchsen | Vorhandenes Patchkabel entfernen (auch B → A) |
+| Kabel einmal anklicken/antippen | Kabel markieren |
+| Markiertes Kabel erneut anklicken/antippen | Kabel entfernen |
+| Entf / Rücktaste | Markiertes Kabel entfernen |
+| Rechtsklick auf ein Kabel | Kabel entfernen |
+| Stecker eines markierten Kabels ziehen | Kabel umstecken; im Leeren loslassen entfernt das Kabel |
+| Strg+Z / ⌘+Z oder ↶ | Letzte Kabeländerung rückgängig (bis zu 50 Schritte) |
+| Esc | Kabelmarkierung aufheben |
 | Schiebeschalter anklicken | Logischen Zustand ändern |
 | Taktgenerator bedienen | Manuellen oder automatischen Takt erzeugen |
 | M | Vermessungsmodus umschalten |
@@ -197,7 +209,7 @@ Im Vermessungsmodus lassen sich Positionen und rechteckige Bereiche auf der Plat
 | Debug | Logikpegel und binäre Zustände ein- oder ausblenden |
 | Projekt | Schaltung im Browser speichern/laden oder als JSON-Datei exportieren/importieren |
 
-**Hinweis:** Patchkabel lassen sich nur bei ausgeschaltetem DigiTrainer stecken oder entfernen.
+**Hinweis:** Patchkabel lassen sich nur bei ausgeschaltetem DigiTrainer und außerhalb des Vermessungsmodus bearbeiten. Die neue Kabelbedienung funktioniert auch auf Touch-Geräten.
 
 ## 🛠 Technische Umsetzung
 
@@ -213,13 +225,14 @@ DigiTrainer/
 │   └── digitrainer.css
 ├── js/
 │   ├── simulator.js
-│   └── projekt.js
+│   ├── projekt.js
+│   └── kabel.js
 ├── boards/
 │   └── itt-digitrainer2/
 │       ├── board.jpg
 │       └── board.json
 └── images/
-    ├── digitrainer-v0.61.jpg
+    ├── digitrainer-v0.64.jpg
     └── digitrainer-qr.jpg
 ```
 
@@ -229,6 +242,7 @@ Die Aufgaben der einzelnen Dateien:
 - `css/digitrainer.css` – Darstellung und Layout
 - `js/simulator.js` – Bedienung, Verdrahtung und elektrische Simulation
 - `js/projekt.js` – Projektverwaltung, Browserspeicher sowie JSON-Import und -Export
+- `js/kabel.js` – Kabel markieren, entfernen, umstecken und Änderungen rückgängig machen
 - `help.html` – Bedienungshinweise und Hilfe
 - `boards/itt-digitrainer2/board.jpg` – Foto des Originalgeräts
 - `boards/itt-digitrainer2/board.json` – Positionen und Definitionen der Steckbuchsen, Schalter und LEDs
@@ -241,6 +255,18 @@ Der Schwerpunkt liegt derzeit auf dem logischen Verhalten der Schaltungen. Analo
 
 Das Projekt wird über **GitHub Pages** bereitgestellt.
 
+### Lokal und offline ausführen
+
+Die Live-Demo benötigt keine Installation. Für die lokale Offline-Nutzung das Repository herunterladen und im Projektverzeichnis einen kleinen lokalen Webserver starten, beispielsweise mit Python 3:
+
+```bash
+python3 -m http.server 8000
+```
+
+Unter Windows funktioniert alternativ häufig `py -m http.server 8000`. Anschließend `http://localhost:8000/` im Browser öffnen. Der Server wird mit **Strg+C** beendet. Eine Internetverbindung ist für die eigentliche Simulation nicht nötig.
+
+**Wichtig:** Der direkte Aufruf von `index.html` über `file://` kann wegen der Browser-Sicherheitsbeschränkungen beim Laden von `board.json` die Verdrahtung verhindern. Die künftig geplante GitHub-Projektbibliothek wird eine Internetverbindung benötigen.
+
 ## 📋 Geplante Erweiterungen
 
 - Untersuchung und Simulation des Widerstandsnetzwerks R0–R7
@@ -250,10 +276,12 @@ Das Projekt wird über **GitHub Pages** bereitgestellt.
 - Experimente aus dem originalen ITT-Lehrmaterial nachbilden
 - Weitere Verbesserungen der elektrischen Simulation
 - Ergänzung von Beispielschaltungen und Bedienungshinweisen
+- Projektbibliothek mit geprüften JSON-Beispielen aus dem GitHub-Verzeichnis `projects/`
+- Vereinfachter Offline-Start ohne manuell gestarteten lokalen Webserver
 
 ## 📌 Projektstatus
 
-**Work in Progress – Version 0.64, Oktober 2026**
+**Work in Progress – Version 0.66, Oktober 2026**
 
 Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind implementiert. Darüber hinaus wurden folgende Funktionen bereits in grundlegenden Funktionstests erprobt:
 
@@ -264,6 +292,10 @@ Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind 
 - Experimenteller 6-Bit-A/D-Wandler NE5037N (Grenzwerte 0 V und +5 V)
 - Passive Verbindungsschienen L0–L4
 - Gezieltes Entfernen einzelner Patchkabel durch erneutes Ziehen der Verbindung
+- Kabelmarkierung, Entfernen durch Tipp/Rechtsklick/Tastatur und Umstecken einzelner Stecker
+- Rückgängig-Funktion für bis zu 50 Kabeländerungen
+- Bunte Patchkabel mit einheitlichen Netzfarben und Kabelschatten
+- Logische HIGH-Auswertung offener 74LS-TTL-Eingänge
 - Debug-Anzeige mit Logikpegeln und binären Zustandsanzeigen
 - Speichern und Laden mehrerer Projekte im Browser
 - Export und Import von Schaltungen als JSON-Dateien
@@ -282,7 +314,7 @@ Ohne diese Bilder wäre die originalgetreue Darstellung des Geräts in dieser Fo
 
 Vielen Dank auch an die Mitglieder des Classic-Computing-Forums für die Anregungen und Diskussionen rund um dieses Projekt.
 
-Ein herzliches Dankeschön an **[Lutz (lschulze)](https://github.com/lschulze)** für die Entwicklung der Projektverwaltung mit Browserspeicher und JSON-Import/-Export – den ersten externen Pull Request für den DigiTrainer. Lutz hat dabei auch KI-Unterstützung durch Grok genutzt.
+Ein herzliches Dankeschön an **[Lutz (lschulze)](https://github.com/lschulze)** für die Entwicklung der Projektverwaltung mit Browserspeicher und JSON-Import/-Export ([Pull Request #1](https://github.com/ManiBecker/DigiTrainer/pull/1)) sowie für die Erweiterung der Kabelbedienung mit Markieren, Entfernen, Umstecken und Rückgängig ([Pull Request #2](https://github.com/ManiBecker/DigiTrainer/pull/2)). Lutz hat bei seiner Entwicklung auch KI-Unterstützung eingesetzt und die Ergebnisse selbst getestet.
 
 ## 🔗 Links
 
