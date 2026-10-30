@@ -1784,7 +1784,7 @@
       "id": "power",
       "label": "Hauptschalter",
       "type": "switch",
-      "x": 0.0720,
+      "x": 0.0710,
       "y": 0.2935,
       "width": 0.04594,
       "height": 0.06455,
