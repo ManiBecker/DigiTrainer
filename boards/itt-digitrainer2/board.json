@@ -1790,7 +1790,7 @@
       "height": 0.06455,
       "defaultState": "off",
       "overlay": {
-        "on": "images/power-on.jpg"
+        "on": "boards/itt-digitrainer2/power-on.jpg"
       }
     },
     {
