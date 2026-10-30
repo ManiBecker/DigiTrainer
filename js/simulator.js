@@ -839,7 +839,21 @@ fetch("boards/itt-digitrainer2/board.json")
         const indicators = Array.isArray(config.indicators) ? config.indicators : [];
         boardLoaded = true;
 
+        // Hauptschalter aus board.json konfigurieren
+        const powerConfig = switches.find(control => control.id === "power");
+        
+        if (powerConfig) {
+            powerSwitch.style.left = (powerConfig.x * 100) + "%";
+            powerSwitch.style.top = (powerConfig.y * 100) + "%";
+            powerSwitch.style.width = (powerConfig.width * 100) + "%";
+            powerSwitch.style.height = (powerConfig.height * 100) + "%";
+        
+            powerSwitch.dataset.overlayOn = powerConfig.overlay.on;
+            powerSwitch.style.backgroundImage = "none";
+        }
+
         switches.forEach(function (control) {
+            if (control.id === "power") return;
             if (control.type !== "switch" && control.type !== "button") return;
             switchStates[control.id] = control.initialState ?? 0;
             if (control.type === "button") {
