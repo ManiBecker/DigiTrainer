@@ -1786,8 +1786,8 @@
       "type": "switch",
       "x": 0.0702,
       "y": 0.2963,
-      "width": 0.0489,
-      "height": 0.0631,
+      "width": 0.04594,
+      "height": 0.06455,
       "defaultState": "off",
       "overlay": {
         "on": "images/power-on.jpg"
