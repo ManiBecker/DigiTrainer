@@ -1,6 +1,20 @@
 {
   "id": "itt-digitrainer2",
   "name": "ITT Digi-Trainer 2",
+  "controls": [
+    {
+      "id": "power",
+      "type": "switch",
+      "x": 0.0702,
+      "y": 0.2963,
+      "width": 0.0489,
+      "height": 0.0631,
+      "defaultState": "off",
+      "overlay": {
+        "on": "images/power-on.jpg"
+      }
+    }
+  ],
   "hotspots": [
     {
       "id": "vcc1",
