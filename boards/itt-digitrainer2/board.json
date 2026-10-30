@@ -1782,6 +1782,7 @@
   "controls": [
     {
       "id": "power",
+      "label": "Hauptschalter",
       "type": "switch",
       "x": 0.0702,
       "y": 0.2963,
