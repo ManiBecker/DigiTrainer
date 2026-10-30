@@ -769,6 +769,11 @@ function drawWire(x1, y1, x2, y2) {
 powerSwitch.addEventListener("click", function () {
     powerOn = !powerOn;
 
+    // Bild des eingeschalteten Hauptschalters anzeigen
+    powerSwitch.style.backgroundImage = powerOn
+        ? `url("${powerSwitch.dataset.overlayOn}")`
+        : "none";
+
     powerLed.classList.toggle("on", powerOn);
     updateSwitchLeds();
     refreshClockGenerator();
