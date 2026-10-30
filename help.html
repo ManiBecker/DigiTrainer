@@ -25,11 +25,19 @@ td,th{border:1px solid #555;padding:6px;text-align:left}
 
 <h2>2. Patchkabel stecken und entfernen</h2>
 <ol>
-<li>Gerät ausschalten.</li>
+<li>Gerät ausschalten. Im Vermessungsmodus lassen sich keine Kabel ändern.</li>
 <li>Von einer Steckbuchse zur gewünschten zweiten Buchse ziehen.</li>
-<li>Zum <strong>Entfernen</strong> dieselbe Verbindung ein zweites Mal ziehen. Die Richtung ist egal (A → B oder B → A).</li>
 <li>Gerät einschalten und die Schaltung testen.</li>
 </ol>
+<p>Entfernen und Umstecken gehen mit Maus und Touch, solange das Gerät ausgeschaltet ist:</p>
+<ul>
+<li><strong>Erneut ziehen:</strong> Dieselbe Verbindung ein zweites Mal ziehen. Die Richtung ist egal (A → B oder B → A).</li>
+<li><strong>Markieren:</strong> Auf die Leitung tippen, nicht auf eine Buchse. Das Kabel wird gestrichelt, die Stecker bekommen einen gelben Ring. Ein Tipp ins Leere oder Esc hebt die Markierung auf.</li>
+<li><strong>Markiertes Kabel entfernen:</strong> Ein zweites Mal auf die Leitung tippen, Entf oder die Rücktaste drücken, oder mit der rechten Maustaste klicken. Ein langes Drücken auf dem Touchscreen löscht das Kabel nicht.</li>
+<li><strong>Stecker umsetzen:</strong> Einen Stecker des markierten Kabels auf eine andere Buchse ziehen. Loslassen im Leeren entfernt das Kabel. Passt die neue Verbindung nicht, bleibt das Kabel an der alten Stelle.</li>
+<li><strong>Rückgängig:</strong> Der Knopf ↶ oder Strg+Z (auf dem Mac ⌘+Z) macht die letzte Kabeländerung rückgängig, bis zu 50 Schritte. Bei eingeschaltetem Gerät ist das gesperrt.</li>
+</ul>
+<p>Solange ein Kabel markiert ist, beginnt ein Zug an einer seiner Buchsen das Umstecken und kein neues Kabel.</p>
 <p>Der Simulator fasst miteinander verbundene Buchsen zu elektrischen Netzen zusammen. Die fünf Verbindungsschienen L0–L4 verbinden jeweils ihre zugehörigen Buchsen untereinander, sind aber voneinander getrennt. Kurzschlüsse und konkurrierende Ausgänge werden geprüft.</p>
 
 <h2>3. Stromversorgung der Logik-ICs</h2>
@@ -67,9 +75,11 @@ td,th{border:1px solid #555;padding:6px;text-align:left}
 <tr><td>Mausrad</td><td>Zoom am Mauszeiger</td></tr>
 <tr><td>Debug</td><td>Logische Signalzustände anzeigen</td></tr>
 <tr><td>Projekt</td><td>Schaltungen speichern und laden</td></tr>
+<tr><td>↶ oder Strg+Z</td><td>Letzte Kabeländerung rückgängig</td></tr>
+<tr><td>Entf oder Rücktaste</td><td>Markiertes Kabel entfernen</td></tr>
 <tr><td>Vollbild</td><td>Board größer anzeigen</td></tr>
 <tr><td>Hilfe ?</td><td>Diese Hilfe öffnen</td></tr>
-<tr><td>Esc</td><td>Hilfe schließen</td></tr>
+<tr><td>Esc</td><td>Hilfe schließen oder Kabelmarkierung aufheben</td></tr>
 </table>
 <p>Der Vermessungsmodus dient zur Bestimmung von Koordinaten und Bereichen auf dem Board, nicht zur Verdrahtung.</p>
 
@@ -96,7 +106,7 @@ td,th{border:1px solid #555;padding:6px;text-align:left}
 <p><strong>Im Browser speichern:</strong> Einen Projektnamen eingeben und auf „Im Browser speichern“ klicken. Gespeicherte Projekte erscheinen in einer Liste und können dort geladen oder gelöscht werden.</p>
 <p><strong>Als Datei exportieren:</strong> Die aktuelle Schaltung wird als JSON-Datei heruntergeladen. Damit lassen sich Projekte archivieren oder an andere Nutzer weitergeben.</p>
 <p><strong>Datei importieren:</strong> Eine zuvor exportierte JSON-Datei auswählen. Die darin enthaltene Schaltung wird wiederhergestellt.</p>
-<p><strong>Wichtig:</strong> Beim Laden eines Projekts wird der DigiTrainer ausgeschaltet. Der interne Zustand simulierter Bausteine, beispielsweise der aktuelle Zählerstand, wird nicht gespeichert.</p>
+<p><strong>Wichtig:</strong> Beim Laden eines Projekts wird der DigiTrainer ausgeschaltet. Die Rückgängig-Liste für Kabel beginnt danach neu. Der interne Zustand simulierter Bausteine, beispielsweise der aktuelle Zählerstand, wird nicht gespeichert.</p>
 <p>Im Browser gespeicherte Projekte sind an den jeweiligen Browser und die Website gebunden. Für eine dauerhafte Sicherung empfiehlt sich der JSON-Export.</p>
 
 <h2>10. Hinweise und Rückmeldungen</h2>
