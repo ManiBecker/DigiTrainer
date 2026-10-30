@@ -1785,7 +1785,7 @@
       "label": "Hauptschalter",
       "type": "switch",
       "x": 0.0702,
-      "y": 0.2963,
+      "y": 0.2949,
       "width": 0.04594,
       "height": 0.06455,
       "defaultState": "off",
