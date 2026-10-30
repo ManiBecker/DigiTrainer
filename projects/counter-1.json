@@ -1,0 +1,50 @@
+{
+  "format": "digitrainer-projekt",
+  "version": 1,
+  "app": "DigiTrainer v0.66",
+  "board": "itt-digitrainer2",
+  "saved": "2026-10-30T08:55:02.823Z",
+  "wires": [
+    {
+      "from": "gnd11",
+      "to": "b7s-E"
+    },
+    {
+      "from": "b7s-1",
+      "to": "ctr-QA"
+    },
+    {
+      "from": "ctr-QB",
+      "to": "b7s-2"
+    },
+    {
+      "from": "b7s-4",
+      "to": "ctr-QC"
+    },
+    {
+      "from": "ctr-QD",
+      "to": "b7s-8"
+    },
+    {
+      "from": "ctr-CKB",
+      "to": "ctr-QA"
+    },
+    {
+      "from": "ctr-CKA",
+      "to": "clk-out"
+    }
+  ],
+  "switches": {
+    "switch_clk_f": 0,
+    "switch_clk_stop": 1,
+    "switch0": 0,
+    "switch1": 0,
+    "switch2": 0,
+    "switch3": 0,
+    "switch4": 0,
+    "switch5": 0,
+    "switch6": 0,
+    "switch7": 0
+  },
+  "debug": false
+}
