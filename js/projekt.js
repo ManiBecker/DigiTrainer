@@ -271,6 +271,7 @@
       <button type="button" id="project-store">Im Browser speichern</button>
     </div>
     <textarea id="project-description" rows="4" maxlength="4000" placeholder="Optionale Beschreibung, auch mehrzeilig"></textarea>
+    <p class="project-hint">Meine Projekte</p>
     <ul id="project-list"></ul>
     <p class="project-hint">Beispielprojekte</p>
     <ul id="library-list"></ul>
