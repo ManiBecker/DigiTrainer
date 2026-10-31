@@ -2,6 +2,7 @@
   "format": "digitrainer-projekt",
   "version": 1,
   "app": "DigiTrainer v0.66",
+  "description": "4-Bit-Binärzähler mit hexadezimaler 7-Segment-Anzeige von 0 bis F.\n\nQA ist mit dem zweiten Takteingang verbunden, CK A erhält den Takt. Nach dem Laden den DigiTrainer einschalten und den Taktgenerator starten.",
   "board": "itt-digitrainer2",
   "saved": "2026-10-30T08:55:02.823Z",
   "wires": [
