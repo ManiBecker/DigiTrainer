@@ -3,7 +3,7 @@
 **A web-based simulator of the ITT Digi-Trainer 2 digital electronics training system.**
 
 <a href="https://manibecker.github.io/DigiTrainer/">
-  <img src="images/digitrainer-v0.66.jpg"
+  <img src="images/digitrainer-v0.67.jpg"
        alt="DigiTrainer Live-Demo"
        width="800"
        style="max-width: 100%; height: auto;">
@@ -34,7 +34,7 @@ Der aktuelle Entwicklungsstand kann direkt im Browser ausprobiert werden:
 ### Bedienung und Verdrahtung
 
 - Originalgetreue Darstellung des ITT Digi-Trainer 2
-- Interaktiver Hauptschalter mit Betriebsanzeige
+- Originalgetreuer Hauptschalter mit fotografischem ON-Overlay und roter Betriebsanzeige
 - Acht bedienbare Schiebeschalter S0–S7
 - Simulation der Schalter- und Ausgangs-LEDs D0–D7
 - Mehr als 200 definierte Steckbuchsen (Hotspots)
@@ -159,6 +159,26 @@ Beim Laden wird der DigiTrainer ausgeschaltet. Interne Laufzeitzustände der sim
 
 Die Projektverwaltung wurde von **[Lutz (lschulze)](https://github.com/lschulze)** als erster externer Beitrag über **[Pull Request #1](https://github.com/ManiBecker/DigiTrainer/pull/1)** beigesteuert.
 
+## 💡 Beispielprojekte
+
+Im Verzeichnis [`projects/`](projects/) stehen vier vorbereitete Beispielschaltungen zur Verfügung. Sie lassen sich als JSON-Dateien herunterladen und über **Projekt → Datei importieren** in den DigiTrainer laden.
+
+| Projekt | Beschreibung |
+|---|---|
+| [`counter-1.json`](projects/counter-1.json) | 4-Bit-Binärzähler mit hexadezimaler 7-Segment-Anzeige (0 bis F) |
+| [`counter-2.json`](projects/counter-2.json) | 4-Bit-Binärzähler mit 7-Segment-Anzeige und zusätzlicher binärer Anzeige über D4–D7; S0 beeinflusst den Anzeigeeingang E |
+| [`lauflicht-D0-D7.json`](projects/lauflicht-D0-D7.json) | Lauflicht über alle acht LEDs von D0 bis D7 |
+| [`lauflicht-D0-D7-Pendel.json`](projects/lauflicht-D0-D7-Pendel.json) | Pendellauflicht von D0 nach D7 und zurück, mit doppelter Leuchtdauer an den Endpunkten |
+
+**Beispiel ausprobieren:**
+
+1. Die gewünschte JSON-Datei über den Link herunterladen.
+2. DigiTrainer starten und ausschalten.
+3. Über **Projekt → Datei importieren** die Datei laden.
+4. DigiTrainer einschalten und den Taktgenerator starten.
+
+Die Lauflichtschaltungen verwenden den integrierten 4-Bit-Zähler, den Taktgenerator und die bereits simulierten Logik-ICs. Es sind keine zusätzlichen virtuellen Bauteile erforderlich. Die Beispielprojekte wurden im Simulator erfolgreich ausprobiert.
+
 ## 🐞 Debug-Anzeige
 
 Über die Checkbox **Debug** lassen sich bei eingeschaltetem Gerät die logischen Zustände der Verdrahtung farblich anzeigen: **Rot** für HIGH (1), **Hellblau** für LOW (0) und **Hellgrau** für einen unbestimmten Zustand. Zusätzlich erscheinen die binären Zustände **0/1** unter den Schaltern S0–S7 und den Ausgangs-LEDs D0–D7.
@@ -231,9 +251,16 @@ DigiTrainer/
 │   └── itt-digitrainer2/
 │       ├── board.jpg
 │       └── board.json
+├── projects/
+│   ├── counter-1.json
+│   ├── counter-2.json
+│   ├── lauflicht-D0-D7.json
+│   └── lauflicht-D0-D7-Pendel.json
 └── images/
-    ├── digitrainer-v0.64.jpg
-    └── digitrainer-qr.jpg
+    ├── digitrainer-v0.67.jpg
+    ├── digitrainer-qr.jpg
+    ├── power-on.jpg
+    └── switch-off.jpg
 ```
 
 Die Aufgaben der einzelnen Dateien:
@@ -245,7 +272,9 @@ Die Aufgaben der einzelnen Dateien:
 - `js/kabel.js` – Kabel markieren, entfernen, umstecken und Änderungen rückgängig machen
 - `help.html` – Bedienungshinweise und Hilfe
 - `boards/itt-digitrainer2/board.jpg` – Foto des Originalgeräts
-- `boards/itt-digitrainer2/board.json` – Positionen und Definitionen der Steckbuchsen, Schalter und LEDs
+- `boards/itt-digitrainer2/board.json` – Positionen und Definitionen der Steckbuchsen, Schalter und LEDs einschließlich der Hauptschalter-Konfiguration
+- `images/power-on.jpg` – fotografisches Overlay des eingeschalteten Hauptschalters
+- `projects/` – importierbare JSON-Beispielschaltungen
 
 Die Simulation arbeitet mit einem Verbindungsmodell, das die über Patchkabel zusammengeschalteten Anschlüsse zu elektrischen Netzen zusammenfasst. Dazu gehören auch die passiven Verbindungsschienen L0–L4.
 
@@ -276,12 +305,12 @@ Unter Windows funktioniert alternativ häufig `py -m http.server 8000`. Anschlie
 - Experimente aus dem originalen ITT-Lehrmaterial nachbilden
 - Weitere Verbesserungen der elektrischen Simulation
 - Ergänzung von Beispielschaltungen und Bedienungshinweisen
-- Projektbibliothek mit geprüften JSON-Beispielen aus dem GitHub-Verzeichnis `projects/`
+- Erweiterung der vorhandenen JSON-Beispielprojekte zu einer direkt im Simulator auswählbaren Projektbibliothek
 - Vereinfachter Offline-Start ohne manuell gestarteten lokalen Webserver
 
 ## 📌 Projektstatus
 
-**Work in Progress – Version 0.66, Oktober 2026**
+**Work in Progress – Version 0.67, Oktober 2026**
 
 Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind implementiert. Darüber hinaus wurden folgende Funktionen bereits in grundlegenden Funktionstests erprobt:
 
@@ -299,6 +328,8 @@ Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind 
 - Debug-Anzeige mit Logikpegeln und binären Zustandsanzeigen
 - Speichern und Laden mehrerer Projekte im Browser
 - Export und Import von Schaltungen als JSON-Dateien
+- Fotografisches ON-Overlay des Hauptschalters, dessen Position und Größe über `board.json` festgelegt sind
+- Vier Beispielprojekte: zwei Zählerschaltungen und zwei Lauflichtvarianten
 
 Die wesentlichen digitalen Funktionsgruppen des Originalgeräts sind damit im Simulator abgebildet. Einige Details – insbesondere die analoge Beschaltung, das Widerstandsnetzwerk und das Verhalten bei Grenzfällen – müssen noch weiter untersucht werden.
 
