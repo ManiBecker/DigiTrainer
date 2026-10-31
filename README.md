@@ -3,7 +3,7 @@
 **A web-based simulator of the ITT Digi-Trainer 2 digital electronics training system.**
 
 <a href="https://manibecker.github.io/DigiTrainer/">
-  <img src="images/digitrainer-v0.67.jpg"
+  <img src="images/digitrainer-v0.68.jpg"
        alt="DigiTrainer Live-Demo"
        width="800"
        style="max-width: 100%; height: auto;">
