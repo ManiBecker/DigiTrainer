@@ -2,6 +2,7 @@
   "format": "digitrainer-projekt",
   "version": 1,
   "app": "DigiTrainer v0.66",
+  "description": "4-Bit-Binärzähler mit 7-Segment-Anzeige und zusätzlicher binärer Anzeige über D4–D7. S0 beeinflusst den Anzeigeeingang E.",
   "board": "itt-digitrainer2",
   "saved": "2026-10-30T09:02:31.833Z",
   "wires": [
