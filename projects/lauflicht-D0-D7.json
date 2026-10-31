@@ -2,6 +2,7 @@
   "format": "digitrainer-projekt",
   "version": 1,
   "app": "DigiTrainer v0.67",
+  "description": "Lauflicht über alle acht LEDs von D0 bis D7. Die Schaltung nutzt den Zähler, den Taktgenerator und die vorhandenen Logik-ICs.",
   "board": "itt-digitrainer2",
   "saved": "2026-10-31T00:29:00.294Z",
   "wires": [
