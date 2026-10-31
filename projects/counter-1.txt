@@ -1,0 +1,3 @@
+4-Bit-Binärzähler mit hexadezimaler 7-Segment-Anzeige von 0 bis F.
+
+QA ist mit dem zweiten Takteingang verbunden, CK A erhält den Takt. Nach dem Laden den DigiTrainer einschalten und den Taktgenerator starten.

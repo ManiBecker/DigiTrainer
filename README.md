@@ -161,7 +161,9 @@ Die Projektverwaltung wurde von **[Lutz (lschulze)](https://github.com/lschulze)
 
 ## 💡 Beispielprojekte
 
-Im Verzeichnis [`projects/`](projects/) stehen vier vorbereitete Beispielschaltungen zur Verfügung. Sie lassen sich als JSON-Dateien herunterladen und über **Projekt → Datei importieren** in den DigiTrainer laden.
+Im Verzeichnis [`projects/`](projects/) stehen vier vorbereitete Beispielschaltungen. Im Dialog **Projekt** lädt der DigiTrainer diese Dateien immer aus dem Repository [ManiBecker/DigiTrainer](https://github.com/ManiBecker/DigiTrainer), Branch `main`. Dafür ist eine Internetverbindung nötig. Ein Tipp auf den Dateinamen zeigt die Beschreibung, Laden übernimmt die Schaltung. Dieselbe JSON-Datei lässt sich weiterhin über **Datei importieren** laden.
+
+Die optionale Beschreibung steht im Feld `description` der JSON-Datei oder in einer Textdatei mit demselben Namen (`counter-1.json` und `counter-1.txt`). Der Dialog liest sie nur. Eine eigene Beschreibung wird beim Speichern im Browser und beim JSON-Export mit der eigenen Schaltung gespeichert. Ohne Beschreibungstext bleibt das Laden möglich.
 
 | Projekt | Beschreibung |
 |---|---|
@@ -172,10 +174,9 @@ Im Verzeichnis [`projects/`](projects/) stehen vier vorbereitete Beispielschaltu
 
 **Beispiel ausprobieren:**
 
-1. Die gewünschte JSON-Datei über den Link herunterladen.
-2. DigiTrainer starten und ausschalten.
-3. Über **Projekt → Datei importieren** die Datei laden.
-4. DigiTrainer einschalten und den Taktgenerator starten.
+1. DigiTrainer starten.
+2. **Projekt** öffnen und die gewünschte Beispielschaltung laden.
+3. DigiTrainer einschalten und den Taktgenerator starten.
 
 Die Lauflichtschaltungen verwenden den integrierten 4-Bit-Zähler, den Taktgenerator und die bereits simulierten Logik-ICs. Es sind keine zusätzlichen virtuellen Bauteile erforderlich. Die Beispielprojekte wurden im Simulator erfolgreich ausprobiert.
 
@@ -253,9 +254,13 @@ DigiTrainer/
 │       └── board.json
 ├── projects/
 │   ├── counter-1.json
+│   ├── counter-1.txt
 │   ├── counter-2.json
+│   ├── counter-2.txt
 │   ├── lauflicht-D0-D7.json
-│   └── lauflicht-D0-D7-Pendel.json
+│   ├── lauflicht-D0-D7.txt
+│   ├── lauflicht-D0-D7-Pendel.json
+│   └── lauflicht-D0-D7-Pendel.txt
 └── images/
     ├── digitrainer-v0.67.jpg
     ├── digitrainer-qr.jpg
@@ -268,7 +273,7 @@ Die Aufgaben der einzelnen Dateien:
 - `index.html` – Benutzeroberfläche
 - `css/digitrainer.css` – Darstellung und Layout
 - `js/simulator.js` – Bedienung, Verdrahtung und elektrische Simulation
-- `js/projekt.js` – Projektverwaltung, Browserspeicher sowie JSON-Import und -Export
+- `js/projekt.js` – Projektverwaltung, Browserspeicher, JSON-Import und -Export, optionale Beschreibung und Beispielschaltungen aus `projects/`
 - `js/kabel.js` – Kabel markieren, entfernen, umstecken und Änderungen rückgängig machen
 - `help.html` – Bedienungshinweise und Hilfe
 - `boards/itt-digitrainer2/board.jpg` – Foto des Originalgeräts
@@ -294,7 +299,7 @@ python3 -m http.server 8000
 
 Unter Windows funktioniert alternativ häufig `py -m http.server 8000`. Anschließend `http://localhost:8000/` im Browser öffnen. Der Server wird mit **Strg+C** beendet. Eine Internetverbindung ist für die eigentliche Simulation nicht nötig.
 
-**Wichtig:** Der direkte Aufruf von `index.html` über `file://` kann wegen der Browser-Sicherheitsbeschränkungen beim Laden von `board.json` die Verdrahtung verhindern. Die künftig geplante GitHub-Projektbibliothek wird eine Internetverbindung benötigen.
+**Wichtig:** Der direkte Aufruf von `index.html` über `file://` kann wegen der Browser-Sicherheitsbeschränkungen beim Laden von `board.json` die Verdrahtung verhindern. Die Beispielschaltungen kommen immer aus Manfreds Repository und brauchen dafür eine Internetverbindung.
 
 ## 📋 Geplante Erweiterungen
 
@@ -305,7 +310,6 @@ Unter Windows funktioniert alternativ häufig `py -m http.server 8000`. Anschlie
 - Experimente aus dem originalen ITT-Lehrmaterial nachbilden
 - Weitere Verbesserungen der elektrischen Simulation
 - Ergänzung von Beispielschaltungen und Bedienungshinweisen
-- Erweiterung der vorhandenen JSON-Beispielprojekte zu einer direkt im Simulator auswählbaren Projektbibliothek
 - Vereinfachter Offline-Start ohne manuell gestarteten lokalen Webserver
 
 ## 📌 Projektstatus
