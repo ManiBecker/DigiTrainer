@@ -1,85 +1,137 @@
 {
   "format": "digitrainer-projekt",
   "version": 1,
-  "app": "DigiTrainer v0.66",
+  "app": "DigiTrainer v0.67",
   "board": "itt-digitrainer2",
-  "saved": "2026-10-30T23:18:08.273Z",
+  "saved": "2026-10-31T00:29:00.294Z",
   "wires": [
     {
       "from": "clk-out",
-      "to": "ctr-CKA"
+      "to": "l1_4"
     },
     {
-      "from": "ctr-QA",
+      "from": "ctr-CKA",
+      "to": "l1_1"
+    },
+    {
+      "from": "ic0-pin11",
+      "to": "l0_3"
+    },
+    {
+      "from": "ic1-pin1",
+      "to": "l0_1"
+    },
+    {
+      "from": "ic1-pin1",
       "to": "ctr-CKB"
+    },
+    {
+      "from": "ctr-CKB",
+      "to": "ctr-QA"
+    },
+    {
+      "from": "ic0-pin2",
+      "to": "l0_1"
+    },
+    {
+      "from": "b7s-1",
+      "to": "ctr-QA"
     },
     {
       "from": "gnd1",
       "to": "ic0-pin7"
     },
     {
-      "from": "ctr-QA",
-      "to": "ic1-pin1"
-    },
-    {
-      "from": "ctr-QB",
-      "to": "ic1-pin3"
-    },
-    {
-      "from": "ctr-QC",
-      "to": "ic1-pin5"
-    },
-    {
-      "from": "ctr-QA",
-      "to": "ic0-pin2"
-    },
-    {
-      "from": "ctr-QB",
+      "from": "ic1-pin3",
       "to": "ic0-pin3"
     },
     {
-      "from": "ic1-pin2",
-      "to": "ic0-pin5"
+      "from": "b7s-2",
+      "to": "ctr-QB"
     },
     {
-      "from": "ctr-QB",
-      "to": "ic0-pin6"
+      "from": "ic0-pin6",
+      "to": "ic0-pin3"
     },
     {
-      "from": "ctr-QA",
-      "to": "ic0-pin11"
+      "from": "ic1-pin5",
+      "to": "ic4-pin5"
     },
     {
-      "from": "ic1-pin4",
-      "to": "ic0-pin10"
+      "from": "ic4-pin12",
+      "to": "l4_3"
+    },
+    {
+      "from": "ic4-pin12",
+      "to": "ic4-pin5"
+    },
+    {
+      "from": "ic4-pin2",
+      "to": "ic4-pin5"
+    },
+    {
+      "from": "b7s-4",
+      "to": "ctr-QC"
+    },
+    {
+      "from": "ic4-pin15",
+      "to": "l4_1"
+    },
+    {
+      "from": "ctr-QC",
+      "to": "l4_1"
     },
     {
       "from": "ic1-pin2",
       "to": "ic0-pin14"
     },
     {
+      "from": "ic0-pin14",
+      "to": "ic0-pin5"
+    },
+    {
       "from": "ic1-pin4",
       "to": "ic0-pin13"
+    },
+    {
+      "from": "ic0-pin13",
+      "to": "ic0-pin10"
     },
     {
       "from": "ic0-pin1",
       "to": "ic2-pin1"
     },
     {
+      "from": "ic2-pin1",
+      "to": "ic4-pin1"
+    },
+    {
       "from": "ic1-pin6",
+      "to": "ic2-pin5"
+    },
+    {
+      "from": "ic2-pin15",
+      "to": "ic2-pin12"
+    },
+    {
+      "from": "ic2-pin15",
       "to": "ic2-pin2"
     },
     {
-      "from": "ic2-pin3",
-      "to": "D0"
+      "from": "ic2-pin2",
+      "to": "ic2-pin5"
+    },
+    {
+      "from": "D0",
+      "to": "ic2-pin3"
     },
     {
       "from": "ic0-pin4",
       "to": "ic2-pin4"
     },
     {
-      "from": "ic1-pin6",
-      "to": "ic2-pin5"
+      "from": "ic4-pin4",
+      "to": "ic2-pin4"
     },
     {
       "from": "ic2-pin6",
@@ -90,8 +142,8 @@
       "to": "ic2-pin11"
     },
     {
-      "from": "ic1-pin6",
-      "to": "ic2-pin12"
+      "from": "ic2-pin11",
+      "to": "ic4-pin11"
     },
     {
       "from": "ic2-pin10",
@@ -102,68 +154,36 @@
       "to": "ic2-pin14"
     },
     {
-      "from": "ic1-pin6",
-      "to": "ic2-pin15"
+      "from": "ic4-pin14",
+      "to": "ic2-pin14"
     },
     {
-      "from": "ic2-pin13",
-      "to": "D3"
-    },
-    {
-      "from": "ic0-pin1",
-      "to": "ic4-pin1"
-    },
-    {
-      "from": "ctr-QC",
-      "to": "ic4-pin2"
+      "from": "D3",
+      "to": "ic2-pin13"
     },
     {
       "from": "ic4-pin3",
       "to": "ic1-pin11"
     },
     {
-      "from": "ic1-pin10",
-      "to": "D4"
+      "from": "D4",
+      "to": "ic1-pin10"
     },
     {
-      "from": "ic0-pin4",
-      "to": "ic4-pin4"
+      "from": "ic1-pin13",
+      "to": "ic4-pin6"
     },
     {
-      "from": "ctr-QC",
-      "to": "ic4-pin5"
-    },
-    {
-      "from": "ic4-pin6",
-      "to": "ic1-pin13"
-    },
-    {
-      "from": "ic1-pin12",
-      "to": "D5"
-    },
-    {
-      "from": "ic0-pin12",
-      "to": "ic4-pin11"
-    },
-    {
-      "from": "ctr-QC",
-      "to": "ic4-pin12"
+      "from": "D5",
+      "to": "ic1-pin12"
     },
     {
       "from": "ic4-pin10",
       "to": "ic1-pin15"
     },
     {
-      "from": "ic1-pin14",
-      "to": "D6"
-    },
-    {
-      "from": "ic0-pin15",
-      "to": "ic4-pin14"
-    },
-    {
-      "from": "ctr-QC",
-      "to": "ic4-pin15"
+      "from": "D6",
+      "to": "ic1-pin14"
     },
     {
       "from": "ic4-pin13",
@@ -174,12 +194,12 @@
       "to": "D7"
     },
     {
-      "from": "vcc12",
-      "to": "ic5-pin20"
+      "from": "ic5-pin20",
+      "to": "vcc12"
     },
     {
-      "from": "vcc10",
-      "to": "ic4-pin16"
+      "from": "ic4-pin16",
+      "to": "vcc10"
     },
     {
       "from": "vcc6",
@@ -190,8 +210,8 @@
       "to": "ic0-pin16"
     },
     {
-      "from": "vcc4",
-      "to": "ic1-pin16"
+      "from": "ic1-pin16",
+      "to": "vcc4"
     },
     {
       "from": "gnd12",
@@ -206,33 +226,25 @@
       "to": "ic2-pin7"
     },
     {
-      "from": "gnd3",
-      "to": "ic1-pin7"
-    },
-    {
-      "from": "b7s-1",
-      "to": "ctr-QA"
-    },
-    {
-      "from": "ctr-QB",
-      "to": "b7s-2"
-    },
-    {
-      "from": "b7s-4",
-      "to": "ctr-QC"
+      "from": "ic1-pin7",
+      "to": "gnd3"
     },
     {
       "from": "ctr-QD",
       "to": "b7s-8"
     },
     {
-      "from": "S0_NOT",
-      "to": "b7s-E"
+      "from": "b7s-E",
+      "to": "S0_NOT"
+    },
+    {
+      "from": "ctr-QB",
+      "to": "ic1-pin3"
     }
   ],
   "switches": {
     "power": 0,
-    "switch_clk_f": 0,
+    "switch_clk_f": 1,
     "switch_clk_stop": 1,
     "switch0": 1,
     "switch1": 0,
@@ -243,5 +255,5 @@
     "switch6": 0,
     "switch7": 0
   },
-  "debug": true
+  "debug": false
 }
