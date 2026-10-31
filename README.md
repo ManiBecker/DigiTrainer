@@ -254,9 +254,13 @@ DigiTrainer/
 │       └── board.json
 ├── projects/
 │   ├── counter-1.json
+│   ├── counter-1.txt
 │   ├── counter-2.json
+│   ├── counter-2.txt
 │   ├── lauflicht-D0-D7.json
-│   └── lauflicht-D0-D7-Pendel.json
+│   ├── lauflicht-D0-D7.txt
+│   ├── lauflicht-D0-D7-Pendel.json
+│   └── lauflicht-D0-D7-Pendel.txt
 └── images/
     ├── digitrainer-v0.67.jpg
     ├── digitrainer-qr.jpg
