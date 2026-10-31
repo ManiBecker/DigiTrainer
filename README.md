@@ -152,8 +152,9 @@ Ab **v0.64** lassen sich aufgebaute Schaltungen über den Button **Projekt** spe
 - **Im Browser speichern:** Projekte unter einem frei wählbaren Namen im lokalen Browserspeicher (`localStorage`) ablegen, aus einer Liste laden oder löschen.
 - **Als Datei exportieren:** Die aktuelle Schaltung als lesbare **JSON-Datei** herunterladen.
 - **Datei importieren:** Eine zuvor exportierte JSON-Datei auswählen und die Schaltung wiederherstellen – auch auf einem anderen Rechner oder in einem anderen Browser.
+- **Projektbeschreibung:** Optionalen, auch mehrzeiligen Text zu einer eigenen Schaltung hinterlegen. Die Beschreibung wird im Browser gespeichert und beim JSON-Export mitgegeben.
 
-Gespeichert werden die Verbindungen zwischen den Steckbuchsen, die Stellungen der Schalter **S0–S7**, die Einstellungen **f** und **STOP** des Taktgenerators sowie die **Debug-Anzeige**. Die Dateien enthalten Buchsen-IDs und Schalterzustände, keine Bildschirmfotos.
+Gespeichert werden die Verbindungen zwischen den Steckbuchsen, die Stellungen der Schalter **S0–S7**, die Einstellungen **f** und **STOP** des Taktgenerators, die **Debug-Anzeige** sowie eine optionale **Projektbeschreibung**. Die Dateien enthalten Buchsen-IDs und Schalterzustände, keine Bildschirmfotos.
 
 Beim Laden wird der DigiTrainer ausgeschaltet. Interne Laufzeitzustände der simulierten Bausteine, etwa ein aktueller Zählerstand, werden nicht gespeichert. Im Browser abgelegte Projekte sind an den jeweiligen Browser und die Website gebunden und können beim Löschen der Browserdaten verloren gehen. Für eine dauerhafte Sicherung empfiehlt sich der JSON-Export.
 
@@ -161,9 +162,9 @@ Die Projektverwaltung wurde von **[Lutz (lschulze)](https://github.com/lschulze)
 
 ## 💡 Beispielprojekte
 
-Im Verzeichnis [`projects/`](projects/) stehen vier vorbereitete Beispielschaltungen. Im Dialog **Projekt** lädt der DigiTrainer diese Dateien immer aus dem Repository [ManiBecker/DigiTrainer](https://github.com/ManiBecker/DigiTrainer), Branch `main`. Dafür ist eine Internetverbindung nötig. Ein Tipp auf den Dateinamen zeigt die Beschreibung, Laden übernimmt die Schaltung. Dieselbe JSON-Datei lässt sich weiterhin über **Datei importieren** laden.
+Im Verzeichnis [`projects/`](projects/) stehen vier vorbereitete Beispielschaltungen. Im Dialog **Projekt** sind die lokal gespeicherten Schaltungen unter **Meine Projekte** und die öffentlich bereitgestellten Schaltungen unter **Beispielprojekte** getrennt aufgeführt. Die Beispielprojekte werden aus dem Repository [ManiBecker/DigiTrainer](https://github.com/ManiBecker/DigiTrainer), Branch `main`, geladen; dafür ist eine Internetverbindung nötig. Ein Klick auf den Projektnamen zeigt die Beschreibung, **Laden** übernimmt die Schaltung. Dieselbe JSON-Datei lässt sich weiterhin über **Datei importieren** laden.
 
-Die optionale Beschreibung steht im Feld `description` der JSON-Datei oder in einer Textdatei mit demselben Namen (`counter-1.json` und `counter-1.txt`). Der Dialog liest sie nur. Eine eigene Beschreibung wird beim Speichern im Browser und beim JSON-Export mit der eigenen Schaltung gespeichert. Ohne Beschreibungstext bleibt das Laden möglich.
+Die Beschreibung steht vorzugsweise direkt im Feld `description` der JSON-Datei. Alternativ unterstützt die Projektbibliothek eine gleichnamige `.txt`-Datei, falls im JSON keine Beschreibung hinterlegt ist. Die JSON-Beschreibung hat Vorrang. Mehrzeilige Texte können in JSON mit `\n` (Zeilenumbruch) bzw. `\n\n` (Leerzeile) geschrieben werden. Eine eigene Beschreibung wird beim Speichern im Browser und beim JSON-Export mit der Schaltung gespeichert. Ältere Projekte ohne Beschreibung bleiben weiterhin ladbar.
 
 | Projekt | Beschreibung |
 |---|---|
@@ -254,13 +255,9 @@ DigiTrainer/
 │       └── board.json
 ├── projects/
 │   ├── counter-1.json
-│   ├── counter-1.txt
 │   ├── counter-2.json
-│   ├── counter-2.txt
 │   ├── lauflicht-D0-D7.json
-│   ├── lauflicht-D0-D7.txt
-│   ├── lauflicht-D0-D7-Pendel.json
-│   └── lauflicht-D0-D7-Pendel.txt
+│   └── lauflicht-D0-D7-Pendel.json
 └── images/
     ├── digitrainer-v0.67.jpg
     ├── digitrainer-qr.jpg
@@ -279,7 +276,7 @@ Die Aufgaben der einzelnen Dateien:
 - `boards/itt-digitrainer2/board.jpg` – Foto des Originalgeräts
 - `boards/itt-digitrainer2/board.json` – Positionen und Definitionen der Steckbuchsen, Schalter und LEDs einschließlich der Hauptschalter-Konfiguration
 - `images/power-on.jpg` – fotografisches Overlay des eingeschalteten Hauptschalters
-- `projects/` – importierbare JSON-Beispielschaltungen
+- `projects/` – JSON-Beispielschaltungen mit optionaler integrierter Beschreibung
 
 Die Simulation arbeitet mit einem Verbindungsmodell, das die über Patchkabel zusammengeschalteten Anschlüsse zu elektrischen Netzen zusammenfasst. Dazu gehören auch die passiven Verbindungsschienen L0–L4.
 
@@ -301,6 +298,10 @@ Unter Windows funktioniert alternativ häufig `py -m http.server 8000`. Anschlie
 
 **Wichtig:** Der direkte Aufruf von `index.html` über `file://` kann wegen der Browser-Sicherheitsbeschränkungen beim Laden von `board.json` die Verdrahtung verhindern. Die Beispielschaltungen kommen immer aus Manfreds Repository und brauchen dafür eine Internetverbindung.
 
+## 📊 Besucherstatistik
+
+Auf der Live-Demo wird die Anzahl der **Besuche seit dem 26.10.2026** angezeigt. Die Zahl wird über [GoatCounter](https://www.goatcounter.com/) abgerufen. Über den verlinkten Zähler lässt sich die [DigiTrainer-Besucherstatistik](https://digitrainer.goatcounter.com/) aufrufen (sofern öffentlich freigegeben bzw. mit entsprechender Anmeldung). Die Statistik ist unabhängig von der elektrischen Simulation.
+
 ## 📋 Geplante Erweiterungen
 
 - Untersuchung und Simulation des Widerstandsnetzwerks R0–R7
@@ -314,7 +315,7 @@ Unter Windows funktioniert alternativ häufig `py -m http.server 8000`. Anschlie
 
 ## 📌 Projektstatus
 
-**Work in Progress – Version 0.67, Oktober 2026**
+**Work in Progress – Stand November 2026 (zuletzt dokumentierte Version 0.67)**
 
 Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind implementiert. Darüber hinaus wurden folgende Funktionen bereits in grundlegenden Funktionstests erprobt:
 
@@ -331,7 +332,10 @@ Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind 
 - Logische HIGH-Auswertung offener 74LS-TTL-Eingänge
 - Debug-Anzeige mit Logikpegeln und binären Zustandsanzeigen
 - Speichern und Laden mehrerer Projekte im Browser
-- Export und Import von Schaltungen als JSON-Dateien
+- Export und Import von Schaltungen als JSON-Dateien einschließlich optionaler Projektbeschreibung
+- Automatisch geladene Beispielprojektbibliothek aus GitHub mit Beschreibungen
+- Getrennte Listen für eigene Projekte und Beispielprojekte
+- Besucherzähler auf der Live-Demo
 - Fotografisches ON-Overlay des Hauptschalters, dessen Position und Größe über `board.json` festgelegt sind
 - Vier Beispielprojekte: zwei Zählerschaltungen und zwei Lauflichtvarianten
 
@@ -349,10 +353,11 @@ Ohne diese Bilder wäre die originalgetreue Darstellung des Geräts in dieser Fo
 
 Vielen Dank auch an die Mitglieder des Classic-Computing-Forums für die Anregungen und Diskussionen rund um dieses Projekt.
 
-Ein herzliches Dankeschön an **[Lutz (lschulze)](https://github.com/lschulze)** für die Entwicklung der Projektverwaltung mit Browserspeicher und JSON-Import/-Export ([Pull Request #1](https://github.com/ManiBecker/DigiTrainer/pull/1)) sowie für die Erweiterung der Kabelbedienung mit Markieren, Entfernen, Umstecken und Rückgängig ([Pull Request #2](https://github.com/ManiBecker/DigiTrainer/pull/2)). Lutz hat bei seiner Entwicklung auch KI-Unterstützung eingesetzt und die Ergebnisse selbst getestet.
+Ein herzliches Dankeschön an **[Lutz (lschulze)](https://github.com/lschulze)** für die Entwicklung der Projektverwaltung mit Browserspeicher und JSON-Import/-Export ([Pull Request #1](https://github.com/ManiBecker/DigiTrainer/pull/1)) sowie für die Erweiterung der Kabelbedienung mit Markieren, Entfernen, Umstecken und Rückgängig ([Pull Request #2](https://github.com/ManiBecker/DigiTrainer/pull/2)) sowie für die automatische Beispielprojektbibliothek mit Projektbeschreibungen ([Pull Request #3](https://github.com/ManiBecker/DigiTrainer/pull/3)). Lutz hat bei seiner Entwicklung auch KI-Unterstützung eingesetzt und die Ergebnisse selbst getestet.
 
 ## 🔗 Links
 
 - **Live-Demo:** https://manibecker.github.io/DigiTrainer/
 - **GitHub-Repository:** https://github.com/ManiBecker/DigiTrainer
+- **Besucherstatistik:** https://digitrainer.goatcounter.com/
 - **Classic-Computing-Forum:** https://forum.classic-computing.de/
