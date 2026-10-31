@@ -1,1 +1,0 @@
-Pendellauflicht von D0 nach D7 und zurück, mit doppelter Leuchtdauer an den Endpunkten.

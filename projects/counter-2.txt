@@ -1,1 +1,0 @@
-4-Bit-Binärzähler mit 7-Segment-Anzeige und zusätzlicher binärer Anzeige über D4–D7. S0 beeinflusst den Anzeigeeingang E.
