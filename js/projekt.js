@@ -33,8 +33,16 @@
 //   "saved": "2026-10-28T12:00:00.000Z",
 //   "wires": [ { "from": "clk-out", "to": "ctr-CKA" }, ... ],
 //   "switches": { "switch0": 0, ..., "switch_clk_f": 0, "switch_clk_stop": 1 },
-//   "debug": false
+//   "debug": false,
+//   "description": "optionaler Hinweistext"
 // }
+// "description" darf fehlen. Aeltere Projekte ohne dieses Feld bleiben gueltig.
+//
+// Beispielbibliothek: nur lesend aus Manfreds Repository, Branch main.
+// Gelistet werden alle *.json in projects/. Die Beschreibung kommt aus
+// dem Feld description oder, falls das fehlt, aus der gleichnamigen
+// Textdatei. Beides wird nie dorthin zurueckgeschrieben. Eine eigene
+// Beschreibung bleibt beim Speichern im Browser und beim JSON-Export erhalten.
 // "from"/"to" sind die Buchsen-IDs aus boards/itt-digitrainer2/board.json.
 //
 // Lizenz: MIT, wie das DigiTrainer-Projekt (siehe LICENSE).
@@ -105,7 +113,7 @@
                 switchesState[control.id] = switchStates[control.id] === 1 ? 1 : 0;
             }
         });
-        return {
+        const project = {
             format: PROJECT_FORMAT,
             version: PROJECT_VERSION,
             app: document.title,
@@ -115,6 +123,20 @@
             switches: switchesState,
             debug: !!(typeof debugToggle !== "undefined" && debugToggle && debugToggle.checked)
         };
+        const description = projectDescription();
+        if (description) project.description = description;
+        return project;
+    }
+
+    function projectDescription() {
+        const field = document.getElementById("project-description");
+        return field ? field.value.replace(/\r\n/g, "\n").trim() : "";
+    }
+
+    function showProjectDescription(project) {
+        const field = document.getElementById("project-description");
+        if (!field) return;
+        field.value = project && typeof project.description === "string" ? project.description : "";
     }
 
     // Projektdaten pruefen. Liefert eine Fehlermeldung oder null.
@@ -217,18 +239,19 @@
 
     const style = document.createElement("style");
     style.textContent = `
-#project-dialog { box-sizing:border-box; width:min(560px,calc(100vw - 24px)); max-height:calc(100dvh - 24px); padding:0; border:1px solid #777; border-radius:8px; background:#242424; color:#fff; box-shadow:0 12px 50px #000b; font-family:Arial,Helvetica,sans-serif; }
+#project-dialog { box-sizing:border-box; width:min(560px,calc(100vw - 24px)); max-height:calc(100dvh - 24px); padding:0; border:1px solid #777; border-radius:8px; background:#242424; color:#fff; box-shadow:0 12px 50px #000b; font-family:Arial,Helvetica,sans-serif; overflow:hidden; }
 #project-dialog::backdrop { background:rgba(0,0,0,.70); }
 #project-dialog .project-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#303030; border-bottom:1px solid #555; font-size:1rem; }
-#project-dialog .project-body { padding:12px 14px; font-size:14px; }
+#project-dialog .project-body { padding:12px 14px; font-size:14px; max-height:calc(100dvh - 90px); overflow:auto; }
 #project-dialog .project-row { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
 #project-dialog button { background:#333; color:white; border:1px solid #777; border-radius:5px; padding:6px 11px; cursor:pointer; }
 #project-dialog button:active { background:#555; }
 #project-name { flex:1; min-width:150px; background:#111; color:#fff; border:1px solid #777; border-radius:5px; padding:6px 8px; }
-#project-list { list-style:none; margin:8px 0; padding:0; max-height:240px; overflow:auto; border:1px solid #444; border-radius:5px; }
-#project-list li { display:flex; align-items:center; gap:6px; padding:5px 8px; border-bottom:1px solid #333; }
-#project-list li span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-#project-list li.project-empty { color:#aaa; }
+#project-description { display:block; width:100%; box-sizing:border-box; min-height:5.6em; max-height:9em; margin:6px 0; resize:vertical; overflow:auto; background:#111; color:#fff; border:1px solid #777; border-radius:5px; padding:6px 8px; font:inherit; }
+#project-list, #library-list { list-style:none; margin:8px 0; padding:0; max-height:180px; overflow:auto; border:1px solid #444; border-radius:5px; }
+#project-list li, #library-list li { display:flex; align-items:center; gap:6px; padding:5px 8px; border-bottom:1px solid #333; }
+#project-list li span, #library-list li span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
+#project-list li.project-empty, #library-list li.project-empty { color:#aaa; cursor:default; }
 #project-dialog .project-hint { color:#aaa; font-size:12px; margin:8px 0 2px; }
 #project-info { min-height:1.2em; margin:4px 0 0; color:#9bd0ff; }
 `;
@@ -247,13 +270,16 @@
       <input type="text" id="project-name" placeholder="Projektname" maxlength="60">
       <button type="button" id="project-store">Im Browser speichern</button>
     </div>
+    <textarea id="project-description" rows="4" maxlength="4000" placeholder="Optionale Beschreibung, auch mehrzeilig"></textarea>
     <ul id="project-list"></ul>
+    <p class="project-hint">Beispielprojekte</p>
+    <ul id="library-list"></ul>
     <div class="project-row">
       <button type="button" id="project-export">Als Datei exportieren</button>
       <button type="button" id="project-import">Datei importieren …</button>
       <input type="file" id="project-file" accept=".json,application/json" hidden>
     </div>
-    <p class="project-hint">Gespeichert werden alle Kabel und die Schalterstellungen (S0–S7, f, STOP).
+    <p class="project-hint">Gespeichert werden alle Kabel, die Schalterstellungen (S0–S7, f, STOP) und, falls vorhanden, die Beschreibung.
     Beim Laden wird das Gerät ausgeschaltet. Browser-Projekte liegen nur in diesem Browser.</p>
     <p id="project-info" role="status"></p>
   </div>`;
@@ -305,16 +331,22 @@
             if (project && project.saved) {
                 label.title = "Gespeichert: " + new Date(project.saved).toLocaleString("de-DE");
             }
+            label.addEventListener("click", () => {
+                nameInput.value = name;
+                showProjectDescription(project);
+            });
 
             const load = document.createElement("button");
             load.type = "button";
             load.textContent = "Laden";
             load.addEventListener("click", () => {
-                const error = applyProject(readStoredProjects()[name]);
+                const stored = readStoredProjects()[name];
+                const error = applyProject(stored);
                 if (error) {
                     projectMessage("Laden fehlgeschlagen: " + error);
                 } else {
                     nameInput.value = name;
+                    showProjectDescription(stored);
                     dialog.close();
                     setStatus("Projekt geladen: " + name);
                 }
@@ -336,9 +368,145 @@
         });
     }
 
+    const libraryElement = dialog.querySelector("#library-list");
+
+    const LIBRARY_API = "https://api.github.com/repos/ManiBecker/DigiTrainer/contents/projects?ref=main";
+    const LIBRARY_BASE = "https://raw.githubusercontent.com/ManiBecker/DigiTrainer/main/projects/";
+
+    function libraryFileName(file) {
+        const base = decodeURIComponent(String(file).split("?")[0].split("/").pop());
+        return /^[A-Za-z0-9._-]+\.json$/i.test(base) ? base : "";
+    }
+
+    function libraryTextName(file) {
+        const jsonName = libraryFileName(file);
+        if (!jsonName) return "";
+        const textName = jsonName.replace(/\.json$/i, ".txt");
+        return /^[A-Za-z0-9._-]+\.txt$/i.test(textName) ? textName : "";
+    }
+
+    function libraryTitle(file) {
+        return file.replace(/\.json$/i, "");
+    }
+
+    async function listProjectFiles() {
+        try {
+            const response = await fetch(LIBRARY_API, {
+                headers: { Accept: "application/vnd.github+json" },
+                cache: "no-cache"
+            });
+            if (!response.ok) return null;
+            const data = await response.json();
+            if (!Array.isArray(data)) return null;
+            return data
+                .map(item => item && item.type === "file" ? libraryFileName(item.name) : "")
+                .filter(Boolean)
+                .sort((a, b) => a.localeCompare(b, "de"));
+        } catch (error) {
+            return null;
+        }
+    }
+
+    async function readOptionalText(url) {
+        try {
+            const response = await fetch(url, { cache: "no-cache" });
+            if (!response.ok) return "";
+            return (await response.text()).trim();
+        } catch (error) {
+            return "";
+        }
+    }
+
+    async function resolveLibraryDescription(file, project) {
+        if (project && typeof project.description === "string" && project.description.trim()) {
+            return project.description.trim();
+        }
+        const textName = libraryTextName(file);
+        if (!textName) return "";
+        return readOptionalText(LIBRARY_BASE + textName);
+    }
+
+    async function readLibraryProject(file) {
+        const name = libraryFileName(file);
+        if (!name) throw new Error("ungültiger Dateiname");
+        const response = await fetch(LIBRARY_BASE + name, { cache: "no-cache" });
+        if (!response.ok) throw new Error("Datei nicht gefunden");
+        return response.json();
+    }
+
+    async function showLibraryEntry(file) {
+        nameInput.value = libraryTitle(file);
+        let project = null;
+        try {
+            project = await readLibraryProject(file);
+        } catch (error) {
+            project = null;
+        }
+        const description = await resolveLibraryDescription(file, project);
+        const field = document.getElementById("project-description");
+        if (field) field.value = description;
+    }
+
+    function renderLibraryMessage(text) {
+        libraryElement.textContent = "";
+        const empty = document.createElement("li");
+        empty.className = "project-empty";
+        empty.textContent = text;
+        libraryElement.appendChild(empty);
+    }
+
+    async function renderLibrary() {
+        const files = await listProjectFiles();
+        if (!files) {
+            renderLibraryMessage("Beispielschaltungen sind gerade nicht erreichbar.");
+            return;
+        }
+        libraryElement.textContent = "";
+        if (!files.length) {
+            renderLibraryMessage("Keine Beispielschaltungen hinterlegt.");
+            return;
+        }
+        files.forEach(file => {
+            const title = libraryTitle(file);
+            const item = document.createElement("li");
+            const label = document.createElement("span");
+            label.textContent = title;
+            label.title = file;
+            label.addEventListener("click", () => {
+                showLibraryEntry(file);
+            });
+            const load = document.createElement("button");
+            load.type = "button";
+            load.textContent = "Laden";
+            load.addEventListener("click", async () => {
+                let project;
+                try {
+                    project = await readLibraryProject(file);
+                } catch (error) {
+                    projectMessage("Beispiel nicht geladen: " + title);
+                    return;
+                }
+                const description = await resolveLibraryDescription(file, project);
+                const error = applyProject(project);
+                if (error) {
+                    projectMessage("Laden fehlgeschlagen: " + error);
+                    return;
+                }
+                nameInput.value = title;
+                const field = document.getElementById("project-description");
+                if (field) field.value = description;
+                dialog.close();
+                setStatus("Beispiel geladen: " + title);
+            });
+            item.append(label, load);
+            libraryElement.appendChild(item);
+        });
+    }
+
     openButton.addEventListener("click", () => {
         info.textContent = "";
         renderProjectList();
+        renderLibrary();
         dialog.showModal();
     });
     dialog.querySelector("#project-close").addEventListener("click", () => dialog.close());
@@ -407,6 +575,7 @@
                 projectMessage("Import fehlgeschlagen: " + error);
             } else {
                 nameInput.value = file.name.replace(/\.json$/i, "");
+                showProjectDescription(project);
                 dialog.close();
                 setStatus("Projekt importiert: " + file.name);
             }
