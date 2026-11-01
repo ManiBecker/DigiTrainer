@@ -1,0 +1,360 @@
+= DigiTrainer: Benutzer- und Experimentierhandbuch
+:subtitle: Digitale Elektronik verstehen und ausprobieren – mit dem virtuellen ITT Digi-Trainer 2
+:author: Manfred Becker
+:revnumber: 0.68
+:revdate: 2026-11-01
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: rouge
+:lang: de
+
+[.lead]
+*Arbeitsfassung 0.1 – Funktionsinventar, Benutzerteil und erste Experimente.*
+
+[NOTE]
+====
+Dieses Handbuch beschreibt den dokumentierten Funktionsstand von DigiTrainer v0.68. Die Bedienfunktionen und Hardwaremerkmale basieren auf der Projekt-README. Die konkreten Steckbuchsenverbindungen der späteren Experimente werden vor der Veröffentlichung anhand von `board.json` und den gespeicherten Projektdateien verifiziert. Ungeprüfte Verdrahtungslisten werden bewusst nicht als fertige Bauanleitung ausgegeben.
+====
+
+== Vorwort
+
+Der ITT Digi-Trainer 2 ist ein Lehr- und Experimentiersystem für digitale Elektronik. Der browserbasierte DigiTrainer bildet das Gerät anhand eines Fotos und interaktiver Bedienelemente nach. Statt physische Patchkabel zu stecken, verbindet man Buchsen mit Maus oder Finger. Der Simulator ermittelt die elektrischen Netze und berechnet die logischen Zustände der simulierten Baugruppen.
+
+Das Handbuch richtet sich an Neugierige ohne Vorkenntnisse ebenso wie an Menschen, die bereits mit TTL-Bausteinen gearbeitet haben. Es verbindet die Bedienung des Programms mit nachvollziehbaren Experimenten. Eine Installation ist für die Online-Version nicht erforderlich.
+
+*Live-Demo:* https://manibecker.github.io/DigiTrainer/
+
+*Quellcode:* https://github.com/ManiBecker/DigiTrainer
+
+== Aufbau dieses Handbuchs
+
+Teil I führt in die Bedienung ein. Teil II erklärt die digitale Elektronik und die simulierte Hardware. Teil III enthält praktische Experimente. Teil IV behandelt Projekte, Fehlersuche und technische Hintergründe.
+
+=== Geplante Kapitel
+
+. Einführung und erster Start
+. Die Oberfläche und ihre Bedienelemente
+. Patchkabel, Versorgung und Verbindungsschienen
+. Anzeige, Zoom, Vollbild und Touch
+. Grundlagen der Digitaltechnik
+. Logikgatter und die sechs IC-Sockel
+. Taktgenerator und 4-Bit-Binärzähler
+. 7-Segment-Anzeige und 4-Bit-ALU
+. Experimenteller A/D-Wandler
+. Projekte speichern, laden und teilen
+. Debug-Anzeige und Fehlersuche
+. Experimente: vom Inverter zum Lauflicht
+. Technische Umsetzung und Grenzen
+. Anhang: Anschlussbelegungen, Wahrheitstabellen, JSON-Format
+
+== Teil I: Den DigiTrainer bedienen
+
+=== 1. Erster Start
+
+. Öffne https://manibecker.github.io/DigiTrainer/ in einem modernen Browser.
+. Warte, bis das Foto des Digi-Trainer 2 vollständig angezeigt wird.
+. Lasse den Hauptschalter zunächst auf *OFF*. In dieser Stellung darfst du die Schaltung verdrahten.
+. Schalte erst nach Abschluss der Verdrahtung auf *ON*. Die rote Betriebsanzeige signalisiert den eingeschalteten Zustand.
+. Betätige die Schiebeschalter S0 bis S7 oder den Taktgenerator und beobachte die Ausgangs-LEDs.
+
+[TIP]
+====
+Zum Kennenlernen eignet sich ein fertiges Beispielprojekt. Öffne *Projekt*, wähle unter *Beispielprojekte* einen Binärzähler aus, lies die Beschreibung, lade das Projekt und schalte den DigiTrainer ein.
+====
+
+=== 2. Bedienelemente
+
+==== Hauptschalter
+
+Der Hauptschalter trennt den Verdrahtungsmodus vom Simulationsbetrieb. Im ausgeschalteten Zustand lassen sich Leitungen stecken und bearbeiten. Im eingeschalteten Zustand kann die Schaltung mit Schaltern und Taktgenerator betrieben werden. Ein fotografisches Overlay und eine rote Betriebsanzeige verdeutlichen den Zustand.
+
+==== Schiebeschalter und LEDs
+
+Acht Schiebeschalter S0 bis S7 liefern manuell einstellbare logische Signale. Acht Ausgangs-LEDs D0 bis D7 machen Ergebnisse sichtbar. In der Debug-Anzeige erscheinen zusätzlich die binären Werte 0 und 1.
+
+==== Steckbuchsen
+
+Mehr als 200 definierte Hotspots repräsentieren Buchsen und Anschlüsse des Originalgeräts. Beim Zeigen auf Anschlüsse können deren Bezeichnungen und IC-Pinfunktionen angezeigt werden. Für die Dokumentation verwenden wir die tatsächlichen Anschlussnamen des Simulators.
+
+=== 3. Patchkabel bearbeiten
+
+==== Leitung stecken
+
+. DigiTrainer ausschalten.
+. Eine Steckbuchse mit der linken Maustaste oder dem Finger berühren.
+. Zur Zielbuchse ziehen.
+. Loslassen, um die Verbindung herzustellen.
+
+==== Leitung entfernen
+
+Du hast mehrere Möglichkeiten:
+
+* Dieselbe Verbindung erneut ziehen; die Richtung spielt keine Rolle.
+* Kabel anklicken oder antippen, um es zu markieren, und erneut anklicken oder antippen.
+* Ein markiertes Kabel mit *Entf* oder *Rücktaste* löschen.
+* Ein Kabel per Rechtsklick entfernen.
+
+==== Leitung umstecken
+
+Markiere das Kabel, ziehe einen Stecker von seiner bisherigen Buchse weg und lasse ihn an einer neuen Buchse los. Wird der Stecker im Leeren losgelassen, entfernt der Simulator das Kabel.
+
+==== Rückgängig
+
+Mit *Strg+Z* unter Windows/Linux, *⌘+Z* unter macOS oder der Schaltfläche *↶* lassen sich bis zu 50 Kabeländerungen rückgängig machen. *Esc* hebt die Kabelmarkierung auf.
+
+[IMPORTANT]
+====
+Kabel dürfen nur bei ausgeschaltetem DigiTrainer und außerhalb des Vermessungsmodus bearbeitet werden.
+====
+
+=== 4. Spannungsversorgung und Verbindungsschienen
+
+Die Logik-ICs benötigen eine korrekte Versorgung mit +5 V und GND. Die entsprechenden Versorgungsschienen sind innerhalb ihrer Gruppe elektrisch verbunden. Die fünf passiven Verbindungsschienen L0 bis L4 bieten jeweils vier miteinander verbundene Buchsen. Sie helfen dabei, ein Signal zu verteilen und lange Leitungen zu vermeiden.
+
+[WARNING]
+====
+Ein direktes Verbinden von +5 V und GND verursacht einen Kurzschluss. Der Simulator erkennt Kurzschlüsse und Ausgangskonflikte. In realen Schaltungen können solche Fehler Bauteile beschädigen.
+====
+
+=== 5. Anzeige, Zoom und Touch
+
+Der DigiTrainer unterstützt Zoomstufen von 100 % bis 400 %, Schaltflächen und Tastatur, Mausrad-Zoom, Zwei-Finger-Zoom sowie das Verschieben der vergrößerten Platine. Mit *0* kehrst du zu 100 % zurück; *+* und *−* verändern den Zoom. Vollbild wird auf PC und iPad unterstützt; auf dem iPhone steht ein Pseudo-Vollbildmodus zur Verfügung.
+
+=== 6. Vermessungsmodus
+
+Mit *M* wechselst du zwischen Verdrahtungs- und Vermessungsmodus. Im Vermessungsmodus können Koordinaten und rechteckige Bereiche auf dem Platinenfoto ermittelt werden. Die Ausgabe im JSON-Format dient insbesondere dazu, weitere Steckbuchsen-Hotspots zu definieren.
+
+== Teil II: Digitale Elektronik und simulierte Baugruppen
+
+=== 7. Grundlagen: LOW, HIGH und Wahrheitstabellen
+
+Digitale Schaltungen arbeiten mit zwei logischen Zuständen: LOW (0) und HIGH (1). Ein Gatter berechnet aus seinen Eingangssignalen einen Ausgangszustand. Eine Wahrheitstabelle zeigt alle möglichen Eingangskombinationen.
+
+==== NOT (Inverter)
+
+[cols="1,1",options="header"]
+|===
+|Eingang A |Ausgang Y
+|0 |1
+|1 |0
+|===
+
+==== AND
+
+[cols="1,1,1",options="header"]
+|===
+|A |B |Y
+|0 |0 |0
+|0 |1 |0
+|1 |0 |0
+|1 |1 |1
+|===
+
+==== OR
+
+[cols="1,1,1",options="header"]
+|===
+|A |B |Y
+|0 |0 |0
+|0 |1 |1
+|1 |0 |1
+|1 |1 |1
+|===
+
+==== XOR
+
+[cols="1,1,1",options="header"]
+|===
+|A |B |Y
+|0 |0 |0
+|0 |1 |1
+|1 |0 |1
+|1 |1 |0
+|===
+
+NAND ist die Negation von AND; NOR ist die Negation von OR. Der Simulator unterscheidet außerdem undefinierte Zustände. Offene Eingänge der simulierten 74LS-TTL-Gatter werden logisch als HIGH interpretiert; offene CMOS-Eingänge des CD4069 bleiben undefiniert.
+
+=== 8. Die sechs Logik-IC-Sockel
+
+[cols="1,2,4",options="header"]
+|===
+|Sockel |Baustein |Funktion
+|0 |SN74LS02N |Vier NOR-Gatter mit je zwei Eingängen
+|1 |SN74LS04N |Sechs Inverter (NOT)
+|2 |SN74LS08N |Vier AND-Gatter mit je zwei Eingängen
+|3 |SN74LS86AN |Vier XOR-Gatter mit je zwei Eingängen
+|4 |74LS00PC |Vier NAND-Gatter mit je zwei Eingängen
+|5 |CD4069UBE |Sechs CMOS-Inverter
+|===
+
+Die simulierten Bausteine können miteinander verdrahtet werden. Für jedes Experiment müssen die Versorgungspins des verwendeten ICs korrekt angeschlossen werden. Die genaue Pinbelegung wird im Anhang nach Prüfung der Boarddefinition ergänzt.
+
+=== 9. Taktgenerator
+
+Der integrierte Taktgenerator unterstützt 1 Hz und 10 Hz, manuelle Impulse, Start/Stopp sowie einen normalen und einen invertierten Taktausgang. Er ermöglicht Versuche mit Zählern und zeitabhängigen Schaltungen.
+
+=== 10. 4-Bit-Binärzähler SN74LS293N
+
+Der Zähler besitzt die Takteingänge CK A und CK B, vier Ausgänge QA bis QD und zwei asynchrone Reset-Eingänge. In der üblichen Zählerbeschaltung liefert er eine Folge von 0 bis 15. Für eine vollständige 4-Bit-Zählfolge wird QA mit CK B verbunden, während CK A die Taktimpulse erhält.
+
+=== 11. 7-Segment-Anzeige MC14495P
+
+Vier binäre Eingänge mit den Wertigkeiten 1, 2, 4 und 8 steuern die hexadezimale Darstellung von 0 bis F. Der Eingang E beeinflusst die Latch-Funktion. So kann der Zählerstand direkt sichtbar gemacht werden.
+
+=== 12. 4-Bit-ALU SN74LS382N
+
+Die ALU verarbeitet zwei 4-Bit-Operanden A0–A3 und B0–B3. Die Steuereingänge S0–S2 wählen eine Funktion; Cn ist der Eingangsübertrag. Ausgänge sind F0–F3, OVR und Cn+4. Der Simulator unterstützt unter anderem Addition, Subtraktion und logische Operationen. Ein dokumentierter Funktionstest ist 3 + 2 = 5.
+
+=== 13. 6-Bit-A/D-Wandler NE5037N
+
+Der NE5037N ist als *experimentelles, vereinfachtes Modell* implementiert. Der Wandler liefert sechs digitale Ausgänge Q0–Q5. Als geprüfte Grenzwerte sind 0 V → `000000` und +5 V → `111111` dokumentiert. Zwischenwerte und zeitliche Details sind noch nicht abschließend verifiziert.
+
+== Teil III: Experimente
+
+=== 14. So sind die Experimente aufgebaut
+
+Jedes Experiment enthält Lernziel, benötigte Funktionsgruppen, geprüfte Verdrahtung, Durchführung, erwartete Beobachtung, Erklärung und eine Zusatzaufgabe. Die Stecklisten werden aus der Boarddefinition und gespeicherten JSON-Projekten übernommen und anschließend im Simulator getestet.
+
+=== Experiment 1: Ein Inverter verändert ein Signal
+
+*Lernziel:* Verstehen, dass ein NOT-Gatter aus 0 eine 1 und aus 1 eine 0 macht.
+
+*Benötigt:* Ein Schiebeschalter, ein Inverter des SN74LS04N und eine Ausgangs-LED.
+
+*Vorbereitung:* Den DigiTrainer ausschalten und die korrekte +5-V-/GND-Versorgung des ICs sicherstellen.
+
+*Verdrahtungskonzept:* Schalterausgang → Invertereingang → Inverterausgang → LED-Eingang.
+
+[NOTE]
+====
+Die exakten Buchsen-IDs werden ergänzt, sobald `board.json` geprüft wurde. Dieses Experiment ist deshalb zunächst ein didaktischer Entwurf und keine freigegebene Steckanleitung.
+====
+
+*Durchführung:* DigiTrainer einschalten und den verwendeten Schalter abwechselnd auf 0 und 1 stellen.
+
+*Erwartete Beobachtung:* Der LED-Zustand ist jeweils das Gegenteil des Schalterzustands.
+
+*Erklärung:* Ein Inverter gibt stets den negierten logischen Eingangswert aus.
+
+*Zusatzaufgabe:* Zwei Inverter hintereinander schalten. Was passiert mit dem ursprünglichen Signal?
+
+=== Experiment 2: Ein 4-Bit-Zähler zeigt Hexadezimalzahlen
+
+*Lernziel:* Binäre Zählwerte und ihre hexadezimale Darstellung kennenlernen.
+
+*Vorlage:* `projects/counter-1.json`
+
+. DigiTrainer öffnen und auf *Projekt* klicken.
+. Unter *Beispielprojekte* `counter-1.json` auswählen und die Beschreibung lesen.
+. Das Projekt laden.
+. Prüfen, dass der DigiTrainer zunächst ausgeschaltet ist.
+. Den Hauptschalter einschalten und den Taktgenerator starten.
+. Die Anzeige von 0 bis F beobachten.
+
+*Erklärung:* Vier Binärstellen können 16 Werte darstellen. Die 7-Segment-Anzeige übersetzt diese Werte in die Ziffern 0 bis 9 und die Buchstaben A bis F.
+
+*Zusatzaufgabe:* Zwischen 1 Hz und 10 Hz wechseln. Bei welcher Frequenz lassen sich die einzelnen Zählerstände besser verfolgen?
+
+=== Experiment 3: Binärzähler und LED-Ausgänge
+
+*Lernziel:* Die Bitwertigkeiten 1, 2, 4 und 8 an den Ausgängen beobachten.
+
+*Vorlage:* `projects/counter-2.json`
+
+Lade die Beispielschaltung und starte den Taktgenerator. Beobachte die 7-Segment-Anzeige und die zusätzlichen binären Ausgänge D4–D7. Untersuche anschließend, welchen Einfluss S0 auf den Anzeigeeingang E hat.
+
+=== Experiment 4: Lauflicht D0 bis D7
+
+*Lernziel:* Aus einem Zähler und kombinatorischer Logik eine zeitlich fortschreitende LED-Folge erzeugen.
+
+*Vorlage:* `projects/lauflicht-D0-D7.json`
+
+Lade die Schaltung aus der Projektbibliothek. Schalte den DigiTrainer ein und starte den Taktgenerator. Beobachte, wie die aktive LED von D0 nach D7 wandert. Die Beispielschaltung verwendet vorhandene Logik-ICs und den integrierten Zähler.
+
+=== Experiment 5: Pendellauflicht
+
+*Lernziel:* Eine vorwärts- und rückwärtslaufende LED-Folge verstehen.
+
+*Vorlage:* `projects/lauflicht-D0-D7-Pendel.json`
+
+Lade das Pendellauflicht, schalte ein und starte den Takt. Beobachte die Folge von D0 nach D7 und zurück. Achte besonders auf die doppelte Leuchtdauer an den Endpunkten.
+
+== Teil IV: Projekte, Fehlersuche und Technik
+
+=== 15. Projekte speichern und laden
+
+Der Button *Projekt* öffnet die Projektverwaltung. *Meine Projekte* enthält im Browser gespeicherte Schaltungen. *Beispielprojekte* zeigt die bereitgestellten JSON-Dateien aus dem GitHub-Repository. Für diese öffentliche Bibliothek ist eine Internetverbindung erforderlich.
+
+Du kannst Projekte lokal im Browser speichern, als JSON exportieren und JSON-Dateien importieren. Der Export ist die zuverlässigere Sicherung, da Browserdaten gelöscht werden können. Gespeichert werden Verbindungen, Schalterstellungen, Taktgenerator-Einstellungen, Debug-Zustand und gegebenenfalls eine Beschreibung. Interne Laufzeitzustände, etwa ein aktueller Zählerstand, werden nicht mitgespeichert. Beim Laden ist der DigiTrainer ausgeschaltet.
+
+=== 16. Beschreibungen in JSON
+
+Eine Projektbeschreibung steht vorzugsweise direkt im Feld `description`:
+
+[source,json]
+----
+{
+  "format": "digitrainer-projekt",
+  "version": 1,
+  "description": "4-Bit-Binärzähler mit 7-Segment-Anzeige.\n\nNach dem Laden einschalten und den Taktgenerator starten."
+}
+----
+
+Dieses Beispiel zeigt nur die Metadaten und ist *keine vollständig importierbare Schaltung*. In echten Projektdateien kommen unter anderem `board`, `wires` und `switches` hinzu. `\n` erzeugt einen Zeilenumbruch; `\n\n` eine Leerzeile. Fehlt `description`, kann die Bibliothek alternativ eine gleichnamige `.txt`-Datei lesen. Die JSON-Beschreibung hat Vorrang.
+
+=== 17. Eigene Projekte beitragen
+
+Die Beispielbibliothek soll durch Schaltungen aus der Community wachsen. Erstelle eine Schaltung, teste sie im Simulator und exportiere sie als JSON-Datei. Ergänze eine kurze Beschreibung mit Zweck und Bedienhinweisen und sende die Datei an den Projektbetreiber. Nach Prüfung kann sie in die öffentliche Bibliothek aufgenommen werden.
+
+=== 18. Debug-Anzeige
+
+Bei eingeschaltetem Gerät zeigt *Debug* die logischen Pegel: Rot für HIGH (1), Hellblau für LOW (0) und Hellgrau für undefiniert. Zusätzlich werden binäre Werte unter Schaltern und LEDs angezeigt. Ohne Debug werden zusammenhängende elektrische Netze durch gleiche Kabelfarben kenntlich gemacht; Versorgung und Masse erhalten eigene Farben.
+
+=== 19. Typische Fehler
+
+[cols="2,4",options="header"]
+|===
+|Beobachtung |Prüfung
+|Ein Kabel lässt sich nicht stecken |Hauptschalter OFF? Vermessungsmodus deaktiviert?
+|Ein IC reagiert nicht |+5 V und GND korrekt verbunden? Richtige Ein- und Ausgänge verwendet?
+|Ein Signal bleibt undefiniert |Offener CMOS-Eingang oder nicht versorgter Baustein?
+|Ausgangskonflikt |Sind zwei Ausgänge direkt miteinander verbunden?
+|Beispielprojekt fehlt |Internetverbindung und Zugriff auf die GitHub-Bibliothek prüfen.
+|Projekt nach Browserbereinigung verschwunden |Nach Möglichkeit aus einer zuvor exportierten JSON-Datei importieren.
+|===
+
+=== 20. Technische Umsetzung und Grenzen
+
+Der DigiTrainer verwendet HTML, CSS und JavaScript. Die Steckbuchsen werden anhand einer Boarddefinition zugeordnet; Patchkabel bilden elektrische Netze. Der Simulator berechnet daraus die logischen Zustände. Er ersetzt keine vollständige elektrische Schaltungssimulation: reale Laufzeiten, Stromaufnahme, Belastbarkeit und analoge Grenzfälle sind nur eingeschränkt modelliert. Der A/D-Wandler befindet sich ausdrücklich in einem experimentellen Entwicklungsstadium.
+
+Für den lokalen Betrieb empfiehlt sich ein Webserver im Repository-Verzeichnis, beispielsweise:
+
+[source,shell]
+----
+python3 -m http.server 8000
+----
+
+Anschließend `http://localhost:8000/` öffnen. Das direkte Öffnen von `index.html` über `file://` kann durch Browser-Sicherheitsbeschränkungen das Laden der Boarddefinition verhindern. Die eigentliche Simulation benötigt keine Internetverbindung; die online bereitgestellten Beispielprojekte hingegen schon.
+
+== Anhang A: Funktions- und Quellenprüfung
+
+[cols="3,3,2",options="header"]
+|===
+|Bereich |Quelle für die Endredaktion |Status
+|Bedienung, Kabel, Undo, Zoom |README und `js/kabel.js` |README dokumentiert; Codeabgleich offen
+|ICs, Zähler, ALU, ADC |README, `js/simulator.js`, `board.json` |README dokumentiert; Codeabgleich offen
+|Projektverwaltung |README und `js/projekt.js` |README dokumentiert; Codeabgleich offen
+|Stecklisten der Experimente |`board.json` und vier Projekt-JSONs |Stecklistenprüfung offen
+|Bildschirmfotos |Live-Demo v0.68 |Bildauswahl offen
+|===
+
+== Anhang B: Quellen und Mitwirkende
+
+* DigiTrainer: https://github.com/ManiBecker/DigiTrainer
+* Live-Demo: https://manibecker.github.io/DigiTrainer/
+* Projekt-README (Stand der Arbeitsfassung): https://raw.githubusercontent.com/ManiBecker/DigiTrainer/main/README.md
+
+Der Simulator basiert auf Fotografien eines originalen ITT Digi-Trainer 2, die jobi23 aus dem Classic-Computing-Forum bereitgestellt hat. Lutz (`lschulze`) hat unter anderem zur Projektverwaltung, Kabelbedienung und Projektbibliothek beigetragen.
