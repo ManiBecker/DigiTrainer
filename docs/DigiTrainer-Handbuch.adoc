@@ -12,7 +12,7 @@
 :lang: de
 
 [.lead]
-*Arbeitsfassung 0.1 – Funktionsinventar, Benutzerteil und erste Experimente.*
+*Arbeitsfassung 0.2 – Funktionsinventar, Benutzerteil, erste Experimente und IC-Katalog.*
 
 [NOTE]
 ====
@@ -358,3 +358,136 @@ Anschließend `http://localhost:8000/` öffnen. Das direkte Öffnen von `index.h
 * Projekt-README (Stand der Arbeitsfassung): https://raw.githubusercontent.com/ManiBecker/DigiTrainer/main/README.md
 
 Der Simulator basiert auf Fotografien eines originalen ITT Digi-Trainer 2, die jobi23 aus dem Classic-Computing-Forum bereitgestellt hat. Lutz (`lschulze`) hat unter anderem zur Projektverwaltung, Kabelbedienung und Projektbibliothek beigetragen.
+
+
+== Anhang C: IC-Katalog für künftige Experimente
+
+Dieser Katalog sammelt Bausteine, die sich für spätere DigiTrainer-Experimente und eine austauschbare IC-Bibliothek eignen. *Die Aufnahme in diese Liste bedeutet nicht, dass der Baustein bereits simuliert oder in einem Sockel auswählbar ist.* Die Verfügbarkeit und die Pinbelegung müssen vor jedem Experiment geprüft werden.
+
+=== C.1 Bereits simulierte ICs
+
+[cols="2,1,3,4",options="header"]
+|===
+|Baustein |Pins |Funktion |Experimentideen
+|74LS00 |14 |Vier NAND-Gatter mit je zwei Eingängen |NAND-Grundschaltungen, RS-Speicher
+|74LS02 |14 |Vier NOR-Gatter mit je zwei Eingängen |NOR-Grundschaltungen, RS-Speicher
+|74LS04 |14 |Sechs Inverter |Signalumkehr, einfache Logik
+|74LS08 |14 |Vier AND-Gatter mit je zwei Eingängen |Freigabeschaltungen, Halbaddierer
+|74LS86 |14 |Vier XOR-Gatter mit je zwei Eingängen |Halbaddierer, Paritätsprüfung
+|CD4069UBE |14 |Sechs CMOS-Inverter |Vergleich von TTL- und CMOS-Eingangsverhalten
+|===
+
+Der *CD4069UBE ist kein TTL-IC*, sondern ein CMOS-Baustein der 4000er-Familie. Er ist hier aufgeführt, weil er zur vorhandenen Bestückung gehört. Zusätzlich sind auf dem Board unter anderem der Binärzähler SN74LS293N, die 7-Segment-Ansteuerung MC14495P, die ALU SN74LS382N und der experimentell modellierte A/D-Wandler NE5037N vorhanden. Diese Baugruppen sind nicht mit den sechs frei zu bestückenden IC-Plätzen gleichzusetzen.
+
+=== C.2 Logikgatter und kombinatorische Funktionen
+
+[cols="2,1,4,4",options="header"]
+|===
+|Baustein |Pins |Funktion |Experimentideen
+|74LS10 |14 |Drei NAND-Gatter mit je drei Eingängen |Mehrfachbedingungen
+|74LS20 |14 |Zwei NAND-Gatter mit je vier Eingängen |Freigabelogik
+|74LS21 |14 |Zwei AND-Gatter mit je vier Eingängen |Zustandsabfragen
+|74LS27 |14 |Drei NOR-Gatter mit je drei Eingängen |Kombinatorische Logik
+|74LS30 |14 |Ein NAND-Gatter mit acht Eingängen |Bitmuster erkennen
+|74LS32 |14 |Vier OR-Gatter mit je zwei Eingängen |OR-Verknüpfungen
+|74LS266 |14 |Vier XNOR-Gatter mit Open-Collector-Ausgängen |Gleichheitsprüfung, Ausgangsbeschaltung
+|===
+
+=== C.3 Flipflops und Schieberegister
+
+[cols="2,1,4,4",options="header"]
+|===
+|Baustein |Pins |Funktion |Experimentideen
+|74LS74 |14 |Zwei D-Flipflops |Speichern, Frequenzteilen
+|74LS76 |16 |Zwei JK-Flipflops |Toggle-Betrieb, Zähler
+|74LS109 |16 |Zwei JK-Flipflops |Zustandsautomaten
+|74LS164 |14 |8-Bit-Schieberegister, seriell nach parallel |LED-Lauflicht
+|74LS165 |16 |8-Bit-Schieberegister, parallel nach seriell |Serielle Datenausgabe
+|74LS173 |16 |4-Bit-Register mit Tri-State-Ausgängen |Datenspeicherung, Bus
+|74LS175 |16 |Vier D-Flipflops mit gemeinsamem Takt |4-Bit-Register
+|74LS194 |16 |Bidirektionales 4-Bit-Schieberegister |Verschieben nach links und rechts
+|===
+
+=== C.4 Zähler und Frequenzteiler
+
+[cols="2,1,4,4",options="header"]
+|===
+|Baustein |Pins |Funktion |Experimentideen
+|74LS90 |14 |Dezimalzähler |Zählen von 0 bis 9
+|74LS92 |14 |Modulo-12-Zähler |Frequenzteilung
+|74LS93 |14 |4-Bit-Binärzähler |Zählen von 0 bis 15
+|74LS161 |16 |Synchroner 4-Bit-Binärzähler |Synchrones Zählen
+|74LS163 |16 |Synchroner 4-Bit-Binärzähler |Kaskadierte Zähler
+|74LS192 |16 |Synchroner BCD-Auf-/Abwärtszähler |Dezimal vorwärts und rückwärts zählen
+|74LS193 |16 |Synchroner 4-Bit-Auf-/Abwärtszähler |Pendelzähler
+|===
+
+=== C.5 Decoder, Multiplexer und Anzeige
+
+[cols="2,1,4,4",options="header"]
+|===
+|Baustein |Pins |Funktion |Experimentideen
+|74LS47 |16 |BCD-zu-7-Segment-Decoder/Treiber |Dezimalanzeige mit geeigneter Anzeige
+|74LS138 |16 |3-zu-8-Decoder |LED-Auswahl, Adressdekodierung
+|74LS139 |16 |Zwei 2-zu-4-Decoder |Adressdekodierung
+|74LS148 |16 |8-zu-3-Prioritätsencoder |Prioritäten auswerten
+|74LS151 |16 |8-zu-1-Multiplexer |Datenauswahl
+|74LS153 |16 |Zwei 4-zu-1-Multiplexer |Logikfunktionen auswählen
+|74LS157 |16 |Vier 2-zu-1-Multiplexer |4-Bit-Datenquellen umschalten
+|===
+
+Der 74LS47 ist für Anzeigen mit passender elektrischer Ansteuerung gedacht. Er kann nicht ohne Weiteres als Ersatz für den auf dem DigiTrainer vorhandenen MC14495P betrachtet werden.
+
+=== C.6 Arithmetik und Vergleicher
+
+[cols="2,1,4,4",options="header"]
+|===
+|Baustein |Pins |Funktion |Experimentideen
+|74LS83 |16 |4-Bit-Volladdierer |Binäre Addition
+|74LS85 |16 |4-Bit-Größenkomparator |A = B, A größer/kleiner B
+|74LS181 |24 |4-Bit-ALU |Kleines Rechenwerk; zusätzlicher Sockel nötig
+|74LS283 |16 |4-Bit-Volladdierer |Addition und Subtraktion mit Zusatzlogik
+|===
+
+=== C.7 Besonders interessante 20-polige Bausteine
+
+[cols="2,1,4,4",options="header"]
+|===
+|Baustein |Pins |Funktion |Experimentideen
+|74LS240 |20 |Acht invertierende Tri-State-Bustreiber |Busfreigabe, Datenbus
+|74LS244 |20 |Acht nichtinvertierende Tri-State-Bustreiber |Busfreigabe
+|74LS245 |20 |Bidirektionaler 8-Bit-Bustransceiver |Datenübertragung in beide Richtungen
+|74LS273 |20 |Acht D-Flipflops mit gemeinsamem Takt |8-Bit-Datenspeicher
+|74LS373 |20 |Acht transparente Latches mit Tri-State-Ausgängen |Zwischenspeichern von Busdaten
+|74LS374 |20 |Acht flankengesteuerte D-Flipflops mit Tri-State-Ausgängen |8-Bit-Register und Datenbus
+|===
+
+=== C.8 Sockel und elektrische Besonderheiten
+
+* Die *Sockel 0 bis 4 sind 16-polig*, *Sockel 5 ist 20-polig*. Das muss die spätere Bausteinauswahl berücksichtigen.
+* Die vielen 14-poligen TTL-ICs benötigen eine definierte Zuordnung zu den 16-poligen Steckplätzen. Eine physisch und elektrisch korrekte Einsetzposition darf nicht stillschweigend angenommen werden.
+* 20-polige ICs sind Kandidaten für Sockel 5. Der 24-polige 74LS181 passt dagegen in keinen der vorhandenen Sockel.
+* Stromversorgung, Pinbelegung, Reset-/Takteingänge und Ausgangstypen müssen für jeden IC individuell modelliert werden.
+* Open-Collector-Ausgänge benötigen eine geeignete Pull-up-Beschaltung; Tri-State-Ausgänge können hochohmig sein. Solche Eigenschaften müssen vom Simulator unterstützt werden, bevor entsprechende Experimente als funktionsfähig gelten.
+* Nicht alle Bausteine der 74xx-Familie sind untereinander elektrisch oder zeitlich identisch. Für die Dokumentation ist die konkrete Typbezeichnung maßgeblich.
+
+=== C.9 Vorgeschlagene Reihenfolge für die IC-Bibliothek
+
+[cols="1,2,5",options="header"]
+|===
+|Priorität |IC |Grund
+|1 |74LS74 |Einfacher Einstieg in speichernde Logik
+|2 |74LS32 |Ergänzt die Grundgatter um OR
+|3 |74LS193 |Auf- und Abwärtszähler
+|4 |74LS164 |Serielle Daten und LED-Lauflichter
+|5 |74LS138 |Decoder und gezielte Ausgangsauswahl
+|6 |74LS151 |Multiplexer und Datenauswahl
+|7 |74LS85 |Vergleich zweier Binärzahlen
+|8 |74LS283 |Vier-Bit-Addition
+|9 |74LS273 |Nutzt den 20-poligen Sockel 5 für ein 8-Bit-Register
+|===
+
+[NOTE]
+====
+Dieser Anhang ist ein *Planungskatalog*, keine Liste bereits unterstützter Austausch-ICs. Pinzahlen und Funktionen sind zur Orientierung angegeben; konkrete Pinbelegungen, Versorgungsanforderungen und Simulationseigenschaften müssen vor der Implementierung mit den jeweiligen Datenblättern abgeglichen werden.
+====
