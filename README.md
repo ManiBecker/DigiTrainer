@@ -29,6 +29,15 @@ Der aktuelle Entwicklungsstand kann direkt im Browser ausprobiert werden:
        width="150">
 </a>
 
+
+## 📖 Benutzer- und Experimentierhandbuch
+
+Für den DigiTrainer entsteht ein ausführliches Handbuch mit
+Bedienungsanleitungen, Grundlagen der Digitaltechnik und
+praktischen Experimenten.
+
+👉 [DigiTrainer-Handbuch](docs/DigiTrainer-Handbuch.adoc)
+
 ## ✨ Bereits implementierte Funktionen
 
 ### Bedienung und Verdrahtung
@@ -359,5 +368,6 @@ Ein herzliches Dankeschön an **[Lutz (lschulze)](https://github.com/lschulze)**
 
 - **Live-Demo:** https://manibecker.github.io/DigiTrainer/
 - **GitHub-Repository:** https://github.com/ManiBecker/DigiTrainer
+- **DigiTrainer-Handbuch:** https://github.com/ManiBecker/DigiTrainer/docs/DigiTrainer-Handbuch.adoc
 - **Besucherstatistik:** https://digitrainer.goatcounter.com/
 - **Classic-Computing-Forum:** https://forum.classic-computing.de/
