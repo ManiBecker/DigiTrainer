@@ -1320,12 +1320,22 @@
             }
             return false;
         }
+        const PINS = [];
+        symbols.forEach(symbol => symbol.pins.forEach(pin => PINS.push(pin.ax, pin.ay)));
+        function nearPinAt(x, y, r) {
+            const r2 = r * r;
+            for (let i = 0; i < PINS.length; i += 2) {
+                const dx = PINS[i] - x, dy = PINS[i + 1] - y;
+                if (dx * dx + dy * dy < r2) return true;
+            }
+            return false;
+        }
         function hugsSymbol(a, b) {
             const steps = Math.max(2, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 4));
             for (let step = 0; step <= steps; step++) {
                 const x = a.x + (b.x - a.x) * step / steps;
                 const y = a.y + (b.y - a.y) * step / steps;
-                const nearPin = symbols.some(symbol => symbol.pins.some(pin => Math.hypot(pin.ax - x, pin.ay - y) < 16));
+                const nearPin = nearPinAt(x, y, 16);
                 if (nearPin) continue;
                 const close = symbols.some(symbol => {
                     const box = symbol.box;
@@ -1342,7 +1352,7 @@
             for (let step = 0; step <= steps; step++) {
                 const x = a.x + (b.x - a.x) * step / steps;
                 const y = a.y + (b.y - a.y) * step / steps;
-                const nearPin = symbols.some(symbol => symbol.pins.some(pin => Math.hypot(pin.ax - x, pin.ay - y) < 6));
+                const nearPin = nearPinAt(x, y, 6);
                 if (nearPin) continue;
                 const inside = symbols.some(symbol => {
                     const box = symbol.box;
@@ -1410,7 +1420,6 @@
                 const a = path[index - 1];
                 const b = path[index];
                 if (Math.hypot(b.x - a.x, b.y - a.y) < 0.8) continue;
-                if (hitsSymbol(a, b) || hugsSymbol(a, b)) return false;
                 const horiz = Math.abs(a.y - b.y) < 0.6;
                 if (!horiz && Math.abs(a.x - b.x) >= 0.6) return false;
                 parts.push({ a: a, b: b, horiz: horiz });
@@ -1422,7 +1431,11 @@
                     if ((item.own || item.net !== net) && tooClose(parts[index], item)) return false;
                 }
             }
-            return pathCrossings(parts, foreign, net) <= budget;
+            if (pathCrossings(parts, foreign, net) > budget) return false;
+            for (let index = 0; index < parts.length; index++) {
+                if (hitsSymbol(parts[index].a, parts[index].b) || hugsSymbol(parts[index].a, parts[index].b)) return false;
+            }
+            return true;
         }
         function lengthOf(path) {
             let total = 0;
