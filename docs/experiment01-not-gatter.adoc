@@ -108,12 +108,11 @@ Anders als bei Experiment 1a zeigt D0 nun stets den *entgegengesetzten* Zustand 
 
 Die logische Funktion schreiben wir als:
 
-[stem]
-++++
-Y = \overline{A}
-++++
+[.text-center]
+*Y = ¬A*
 
-Dabei steht `A` für den Eingang und `Y` für den invertierten Ausgang.
+Dabei steht `A` für den Eingang und `Y` für den
+invertierten Ausgang.
 
 *Projektdatei:* link:../projects/experiment01b-not-gatter.json[experiment01b-not-gatter.json]
 
