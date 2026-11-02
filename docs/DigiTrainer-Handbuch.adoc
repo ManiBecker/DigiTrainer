@@ -1,8 +1,8 @@
 = DigiTrainer: Benutzer- und Experimentierhandbuch
 :subtitle: Digitale Elektronik verstehen und ausprobieren – mit dem virtuellen ITT Digi-Trainer 2
 :author: Manfred Becker
-:revnumber: 0.68
-:revdate: 2026-11-01
+:revnumber: 0.69
+:revdate: 2026-11-02
 :doctype: book
 :toc: left
 :toclevels: 3
@@ -12,11 +12,11 @@
 :lang: de
 
 [.lead]
-*Arbeitsfassung 0.2 – Funktionsinventar, Benutzerteil, erste Experimente und IC-Katalog.*
+*Arbeitsfassung 0.3 – Benutzerteil, Schaltplanerstellung, erste Experimente und IC-Katalog.*
 
 [NOTE]
 ====
-Dieses Handbuch beschreibt den dokumentierten Funktionsstand von DigiTrainer v0.68. Die Bedienfunktionen und Hardwaremerkmale basieren auf der Projekt-README. Die konkreten Steckbuchsenverbindungen der späteren Experimente werden vor der Veröffentlichung anhand von `board.json` und den gespeicherten Projektdateien verifiziert. Ungeprüfte Verdrahtungslisten werden bewusst nicht als fertige Bauanleitung ausgegeben.
+Dieses Handbuch beschreibt den dokumentierten Funktionsstand von DigiTrainer v0.69. Die Bedienfunktionen und Hardwaremerkmale basieren auf der Projekt-README, der Online-Hilfe und den beschriebenen Neuerungen von Pull Request #4. Die konkreten Steckbuchsenverbindungen der späteren Experimente werden vor der Veröffentlichung anhand von `board.json` und den gespeicherten Projektdateien verifiziert. Ungeprüfte Verdrahtungslisten werden bewusst nicht als fertige Bauanleitung ausgegeben.
 ====
 
 == Vorwort
@@ -31,7 +31,7 @@ Das Handbuch richtet sich an Neugierige ohne Vorkenntnisse ebenso wie an Mensche
 
 == Aufbau dieses Handbuchs
 
-Teil I führt in die Bedienung ein. Teil II erklärt die digitale Elektronik und die simulierte Hardware. Teil III enthält praktische Experimente. Teil IV behandelt Projekte, Fehlersuche und technische Hintergründe.
+Teil I führt in die Bedienung ein. Teil II erklärt die digitale Elektronik und die simulierte Hardware. Teil III enthält praktische Experimente. Teil IV behandelt Projekte, Fehlersuche, die automatische Schaltplanerstellung und technische Hintergründe.
 
 === Geplante Kapitel
 
@@ -46,6 +46,7 @@ Teil I führt in die Bedienung ein. Teil II erklärt die digitale Elektronik und
 . Experimenteller A/D-Wandler
 . Projekte speichern, laden und teilen
 . Debug-Anzeige und Fehlersuche
+. Automatische Schaltplanerstellung und SVG-Export
 . Experimente: vom Inverter zum Lauflicht
 . Technische Umsetzung und Grenzen
 . Anhang: Anschlussbelegungen, Wahrheitstabellen, JSON-Format
@@ -126,6 +127,33 @@ Der DigiTrainer unterstützt Zoomstufen von 100 % bis 400 %, Schaltflächen und 
 === 6. Vermessungsmodus
 
 Mit *M* wechselst du zwischen Verdrahtungs- und Vermessungsmodus. Im Vermessungsmodus können Koordinaten und rechteckige Bereiche auf dem Platinenfoto ermittelt werden. Die Ausgabe im JSON-Format dient insbesondere dazu, weitere Steckbuchsen-Hotspots zu definieren.
+
+=== 6a. Die Schaltplanansicht (neu in v0.69)
+
+Über die Schaltfläche *Schaltplan* öffnest du eine automatisch erzeugte Schaltplanansicht der aktuell gesteckten Verdrahtung. Die Darstellung ordnet die verwendeten Gatter und Anschlüsse möglichst entlang des Signalflusses von links nach rechts an. +5 V und GND werden zur besseren Übersicht nicht eingezeichnet; das bedeutet nicht, dass die Bausteine ohne Versorgung funktionieren.
+
+Die Schaltplanansicht bietet folgende Möglichkeiten:
+
+* *IEC 60617:* Rechteckige Gattersymbole als Voreinstellung; alternativ können die herkömmlichen Gattersymbole gewählt werden.
+* *Kabelfarben:* Auf Wunsch werden die Farben der gesteckten Verbindungen übernommen.
+* *SVG speichern:* Der Schaltplan wird als skalierbare Vektorgrafik exportiert. Das ist besonders für Dokumentationen und dieses Handbuch nützlich.
+* *Drucken:* Eine druckfreundliche Ansicht mit weißem Hintergrund ausgeben. Bei breiten Schaltungen empfiehlt sich Querformat.
+* *Projektname:* In der Titelleiste erscheint der Name des geladenen Projekts ohne die Dateiendung `.json`, soweit ein Dateiname bekannt ist.
+
+[NOTE]
+====
+Die Anordnung und Leitungsführung erfolgen automatisch und können bei komplexen Verdrahtungen unübersichtliche Abschnitte enthalten. Bei größeren Schaltungen zeigt ein Fortschrittsbalken die Verarbeitung an. Bereits berechnete Ansichten werden zwischengespeichert. Die Schaltplanansicht stellt die vorhandene Verdrahtung dar; sie ersetzt keine Prüfung der logischen Funktion.
+====
+
+==== Ein Schaltbild für das Handbuch exportieren
+
+. Ein Beispielprojekt laden oder eine eigene Schaltung verdrahten.
+. Auf *Schaltplan* klicken.
+. Die gewünschte Symbolform und gegebenenfalls die Kabelfarben auswählen.
+. Den Schaltplan als SVG-Datei speichern.
+. Die SVG-Datei für die spätere Abbildung im Handbuch unter `docs/images/` ablegen.
+
+*Weiterführende technische Dokumentation:* link:Schaltplan-aus-Netzliste.pdf[Schaltplan aus der Netzliste (PDF)] (von Lutz Schulze, im Verzeichnis `docs/`).
 
 == Teil II: Digitale Elektronik und simulierte Baugruppen
 
@@ -256,7 +284,7 @@ Die exakten Buchsen-IDs werden ergänzt, sobald `board.json` geprüft wurde. Die
 
 *Erklärung:* Vier Binärstellen können 16 Werte darstellen. Die 7-Segment-Anzeige übersetzt diese Werte in die Ziffern 0 bis 9 und die Buchstaben A bis F.
 
-*Zusatzaufgabe:* Zwischen 1 Hz und 10 Hz wechseln. Bei welcher Frequenz lassen sich die einzelnen Zählerstände besser verfolgen?
+*Zusatzaufgabe:* Zwischen 1 Hz und 10 Hz wechseln. Bei welcher Frequenz lassen sich die einzelnen Zählerstände besser verfolgen? Öffne außerdem die *Schaltplanansicht* und speichere die Darstellung als SVG.
 
 === Experiment 3: Binärzähler und LED-Ausgänge
 
@@ -272,7 +300,7 @@ Lade die Beispielschaltung und starte den Taktgenerator. Beobachte die 7-Segment
 
 *Vorlage:* `projects/lauflicht-D0-D7.json`
 
-Lade die Schaltung aus der Projektbibliothek. Schalte den DigiTrainer ein und starte den Taktgenerator. Beobachte, wie die aktive LED von D0 nach D7 wandert. Die Beispielschaltung verwendet vorhandene Logik-ICs und den integrierten Zähler.
+Lade die Schaltung aus der Projektbibliothek. Schalte den DigiTrainer ein und starte den Taktgenerator. Beobachte, wie die aktive LED von D0 nach D7 wandert. Die Beispielschaltung verwendet vorhandene Logik-ICs und den integrierten Zähler. Vergleiche anschließend die Verdrahtung mit der automatisch erzeugten Schaltplanansicht.
 
 === Experiment 5: Pendellauflicht
 
@@ -280,7 +308,7 @@ Lade die Schaltung aus der Projektbibliothek. Schalte den DigiTrainer ein und st
 
 *Vorlage:* `projects/lauflicht-D0-D7-Pendel.json`
 
-Lade das Pendellauflicht, schalte ein und starte den Takt. Beobachte die Folge von D0 nach D7 und zurück. Achte besonders auf die doppelte Leuchtdauer an den Endpunkten.
+Lade das Pendellauflicht, schalte ein und starte den Takt. Beobachte die Folge von D0 nach D7 und zurück. Achte besonders auf die doppelte Leuchtdauer an den Endpunkten. Betrachte anschließend die Schaltplanansicht in beiden Symbolformen.
 
 == Teil IV: Projekte, Fehlersuche und Technik
 
@@ -323,6 +351,8 @@ Bei eingeschaltetem Gerät zeigt *Debug* die logischen Pegel: Rot für HIGH (1),
 |Ein Signal bleibt undefiniert |Offener CMOS-Eingang oder nicht versorgter Baustein?
 |Ausgangskonflikt |Sind zwei Ausgänge direkt miteinander verbunden?
 |Beispielprojekt fehlt |Internetverbindung und Zugriff auf die GitHub-Bibliothek prüfen.
+|Schaltplan braucht länger |Bei komplexen Projekten Fortschrittsanzeige abwarten.
+|Schaltplan wirkt unübersichtlich |Alternative Symbolform oder Kabelfarben testen; SVG exportieren und vergrößern.
 |Projekt nach Browserbereinigung verschwunden |Nach Möglichkeit aus einer zuvor exportierten JSON-Datei importieren.
 |===
 
@@ -339,6 +369,14 @@ python3 -m http.server 8000
 
 Anschließend `http://localhost:8000/` öffnen. Das direkte Öffnen von `index.html` über `file://` kann durch Browser-Sicherheitsbeschränkungen das Laden der Boarddefinition verhindern. Die eigentliche Simulation benötigt keine Internetverbindung; die online bereitgestellten Beispielprojekte hingegen schon.
 
+=== 21. Wie entsteht der automatische Schaltplan?
+
+Die Schaltplanerstellung wurde von Lutz (`lschulze`) in Pull Request #4 beigesteuert. Sie wertet die vorhandenen elektrischen Netze aus, erkennt die daran angeschlossenen Logikfunktionen und erstellt daraus eine grafische Darstellung. Für die Anordnung der Elemente werden Verfahren aus der Graphendarstellung verwendet; die Leitungen werden anschließend mit möglichst gut lesbaren Abständen und Verzweigungen geführt.
+
+Die Schaltplanansicht ist von der eigentlichen Simulation getrennt: Die Einführung erfolgte ohne Änderungen an `js/simulator.js`. Die Umsetzung befindet sich in `js/schaltplan.js`; `js/projekt.js` stellt unter anderem den geladenen Projektnamen bereit. Ein ergänzender Test unter `test/leitungsabstand.js` untersucht die Leitungsführung anhand der Beispielprojekte.
+
+Für die geplante austauschbare IC-Bibliothek muss die Schaltplanerstellung später auch die Definitionen neu ausgewählter ICs berücksichtigen. Die technische Beschreibung von Lutz erläutert die derzeitige Vorgehensweise ausführlicher: link:Schaltplan-aus-Netzliste.pdf[Schaltplan aus der Netzliste].
+
 == Anhang A: Funktions- und Quellenprüfung
 
 [cols="3,3,2",options="header"]
@@ -348,7 +386,8 @@ Anschließend `http://localhost:8000/` öffnen. Das direkte Öffnen von `index.h
 |ICs, Zähler, ALU, ADC |README, `js/simulator.js`, `board.json` |README dokumentiert; Codeabgleich offen
 |Projektverwaltung |README und `js/projekt.js` |README dokumentiert; Codeabgleich offen
 |Stecklisten der Experimente |`board.json` und vier Projekt-JSONs |Stecklistenprüfung offen
-|Bildschirmfotos |Live-Demo v0.68 |Bildauswahl offen
+|Schaltplanansicht und SVG-Export |`js/schaltplan.js`, PR #4, technische PDF-Dokumentation |Funktionen dokumentiert; Abgleich mit Quellcode offen
+|Bildschirmfotos |Live-Demo v0.69 |Bildauswahl offen
 |===
 
 == Anhang B: Quellen und Mitwirkende
@@ -357,7 +396,7 @@ Anschließend `http://localhost:8000/` öffnen. Das direkte Öffnen von `index.h
 * Live-Demo: https://manibecker.github.io/DigiTrainer/
 * Projekt-README (Stand der Arbeitsfassung): https://raw.githubusercontent.com/ManiBecker/DigiTrainer/main/README.md
 
-Der Simulator basiert auf Fotografien eines originalen ITT Digi-Trainer 2, die jobi23 aus dem Classic-Computing-Forum bereitgestellt hat. Lutz (`lschulze`) hat unter anderem zur Projektverwaltung, Kabelbedienung und Projektbibliothek beigetragen.
+Der Simulator basiert auf Fotografien eines originalen ITT Digi-Trainer 2, die jobi23 aus dem Classic-Computing-Forum bereitgestellt hat. Lutz (`lschulze`) hat unter anderem zur Projektverwaltung, Kabelbedienung, Projektbibliothek und zur automatischen Schaltplanerstellung (Pull Request #4) beigetragen. Seine technische Dokumentation liegt unter link:Schaltplan-aus-Netzliste.pdf[Schaltplan aus der Netzliste].
 
 
 == Anhang C: IC-Katalog für künftige Experimente
