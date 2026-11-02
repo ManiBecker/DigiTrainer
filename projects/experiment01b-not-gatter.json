@@ -1,0 +1,40 @@
+{
+  "format": "digitrainer-projekt",
+  "version": 1,
+  "app": "DigiTrainer v0.69",
+  "board": "itt-digitrainer2",
+  "saved": "2026-11-02T21:55:39.252Z",
+  "wires": [
+    {
+      "from": "ic1-pin16",
+      "to": "vcc4"
+    },
+    {
+      "from": "gnd3",
+      "to": "ic1-pin7"
+    },
+    {
+      "from": "S0",
+      "to": "ic1-pin1"
+    },
+    {
+      "from": "ic1-pin2",
+      "to": "D0"
+    }
+  ],
+  "switches": {
+    "power": 0,
+    "switch_clk_f": 0,
+    "switch_clk_stop": 0,
+    "switch0": 1,
+    "switch1": 0,
+    "switch2": 0,
+    "switch3": 0,
+    "switch4": 0,
+    "switch5": 0,
+    "switch6": 0,
+    "switch7": 0
+  },
+  "debug": false,
+  "description": "Experiment 1b – Das NOT-Gatter (74LS04). Der Schalter S0 steuert über einen Inverter die LED D0. Ist S0 ausgeschaltet, leuchtet D0; ist S0 eingeschaltet, erlischt D0."
+}

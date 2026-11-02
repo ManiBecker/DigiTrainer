@@ -1,0 +1,28 @@
+{
+  "format": "digitrainer-projekt",
+  "version": 1,
+  "app": "DigiTrainer v0.69",
+  "board": "itt-digitrainer2",
+  "saved": "2026-11-02T21:58:05.663Z",
+  "wires": [
+    {
+      "from": "S0",
+      "to": "D0"
+    }
+  ],
+  "switches": {
+    "power": 0,
+    "switch_clk_f": 0,
+    "switch_clk_stop": 0,
+    "switch0": 1,
+    "switch1": 0,
+    "switch2": 0,
+    "switch3": 0,
+    "switch4": 0,
+    "switch5": 0,
+    "switch6": 0,
+    "switch7": 0
+  },
+  "debug": false,
+  "description": "Experiment 1a – Schalter und LED\n\nIn diesem ersten Versuch wird der Schalter S0 direkt mit der LED D0 verbunden. Die LED zeigt den logischen Zustand des Schalters an: Bei LOW (0) ist sie ausgeschaltet, bei HIGH (1) leuchtet sie.\n\nDer Versuch vermittelt die Grundlagen digitaler Signale und dient als Vorbereitung auf Experiment 1b mit dem NOT-Gatter."
+}
