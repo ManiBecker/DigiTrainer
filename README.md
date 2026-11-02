@@ -3,7 +3,7 @@
 **A web-based simulator of the ITT Digi-Trainer 2 digital electronics training system.**
 
 <a href="https://manibecker.github.io/DigiTrainer/">
-  <img src="images/digitrainer-v0.68.jpg"
+  <img src="images/digitrainer-v0.69.jpg"
        alt="DigiTrainer Live-Demo"
        width="800"
        style="max-width: 100%; height: auto;">
@@ -190,6 +190,54 @@ Die Beschreibung steht vorzugsweise direkt im Feld `description` der JSON-Datei.
 
 Die Lauflichtschaltungen verwenden den integrierten 4-Bit-Zähler, den Taktgenerator und die bereits simulierten Logik-ICs. Es sind keine zusätzlichen virtuellen Bauteile erforderlich. Die Beispielprojekte wurden im Simulator erfolgreich ausprobiert.
 
+
+## 🔌 Automatische Schaltplanerstellung (neu in v0.69)
+
+Ab Version **0.69** kann der DigiTrainer aus der gesteckten
+Verdrahtung automatisch einen digitalen Schaltplan erzeugen.
+
+Über die Schaltfläche **Schaltplan** wird die aktuelle Schaltung
+in einer separaten Ansicht dargestellt.
+
+**Funktionen:**
+
+- Automatische Erkennung der elektrisch verbundenen Netze
+- Darstellung des Signalflusses von links nach rechts
+- Automatische Anordnung der verwendeten Logikgatter
+- Erkennung und Darstellung von Rückkopplungen
+- Optimierte Leitungsführung mit Verbindungspunkten
+- Umschaltbare Gattersymbole nach IEC 60617 oder in
+  amerikanischer Darstellung
+- Wahlweise Übernahme der Kabelfarben vom Experimentierboard
+- Export des Schaltplans als skalierbare SVG-Datei
+- Druckausgabe mit weißem Hintergrund
+- Zwischenspeicherung bereits berechneter Schaltpläne
+- Fortschrittsanzeige bei umfangreichen Schaltungen
+
+Die Versorgungsspannungen +5 V und GND werden im Schaltplan
+nicht dargestellt, um die Übersichtlichkeit zu verbessern.
+
+Die automatische Leitungsführung ist noch nicht in allen
+Fällen perfekt. Besonders bei komplexen Schaltungen mit
+vielen Verbindungen können Kreuzungen und Umwege auftreten.
+
+Die Schaltplanerstellung wurde von
+[Lutz (lschulze)](https://github.com/lschulze)
+entwickelt und über
+[Pull Request #4](https://github.com/ManiBecker/DigiTrainer/pull/4)
+beigesteuert.
+
+### Technischer Hintergrund
+
+Die Schaltplanerstellung basiert auf der Auswertung der
+Netzliste und einer automatischen Anordnung der Bauteile.
+Dabei werden unter anderem Graphenalgorithmen und Verfahren
+zur Minimierung von Leitungskreuzungen eingesetzt.
+
+Lutz hat den technischen Ablauf ausführlich dokumentiert:
+
+📄 [Schaltplan aus der Netzliste (PDF)](docs/Schaltplan-aus-Netzliste.pdf)
+
 ## 🐞 Debug-Anzeige
 
 Über die Checkbox **Debug** lassen sich bei eingeschaltetem Gerät die logischen Zustände der Verdrahtung farblich anzeigen: **Rot** für HIGH (1), **Hellblau** für LOW (0) und **Hellgrau** für einen unbestimmten Zustand. Zusätzlich erscheinen die binären Zustände **0/1** unter den Schaltern S0–S7 und den Ausgangs-LEDs D0–D7.
@@ -257,21 +305,26 @@ DigiTrainer/
 ├── js/
 │   ├── simulator.js
 │   ├── projekt.js
-│   └── kabel.js
+│   ├── kabel.js
+│   └── schaltplan.js
 ├── boards/
 │   └── itt-digitrainer2/
 │       ├── board.jpg
-│       └── board.json
+│       ├── board.json
+│       ├── power-on.jpg
+│       └── switch-off.jpg
 ├── projects/
 │   ├── counter-1.json
 │   ├── counter-2.json
 │   ├── lauflicht-D0-D7.json
 │   └── lauflicht-D0-D7-Pendel.json
+├── docs/
+│   ├── DigiTrainer-Handbuch.adoc
+│   └── Schaltplan-aus-Netzliste.pdf
 └── images/
-    ├── digitrainer-v0.67.jpg
-    ├── digitrainer-qr.jpg
-    ├── power-on.jpg
-    └── switch-off.jpg
+    ├── digitrainer-v0.69.jpg
+    └── digitrainer-qr.jpg
+
 ```
 
 Die Aufgaben der einzelnen Dateien:
@@ -281,6 +334,7 @@ Die Aufgaben der einzelnen Dateien:
 - `js/simulator.js` – Bedienung, Verdrahtung und elektrische Simulation
 - `js/projekt.js` – Projektverwaltung, Browserspeicher, JSON-Import und -Export, optionale Beschreibung und Beispielschaltungen aus `projects/`
 - `js/kabel.js` – Kabel markieren, entfernen, umstecken und Änderungen rückgängig machen
+- `js/schaltplan.js` – Automatische Schaltplanerstellung, Symbolanordnung, Leitungsführung, SVG-Export und Druckfunktion
 - `help.html` – Bedienungshinweise und Hilfe
 - `boards/itt-digitrainer2/board.jpg` – Foto des Originalgeräts
 - `boards/itt-digitrainer2/board.json` – Positionen und Definitionen der Steckbuchsen, Schalter und LEDs einschließlich der Hauptschalter-Konfiguration
@@ -362,7 +416,23 @@ Ohne diese Bilder wäre die originalgetreue Darstellung des Geräts in dieser Fo
 
 Vielen Dank auch an die Mitglieder des Classic-Computing-Forums für die Anregungen und Diskussionen rund um dieses Projekt.
 
-Ein herzliches Dankeschön an **[Lutz (lschulze)](https://github.com/lschulze)** für die Entwicklung der Projektverwaltung mit Browserspeicher und JSON-Import/-Export ([Pull Request #1](https://github.com/ManiBecker/DigiTrainer/pull/1)) sowie für die Erweiterung der Kabelbedienung mit Markieren, Entfernen, Umstecken und Rückgängig ([Pull Request #2](https://github.com/ManiBecker/DigiTrainer/pull/2)) sowie für die automatische Beispielprojektbibliothek mit Projektbeschreibungen ([Pull Request #3](https://github.com/ManiBecker/DigiTrainer/pull/3)). Lutz hat bei seiner Entwicklung auch KI-Unterstützung eingesetzt und die Ergebnisse selbst getestet.
+Ein besonderer Dank gilt
+**[Lutz (lschulze)](https://github.com/lschulze)**,
+der inzwischen mehrere wichtige Erweiterungen zum
+DigiTrainer beigetragen hat:
+
+- [PR #1](https://github.com/ManiBecker/DigiTrainer/pull/1):
+  Projektverwaltung mit Browserspeicher und JSON-Import/-Export
+- [PR #2](https://github.com/ManiBecker/DigiTrainer/pull/2):
+  Erweiterte Kabelbedienung und Rückgängig-Funktion
+- [PR #3](https://github.com/ManiBecker/DigiTrainer/pull/3):
+  Beispielprojektbibliothek mit Projektbeschreibungen
+- [PR #4](https://github.com/ManiBecker/DigiTrainer/pull/4):
+  Automatische Schaltplanerstellung mit SVG-Export
+  und Druckfunktion
+
+Vielen Dank für die großartige Unterstützung und die
+viele Entwicklungsarbeit!
 
 ## 🔗 Links
 
