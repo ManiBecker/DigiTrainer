@@ -163,6 +163,11 @@
 
     // Projekt uebernehmen. Das Geraet wird vorher ausgeschaltet.
     // Bei einem Verdrahtungsfehler bleibt die bisherige Schaltung erhalten.
+    function rememberProjectFile(fileName) {
+        const base = String(fileName || "").split(/[/\\]/).pop().replace(/\.json$/i, "");
+        globalThis.digitrainerProjectName = base;
+    }
+
     function applyProject(project) {
         if (!boardLoaded) return "Board noch nicht geladen";
         const error = validateProject(project);
@@ -252,6 +257,11 @@
 #project-list li, #library-list li { display:flex; align-items:center; gap:6px; padding:5px 8px; border-bottom:1px solid #333; }
 #project-list li span, #library-list li span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
 #project-list li.project-empty, #library-list li.project-empty { color:#aaa; cursor:default; }
+#library-list li.project-wait { flex-direction:column; align-items:stretch; gap:8px; color:#aaa; cursor:default; }
+#library-list li.project-wait span { flex:none; cursor:default; }
+#library-list .wait-bar { display:block; height:8px; border-radius:4px; background:#111; overflow:hidden; border:1px solid #555; }
+#library-list .wait-bar > span { display:block; height:100%; width:35%; background:#9bd0ff; animation:project-wait 1.1s ease-in-out infinite; }
+@keyframes project-wait { from { transform:translateX(-120%); } to { transform:translateX(320%); } }
 #project-dialog .project-hint { color:#aaa; font-size:12px; margin:8px 0 2px; }
 #project-info { min-height:1.2em; margin:4px 0 0; color:#9bd0ff; }
 `;
@@ -348,6 +358,7 @@
                 } else {
                     nameInput.value = name;
                     showProjectDescription(stored);
+                    rememberProjectFile(name);
                     dialog.close();
                     setStatus("Projekt geladen: " + name);
                 }
@@ -456,7 +467,23 @@
         libraryElement.appendChild(empty);
     }
 
+    function renderLibraryWait() {
+        libraryElement.textContent = "";
+        const item = document.createElement("li");
+        item.className = "project-wait";
+        item.setAttribute("role", "status");
+        const label = document.createElement("span");
+        label.textContent = "Beispiele werden geladen …";
+        const bar = document.createElement("span");
+        bar.className = "wait-bar";
+        bar.setAttribute("aria-hidden", "true");
+        bar.appendChild(document.createElement("span"));
+        item.append(label, bar);
+        libraryElement.appendChild(item);
+    }
+
     async function renderLibrary() {
+        renderLibraryWait();
         const files = await listProjectFiles();
         if (!files) {
             renderLibraryMessage("Beispielschaltungen sind gerade nicht erreichbar.");
@@ -494,6 +521,7 @@
                     return;
                 }
                 nameInput.value = title;
+                rememberProjectFile(libraryFileName(file) || title);
                 const field = document.getElementById("project-description");
                 if (field) field.value = description;
                 dialog.close();
@@ -577,6 +605,7 @@
             } else {
                 nameInput.value = file.name.replace(/\.json$/i, "");
                 showProjectDescription(project);
+                rememberProjectFile(file.name);
                 dialog.close();
                 setStatus("Projekt importiert: " + file.name);
             }
