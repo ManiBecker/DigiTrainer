@@ -55,7 +55,7 @@ td,th{border:1px solid #555;padding:6px;text-align:left}
 <tr><td>4</td><td>74LS00PC</td><td>4 × NAND</td></tr>
 <tr><td>5</td><td>CD4069UBE</td><td>6 × CMOS-NOT</td></tr>
 </table>
-<p>Unbeschaltete Eingänge können einen undefinierten logischen Zustand haben.</p>
+<p>Bei der Simulation werden unbeschaltete Eingänge der 74LS-TTL-Gatter als HIGH interpretiert. Offene CMOS-Eingänge des CD4069 bleiben undefiniert.</p>
 
 <h2>5. Taktgenerator und Zähler</h2>
 <p>Der Taktgenerator unterstützt manuelle Impulse sowie automatischen Takt mit 1 Hz oder 10 Hz. Über STOP kann der automatische Takt angehalten werden. Es stehen ein Taktsignal und sein invertiertes Signal zur Verfügung.</p>
@@ -75,6 +75,7 @@ td,th{border:1px solid #555;padding:6px;text-align:left}
 <tr><td>Mausrad</td><td>Zoom am Mauszeiger</td></tr>
 <tr><td>Debug</td><td>Logische Signalzustände anzeigen</td></tr>
 <tr><td>Projekt</td><td>Schaltungen speichern und laden</td></tr>
+<tr><td>Schaltplan</td><td>Automatischen Schaltplan der aktuellen Verdrahtung öffnen</td></tr>
 <tr><td>↶ oder Strg+Z</td><td>Letzte Kabeländerung rückgängig</td></tr>
 <tr><td>Entf oder Rücktaste</td><td>Markiertes Kabel entfernen</td></tr>
 <tr><td>Vollbild</td><td>Board größer anzeigen</td></tr>
@@ -92,7 +93,7 @@ td,th{border:1px solid #555;padding:6px;text-align:left}
 <li><strong>Hellgrau:</strong> undefinierter Zustand</li>
 </ul>
 <p>Zusätzlich erscheinen die Werte 0 und 1 unter den Schiebeschaltern S0–S7 und den Ausgangs-LEDs D0–D7, sofern ein eindeutiger Pegel vorliegt.</p>
-<p>Bei deaktiviertem Debug-Modus werden die Kabel in ihren normalen Farben dargestellt: Rot für +5 V, Blau für GND und Grün für sonstige Verbindungen.</p>
+<p>Bei deaktiviertem Debug-Modus werden die Kabel entsprechend ihrer Netzzugehörigkeit eingefärbt. Elektrisch zusammenhängende Leitungen erhalten dieselbe Farbe; Versorgung und Masse besitzen eigene Farben.</p>
 
 <h2>9. Projekte speichern und laden</h2>
 <p>Über den Button <strong>Projekt</strong> in der Werkzeugleiste können selbst erstellte Schaltungen gespeichert und später wieder geladen werden.</p>
@@ -102,17 +103,33 @@ td,th{border:1px solid #555;padding:6px;text-align:left}
 <li>Die Stellungen der Schalter S0–S7</li>
 <li>Die Einstellungen des Taktgenerators (f und STOP)</li>
 <li>Die Einstellung der Debug-Anzeige</li>
+<li>Eine optionale Projektbeschreibung</li>
 </ul>
-<p><strong>Im Browser speichern:</strong> Einen Projektnamen eingeben und auf „Im Browser speichern“ klicken. Gespeicherte Projekte erscheinen in einer Liste und können dort geladen oder gelöscht werden. Ein Tipp auf den Namen zeigt die Beschreibung.</p>
+<p><strong>Im Browser speichern:</strong> Einen Projektnamen eingeben und auf „Im Browser speichern“ klicken. Gespeicherte Projekte erscheinen unter <strong>Meine Projekte</strong> und können dort geladen oder gelöscht werden. Ein Tipp auf den Namen zeigt die Beschreibung.</p>
 <p><strong>Beschreibung:</strong> Das Textfeld ist optional und lässt sich bei längerem Text scrollen. Der Text wird mitgespeichert und mitexportiert. Fehlt er in einer älteren Datei, lässt sich das Projekt trotzdem laden.</p>
-<p><strong>Beispielschaltungen:</strong> Unter der eigenen Liste erscheinen die JSON-Dateien aus Manfreds DigiTrainer. Dafür ist eine Internetverbindung nötig. Ein Tipp auf den Namen zeigt die Beschreibung, Laden übernimmt die Schaltung. Die Beschreibung steht im Feld description der Datei oder in einer Textdatei mit demselben Namen und wird dort nur gelesen. Fehlt sie, lässt sich die Schaltung trotzdem laden. Eine eigene Beschreibung bleibt beim Speichern im Browser und beim Export als Datei erhalten.</p>
+<p><strong>Beispielschaltungen:</strong> Unter <strong>Beispielprojekte</strong> erscheinen die JSON-Dateien aus dem DigiTrainer-Repository. Dafür ist eine Internetverbindung nötig. Ein Tipp auf den Namen zeigt die Beschreibung, <strong>Laden</strong> übernimmt die Schaltung. Die Beschreibung steht vorzugsweise im Feld <code>description</code> der JSON-Datei; alternativ kann eine gleichnamige Textdatei verwendet werden. Fehlt die Beschreibung, lässt sich die Schaltung trotzdem laden.</p>
 <p><strong>Als Datei exportieren:</strong> Die aktuelle Schaltung wird als JSON-Datei heruntergeladen. Damit lassen sich Projekte archivieren oder an andere Nutzer weitergeben.</p>
 <p><strong>Datei importieren:</strong> Eine zuvor exportierte JSON-Datei auswählen. Die darin enthaltene Schaltung wird wiederhergestellt.</p>
 <p><strong>Wichtig:</strong> Beim Laden eines Projekts wird der DigiTrainer ausgeschaltet. Die Rückgängig-Liste für Kabel beginnt danach neu. Der interne Zustand simulierter Bausteine, beispielsweise der aktuelle Zählerstand, wird nicht gespeichert.</p>
 <p>Im Browser gespeicherte Projekte sind an den jeweiligen Browser und die Website gebunden. Für eine dauerhafte Sicherung empfiehlt sich der JSON-Export.</p>
 
-<h2>10. Hinweise und Rückmeldungen</h2>
+<h2>10. Automatische Schaltplanerstellung (ab v0.69)</h2>
+<p>Über die Schaltfläche <strong>Schaltplan</strong> wird aus der aktuellen Verdrahtung automatisch ein digitaler Schaltplan erzeugt. Der Signalfluss verläuft nach Möglichkeit von links nach rechts. Die Titelleiste zeigt bei einem geladenen Projekt dessen Dateinamen ohne die Endung <code>.json</code>.</p>
+<ul>
+<li><strong>IEC 60617:</strong> Zwischen rechteckigen IEC-Symbolen und der alternativen, amerikanischen Gatterdarstellung umschalten.</li>
+<li><strong>Farben:</strong> Die Farben der Leitungen vom Experimentierboard wahlweise übernehmen.</li>
+<li><strong>SVG:</strong> Den Schaltplan als skalierbare Vektorgrafik exportieren.</li>
+<li><strong>Drucken:</strong> Den Schaltplan auf weißem Hintergrund ausgeben. Für breite Schaltungen empfiehlt sich das Querformat.</li>
+<li><strong>Schließen:</strong> Über das × oben rechts zur Boardansicht zurückkehren.</li>
+</ul>
+<p>Die Versorgungsleitungen für +5 V und GND bleiben in der Schaltplanansicht zur besseren Übersicht unsichtbar. Verbindungspunkte markieren elektrisch verbundene Leitungen; reine Kreuzungen ohne Verbindungspunkt stellen keine elektrische Verbindung dar.</p>
+<p>Die automatische Anordnung und Leitungsführung kann bei umfangreichen Schaltungen etwas Zeit benötigen. Ein Fortschrittsbalken informiert über die Berechnung. Bereits berechnete Darstellungen werden zwischengespeichert. Bei komplexen Verdrahtungen sind nicht alle Leitungswege optimal.</p>
+<p>Die Schaltplanfunktion wurde von <a href="https://github.com/lschulze" target="_blank" rel="noopener noreferrer">Lutz (lschulze)</a> entwickelt. Weitere Einzelheiten beschreibt seine <a href="docs/Schaltplan-aus-Netzliste.pdf" target="_blank" rel="noopener noreferrer">technische Dokumentation „Schaltplan aus der Netzliste“ (PDF)</a>.</p>
+
+<h2>11. Handbuch und weitere Informationen</h2>
+<p>Ausführliche Bedienungsanleitungen, Grundlagen der Digitaltechnik und praktische Experimente findest du im Benutzer- und Experimentierhandbuch.</p>
+<p><strong>📖 <a href="https://github.com/ManiBecker/DigiTrainer/blob/main/docs/DigiTrainer-Handbuch.adoc" target="_blank" rel="noopener noreferrer">DigiTrainer – Benutzer- und Experimentierhandbuch</a></strong></p>
 <p>Der DigiTrainer ist ein Hobby- und Lernprojekt. Er simuliert vor allem das logische Verhalten; analoge Effekte, Verzögerungszeiten und elektrische Belastbarkeit sind nicht vollständig modelliert.</p>
-<p>Projekt und Fehlermeldungen: <a href="https://github.com/ManiBecker/DigiTrainer" target="_blank" rel="noopener">GitHub – DigiTrainer</a>.</p>
+<p>Projekt, Quellcode und Fehlermeldungen: <a href="https://github.com/ManiBecker/DigiTrainer" target="_blank" rel="noopener noreferrer">GitHub – DigiTrainer</a>.</p>
 </body>
 </html>
