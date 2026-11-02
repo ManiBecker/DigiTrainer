@@ -8,6 +8,7 @@
 // ohne Punkt verbindet nicht. Echte Kreise bleiben kurze
 // Rückführungen. Gatter sind standardmäßig Rechtecke nach
 // IEC 60617; die Formdarstellung bleibt zuschaltbar.
+// Verbindungen können die Kabelfarben der Platine tragen.
 // Parallele Leitungen verschiedener Signale werden auf
 // mindestens 14 Pixel Abstand auseinandergezogen.
 // Danach fallen Umwege weg, die nur zusätzliche Knicke wären.
@@ -18,6 +19,11 @@
     "use strict";
 
     const SVGNS = "http://www.w3.org/2000/svg";
+    // Dieselbe Folge wie WIRE_PALETTE in simulator.js.
+    const NET_COLORS = [
+        "#39FF14", "#FFE24A", "#FF9A32", "#B77CFF",
+        "#28E8BD", "#FF75BC", "#F4F4EA", "#D5B348"
+    ];
     const GAP = 20;
     const GUTTER = 64;
     const LANE = 16;
@@ -245,6 +251,15 @@
             nets.push(ids);
         });
         return nets;
+    }
+
+    // Eine Farbe pro Netz, möglichst die schon am Kabel vergebene.
+    function colorsForNets(wires, nets) {
+        return nets.map((ids, index) => {
+            const member = new Set(ids);
+            const colored = (wires || []).find(wire => wire.color && member.has(wire.from) && member.has(wire.to));
+            return colored ? colored.color : NET_COLORS[index % NET_COLORS.length];
+        });
     }
 
     function usedSymbols(nets) {
@@ -1249,8 +1264,8 @@
         tidy();
     }
 
-    // Umwege mit mehr Knicken als nötig durch eine kürzere orthogonale Bahn ersetzen.
-    // Der Abstand zu anderen Leitungen und zu den Symbolen bleibt 14 Pixel.
+    // Umwege durch eine kürzere orthogonale Bahn ersetzen, auch mit gleich vielen Knicken.
+    // Neben Hindernissen wird eine Bahn im Abstand von 14 Pixeln probiert.
     function straighten(lines, symbols) {
         const CLEAR = 14;
         function bends(points) {
@@ -1462,30 +1477,37 @@
                         const foreign = obstacles(line, start, end);
                         const oldParts = segmentsOf({ points: sub });
                         const budget = pathCrossings(oldParts, foreign, line.net);
+                        const oldLength = lengthOf(sub);
                         const options = [];
                         if (aligned) options.push([sub[0], sub[sub.length - 1]]);
                         options.push([sub[0], { x: sub[sub.length - 1].x, y: sub[0].y }, sub[sub.length - 1]]);
                         options.push([sub[0], { x: sub[0].x, y: sub[sub.length - 1].y }, sub[sub.length - 1]]);
-                        if (have > 2) {
+                        const direct = Math.abs(sub[0].x - sub[sub.length - 1].x) + Math.abs(sub[0].y - sub[sub.length - 1].y);
+                        if (have >= 2 && oldLength > direct + 8) {
                             const xs = [];
                             const ys = [];
-                            function keep(list, value) {
+                            function keep(list, value, low, high) {
+                                if (value <= low + 0.4 || value >= high - 0.4) return;
                                 if (!list.some(item => Math.abs(item - value) < 0.4)) list.push(value);
                             }
-                            let minX = Infinity;
-                            let maxX = -Infinity;
-                            let minY = Infinity;
-                            let maxY = -Infinity;
-                            sub.forEach(point => {
-                                minX = Math.min(minX, point.x);
-                                maxX = Math.max(maxX, point.x);
-                                minY = Math.min(minY, point.y);
-                                maxY = Math.max(maxY, point.y);
-                            });
+                            const lowX = Math.min(sub[0].x, sub[sub.length - 1].x);
+                            const highX = Math.max(sub[0].x, sub[sub.length - 1].x);
+                            const lowY = Math.min(sub[0].y, sub[sub.length - 1].y);
+                            const highY = Math.max(sub[0].y, sub[sub.length - 1].y);
                             lines.forEach(other => other.points.forEach(point => {
-                                if (point.x >= minX - CLEAR && point.x <= maxX + CLEAR) keep(xs, point.x);
-                                if (point.y >= minY - CLEAR && point.y <= maxY + CLEAR) keep(ys, point.y);
+                                keep(xs, point.x, lowX, highX);
+                                keep(ys, point.y, lowY, highY);
                             }));
+                            // Freie Bahn direkt neben einem Hindernis, nicht nur auf vorhandenen Koordinaten.
+                            foreign.forEach(item => {
+                                if (item.horiz) {
+                                    keep(ys, item.a.y - CLEAR, lowY, highY);
+                                    keep(ys, item.a.y + CLEAR, lowY, highY);
+                                } else {
+                                    keep(xs, item.a.x - CLEAR, lowX, highX);
+                                    keep(xs, item.a.x + CLEAR, lowX, highX);
+                                }
+                            });
                             xs.forEach(x => options.push([
                                 sub[0], { x: x, y: sub[0].y }, { x: x, y: sub[sub.length - 1].y }, sub[sub.length - 1]
                             ]));
@@ -1497,7 +1519,9 @@
                         options.forEach(option => {
                             const path = normalize(option);
                             const count = bends(path);
-                            if (count >= have) return;
+                            const length = lengthOf(path);
+                            if (count > have || length > oldLength + 0.5) return;
+                            if (count === have && length > oldLength - 0.5) return;
                             if (!pathClear(path, foreign, line.net, budget)) return;
                             const anchors = [];
                             lines.forEach(other => {
@@ -1507,7 +1531,6 @@
                                 });
                             });
                             if (anchors.some(point => !covers(point, path))) return;
-                            const length = lengthOf(path);
                             if (!best || count < best.count || (count === best.count && length < best.length - 0.5)) {
                                 best = { path: path, count: count, length: length };
                             }
@@ -1591,7 +1614,8 @@
             height: sheet.height,
             feedback: edges.filter(edge => edge.local || edge.back).length,
             buses: forward.labels.length,
-            iec: iec
+            iec: iec,
+            colors: colorsForNets(wires, nets)
         };
     }
 
@@ -1610,7 +1634,7 @@
             }
         });
         const dots = [];
-        nets.forEach(segments => {
+        nets.forEach((segments, net) => {
             const points = [];
             segments.forEach(segment => points.push(segment[0], segment[1]));
             const unique = [];
@@ -1631,7 +1655,7 @@
                         directions.add(heading(point, segment[1]));
                     }
                 });
-                if (directions.size >= 3) dots.push({ x: point.x, y: point.y });
+                if (directions.size >= 3) dots.push({ x: point.x, y: point.y, net: net });
             });
         });
         return dots;
@@ -1694,11 +1718,15 @@
     }
 
 
-    function svgOf(model, theme, label) {
+    function svgOf(model, theme, label, colored) {
         const printing = theme === "print";
         const color = printing
             ? { bg: "#ffffff", fill: "#ffffff", stroke: "#000000", wire: "#000000", text: "#000000", pin: "#000000" }
             : palette(theme || "dark");
+        function wirePaint(net) {
+            if (colored && model.colors && model.colors[net]) return model.colors[net];
+            return color.wire;
+        }
         // Im Druck feste Strichstärke in der Zeichnung, sonst werden die Linien beim Skalieren grau.
         const pen = printing ? Math.round(Math.max(model.width * 0.0018, 1.3) * 10) / 10 : 1.5;
         const crisp = printing ? "" : ' vector-effect="non-scaling-stroke"';
@@ -1709,12 +1737,12 @@
             parts.push('<rect width="' + model.width + '" height="' + model.height + '" fill="' + color.bg + '"></rect>');
         }
         model.lines.forEach(line => {
-            parts.push('<polyline points="' + pointsAttr(line.points) + '" fill="none" stroke="' + color.wire +
+            parts.push('<polyline points="' + pointsAttr(line.points) + '" fill="none" stroke="' + wirePaint(line.net) +
                 '" stroke-width="' + pen + '" stroke-linejoin="round" stroke-linecap="square"' + crisp + "></polyline>");
         });
         (model.dots || []).forEach(dot => {
             parts.push('<circle cx="' + num(dot.x) + '" cy="' + num(dot.y) + '" r="' +
-                (printing ? num(pen * 1.15) : "3.2") + '" fill="' + color.wire + '"></circle>');
+                (printing ? num(pen * 1.15) : "3.2") + '" fill="' + wirePaint(dot.net) + '"></circle>');
         });
         model.symbols.forEach(symbol => {
             const box = symbol.box;
@@ -1786,6 +1814,7 @@
             "#schematic-dialog .project-header { display:flex; align-items:center; gap:12px; padding:10px 14px; background:#303030; border-bottom:1px solid #555; }",
             "#schematic-title { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }",
             "#schematic-iec-label { margin-left:auto; display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap; }",
+            "#schematic-color-label { display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap; }",
             "#schematic-dialog button { background:#333; color:white; border:1px solid #777; border-radius:5px; padding:6px 11px; cursor:pointer; }",
             "#schematic-body { position:relative; flex:1; min-height:0; padding:8px; box-sizing:border-box; }",
             "#schematic-view { width:100%; height:100%; }",
@@ -1810,7 +1839,7 @@
 
         const dialog = document.createElement("dialog");
         dialog.id = "schematic-dialog";
-        dialog.innerHTML = '<div class="project-header"><strong id="schematic-title">Schaltplan</strong><label id="schematic-iec-label" title="Gatter als Rechteck nach IEC 60617"><input type="checkbox" id="schematic-iec" checked> IEC 60617</label><button type="button" id="schematic-svg" title="Schaltplan als SVG-Datei sichern">SVG</button><button type="button" id="schematic-print">Drucken</button><button type="button" id="schematic-close" aria-label="Schaltplan schließen">✕</button></div><div id="schematic-body"><div id="schematic-view"></div><div id="schematic-wait" hidden role="status"><p></p><div class="wait-bar" aria-hidden="true"><span></span></div></div></div>';
+        dialog.innerHTML = '<div class="project-header"><strong id="schematic-title">Schaltplan</strong><label id="schematic-iec-label" title="Gatter als Rechteck nach IEC 60617"><input type="checkbox" id="schematic-iec" checked> IEC 60617</label><label id="schematic-color-label" title="Verbindungen in den Kabelfarben der Platine"><input type="checkbox" id="schematic-color" checked> Farben</label><button type="button" id="schematic-svg" title="Schaltplan als SVG-Datei sichern">SVG</button><button type="button" id="schematic-print">Drucken</button><button type="button" id="schematic-close" aria-label="Schaltplan schließen">✕</button></div><div id="schematic-body"><div id="schematic-view"></div><div id="schematic-wait" hidden role="status"><p></p><div class="wait-bar" aria-hidden="true"><span></span></div></div></div>';
         document.body.appendChild(dialog);
         const view = dialog.querySelector("#schematic-view");
 
@@ -1878,7 +1907,10 @@
         }
         function renderPlan(model, name) {
             if (model.symbols.length < 2) view.textContent = "Noch keine signalrelevante Verdrahtung.";
-            else view.innerHTML = svgOf(model, "dark", name);
+            else view.innerHTML = svgOf(model, "dark", name, colorOn());
+        }
+        function colorOn() {
+            return dialog.querySelector("#schematic-color").checked;
         }
         function showPlan(forceWait) {
             const token = ++planToken;
@@ -1914,7 +1946,7 @@
                 doc.write("<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>" + esc(name) +
                     "</title><style>@page{margin:12mm}html,body{margin:0;background:#fff;color:#000}" +
                     "svg{display:block;width:100%;height:auto}*{print-color-adjust:exact;-webkit-print-color-adjust:exact}</style></head><body>" +
-                    svgOf(model, "print", name) + "</body></html>");
+                    svgOf(model, "print", name, colorOn()) + "</body></html>");
                 doc.close();
                 const win = frame.contentWindow;
                 const remove = () => { if (frame.parentNode) frame.parentNode.removeChild(frame); };
@@ -1936,7 +1968,7 @@
                     return;
                 }
                 const file = (name.replace(/[\\/:*?"<>|]+/g, "-").trim() || "Schaltplan") + ".svg";
-                const blob = new Blob(["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + svgOf(model, "print", name)], { type: "image/svg+xml" });
+                const blob = new Blob(["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + svgOf(model, "print", name, colorOn())], { type: "image/svg+xml" });
                 hideWait();
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement("a");
@@ -1956,6 +1988,16 @@
         });
         dialog.querySelector("#schematic-iec").addEventListener("change", () => {
             if (dialog.open) showPlan(true);
+        });
+        dialog.querySelector("#schematic-color").addEventListener("change", () => {
+            if (!dialog.open) return;
+            const options = planOptions();
+            const key = options.iec ? "iec" : "form";
+            if (planCache.stamp === wireStamp(wireConnections) && planCache.models.has(key)) {
+                renderPlan(planCache.models.get(key), planName());
+                return;
+            }
+            showPlan();
         });
         dialog.querySelector("#schematic-print").addEventListener("click", printPlan);
         dialog.querySelector("#schematic-svg").addEventListener("click", savePlan);
