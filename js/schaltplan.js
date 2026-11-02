@@ -13,6 +13,7 @@
 // mindestens 14 Pixel Abstand auseinandergezogen.
 // Danach fallen Umwege weg, die nur zusätzliche Knicke wären.
 // Drucken zeichnet denselben Plan hell auf weiß.
+// Weiß und Gelb bekommen dort einen schmalen dunklen Rand.
 // ------------------------------------------------------------
 
 (function () {
@@ -1717,6 +1718,20 @@
         return points.map(point => num(point.x) + "," + num(point.y)).join(" ");
     }
 
+    // Weiß und Gelb haben auf Papier zu wenig Kontrast.
+    function lightOnPaper(paint) {
+        const match = /^#([\da-f]{3}|[\da-f]{6})$/i.exec(String(paint).trim());
+        if (!match) return false;
+        const hex = match[1].length === 3 ? match[1].replace(/([\da-f])/gi, "$1$1") : match[1];
+        const rgb = [0, 2, 4].map(offset => parseInt(hex.slice(offset, offset + 2), 16));
+        function lin(channel) {
+            const value = channel / 255;
+            return value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+        }
+        const luminance = 0.2126 * lin(rgb[0]) + 0.7152 * lin(rgb[1]) + 0.0722 * lin(rgb[2]);
+        return luminance >= 0.62 && rgb[0] >= 200;
+    }
+
 
     function svgOf(model, theme, label, colored) {
         const printing = theme === "print";
@@ -1736,14 +1751,32 @@
         if (color.bg !== "transparent") {
             parts.push('<rect width="' + model.width + '" height="' + model.height + '" fill="' + color.bg + '"></rect>');
         }
+        const wireHalos = [];
+        const wireMarks = [];
         model.lines.forEach(line => {
-            parts.push('<polyline points="' + pointsAttr(line.points) + '" fill="none" stroke="' + wirePaint(line.net) +
-                '" stroke-width="' + pen + '" stroke-linejoin="round" stroke-linecap="square"' + crisp + "></polyline>");
+            const paint = wirePaint(line.net);
+            const attrs = ' points="' + pointsAttr(line.points) + '" fill="none" stroke-linejoin="round" stroke-linecap="square"' + crisp;
+            if (printing && lightOnPaper(paint)) {
+                wireHalos.push('<polyline' + attrs + ' stroke="#222222" stroke-width="' + num(pen * 1.55) + '"></polyline>');
+            }
+            wireMarks.push('<polyline' + attrs + ' stroke="' + paint + '" stroke-width="' + pen + '"></polyline>');
         });
+        parts.push.apply(parts, wireHalos);
+        parts.push.apply(parts, wireMarks);
+        const dotHalos = [];
+        const dotMarks = [];
         (model.dots || []).forEach(dot => {
-            parts.push('<circle cx="' + num(dot.x) + '" cy="' + num(dot.y) + '" r="' +
-                (printing ? num(pen * 1.15) : "3.2") + '" fill="' + wirePaint(dot.net) + '"></circle>');
+            const paint = wirePaint(dot.net);
+            const radius = printing ? pen * 1.15 : 3.2;
+            if (printing && lightOnPaper(paint)) {
+                dotHalos.push('<circle cx="' + num(dot.x) + '" cy="' + num(dot.y) + '" r="' +
+                    num(radius + pen * 0.275) + '" fill="#222222"></circle>');
+            }
+            dotMarks.push('<circle cx="' + num(dot.x) + '" cy="' + num(dot.y) + '" r="' +
+                num(radius) + '" fill="' + paint + '"></circle>');
         });
+        parts.push.apply(parts, dotHalos);
+        parts.push.apply(parts, dotMarks);
         model.symbols.forEach(symbol => {
             const box = symbol.box;
             parts.push('<g transform="translate(' + num(box.x) + " " + num(box.y) + ')">');
@@ -1809,13 +1842,15 @@
         }
         const style = document.createElement("style");
         style.textContent = [
-            "#schematic-dialog { box-sizing:border-box; display:flex; flex-direction:column; overflow:hidden; width:min(1040px,calc(100vw - 16px)); height:min(760px,calc(100dvh - 16px)); min-width:420px; min-height:280px; max-width:calc(100vw - 16px); max-height:calc(100dvh - 16px); padding:0; border:1px solid #777; border-radius:8px; background:#242424; color:#fff; }",
+            "#schematic-dialog[open] { display:block; position:fixed; inset:0; width:100%; height:100%; max-width:none; max-height:none; margin:0; padding:0; border:none; background:transparent; overflow:visible; color:#fff; }",
             "#schematic-dialog::backdrop { background:rgba(0,0,0,.70); }",
-            "#schematic-dialog .project-header { display:flex; align-items:center; gap:12px; padding:10px 14px; background:#303030; border-bottom:1px solid #555; }",
+            "#schematic-panel { box-sizing:border-box; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); display:flex; flex-direction:column; overflow:hidden; width:min(1040px,calc(100vw - 16px)); height:min(760px,calc(100dvh - 16px)); min-width:420px; min-height:280px; border:1px solid #777; border-radius:8px; background:#242424; color:#fff; }",
+            "#schematic-panel .project-header { flex-shrink:0; display:flex; align-items:center; gap:12px; padding:10px 14px; background:#303030; border-bottom:1px solid #555; }",
             "#schematic-title { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }",
             "#schematic-iec-label { margin-left:auto; display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap; }",
             "#schematic-color-label { display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap; }",
-            "#schematic-dialog button { background:#333; color:white; border:1px solid #777; border-radius:5px; padding:6px 11px; cursor:pointer; }",
+            "#schematic-panel button { background:#333; color:white; border:1px solid #777; border-radius:5px; padding:6px 11px; cursor:pointer; }",
+            "#schematic-close { flex-shrink:0; position:relative; z-index:6; }",
             "#schematic-body { position:relative; flex:1; min-height:0; padding:8px; box-sizing:border-box; }",
             "#schematic-view { width:100%; height:100%; }",
             "#schematic-view svg { width:100%; height:100%; }",
@@ -1824,7 +1859,7 @@
             "#schematic-wait .wait-bar { width:min(280px,70%); height:8px; border-radius:4px; background:#111; overflow:hidden; border:1px solid #555; }",
             "#schematic-wait .wait-bar > span { display:block; height:100%; width:35%; background:#9bd0ff; animation:schematic-wait 1.1s ease-in-out infinite; }",
             "@keyframes schematic-wait { from { transform:translateX(-120%); } to { transform:translateX(320%); } }",
-            ".schematic-corner { position:absolute; width:18px; height:18px; z-index:3; touch-action:none; }",
+            ".schematic-corner { position:absolute; width:18px; height:18px; max-width:18px; max-height:18px; margin:0; z-index:4; touch-action:none; }",
             ".schematic-corner[data-corner='nw'] { top:0; left:0; cursor:nwse-resize; }",
             ".schematic-corner[data-corner='ne'] { top:0; right:0; cursor:nesw-resize; }",
             ".schematic-corner[data-corner='sw'] { bottom:0; left:0; cursor:nesw-resize; }",
@@ -1839,8 +1874,9 @@
 
         const dialog = document.createElement("dialog");
         dialog.id = "schematic-dialog";
-        dialog.innerHTML = '<div class="project-header"><strong id="schematic-title">Schaltplan</strong><label id="schematic-iec-label" title="Gatter als Rechteck nach IEC 60617"><input type="checkbox" id="schematic-iec" checked> IEC 60617</label><label id="schematic-color-label" title="Verbindungen in den Kabelfarben der Platine"><input type="checkbox" id="schematic-color" checked> Farben</label><button type="button" id="schematic-svg" title="Schaltplan als SVG-Datei sichern">SVG</button><button type="button" id="schematic-print">Drucken</button><button type="button" id="schematic-close" aria-label="Schaltplan schließen">✕</button></div><div id="schematic-body"><div id="schematic-view"></div><div id="schematic-wait" hidden role="status"><p></p><div class="wait-bar" aria-hidden="true"><span></span></div></div></div>';
+        dialog.innerHTML = '<div id="schematic-panel"><div class="project-header"><strong id="schematic-title">Schaltplan</strong><label id="schematic-iec-label" title="Gatter als Rechteck nach IEC 60617"><input type="checkbox" id="schematic-iec" checked> IEC 60617</label><label id="schematic-color-label" title="Verbindungen in den Kabelfarben der Platine"><input type="checkbox" id="schematic-color" checked> Farben</label><button type="button" id="schematic-svg" title="Schaltplan als SVG-Datei sichern">SVG</button><button type="button" id="schematic-print">Drucken</button><button type="button" id="schematic-close" aria-label="Schaltplan schließen">✕</button></div><div id="schematic-body"><div id="schematic-view"></div><div id="schematic-wait" hidden role="status"><p></p><div class="wait-bar" aria-hidden="true"><span></span></div></div></div>';
         document.body.appendChild(dialog);
+        const panel = dialog.querySelector("#schematic-panel");
         const view = dialog.querySelector("#schematic-view");
 
         const button = document.createElement("button");
@@ -2001,30 +2037,47 @@
         });
         dialog.querySelector("#schematic-print").addEventListener("click", printPlan);
         dialog.querySelector("#schematic-svg").addEventListener("click", savePlan);
-        dialog.querySelector("#schematic-close").addEventListener("click", () => dialog.close());
-        dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
-        dialog.addEventListener("keydown", event => event.stopPropagation());
+        function closePlan() {
+            if (dialog.open) dialog.close();
+        }
+        dialog.querySelector("#schematic-close").addEventListener("click", event => {
+            event.preventDefault();
+            event.stopPropagation();
+            closePlan();
+        });
+        dialog.addEventListener("click", event => { if (event.target === dialog) closePlan(); });
+        // Escape kommt nach dem Verschieben nicht mehr als Dialog-Standard an.
+        document.addEventListener("keydown", event => {
+            if (event.key !== "Escape" || !dialog.open) return;
+            const openDialogs = document.querySelectorAll("dialog[open]");
+            if (openDialogs[openDialogs.length - 1] !== dialog) return;
+            event.preventDefault();
+            event.stopPropagation();
+            closePlan();
+        }, true);
+        dialog.addEventListener("keydown", event => {
+            event.stopPropagation();
+        });
 
         ["nw", "ne", "sw", "se"].forEach(corner => {
             const handle = document.createElement("div");
             handle.className = "schematic-corner";
             handle.dataset.corner = corner;
             handle.title = "An der Ecke ziehen, um das Fenster zu vergrößern";
-            dialog.appendChild(handle);
+            panel.appendChild(handle);
             handle.addEventListener("pointerdown", event => {
                 event.preventDefault();
                 event.stopPropagation();
-                const start = dialog.getBoundingClientRect();
+                const start = panel.getBoundingClientRect();
                 const originX = event.clientX;
                 const originY = event.clientY;
-                dialog.style.margin = "0";
-                dialog.style.right = "auto";
-                dialog.style.bottom = "auto";
-                dialog.style.left = start.left + "px";
-                dialog.style.top = start.top + "px";
-                dialog.style.width = start.width + "px";
-                dialog.style.height = start.height + "px";
+                panel.style.transform = "none";
+                panel.style.left = start.left + "px";
+                panel.style.top = start.top + "px";
+                panel.style.width = start.width + "px";
+                panel.style.height = start.height + "px";
                 handle.setPointerCapture(event.pointerId);
+                let ended = false;
                 function onMove(ev) {
                     const dx = ev.clientX - originX;
                     const dy = ev.clientY - originY;
@@ -2065,18 +2118,26 @@
                     const maxH = window.innerHeight - pad - top;
                     if (width > maxW) width = maxW;
                     if (height > maxH) height = maxH;
-                    dialog.style.left = left + "px";
-                    dialog.style.top = top + "px";
-                    dialog.style.width = Math.max(minW, width) + "px";
-                    dialog.style.height = Math.max(minH, height) + "px";
+                    panel.style.left = left + "px";
+                    panel.style.top = top + "px";
+                    panel.style.width = Math.max(minW, width) + "px";
+                    panel.style.height = Math.max(minH, height) + "px";
                 }
-                function onUp(ev) {
+                function endDrag(ev) {
+                    if (ended) return;
+                    ended = true;
                     handle.removeEventListener("pointermove", onMove);
-                    handle.removeEventListener("pointerup", onUp);
-                    if (handle.hasPointerCapture(ev.pointerId)) handle.releasePointerCapture(ev.pointerId);
+                    handle.removeEventListener("pointerup", endDrag);
+                    handle.removeEventListener("pointercancel", endDrag);
+                    handle.removeEventListener("lostpointercapture", endDrag);
+                    if (ev && ev.pointerId != null && handle.hasPointerCapture(ev.pointerId)) {
+                        handle.releasePointerCapture(ev.pointerId);
+                    }
                 }
                 handle.addEventListener("pointermove", onMove);
-                handle.addEventListener("pointerup", onUp);
+                handle.addEventListener("pointerup", endDrag);
+                handle.addEventListener("pointercancel", endDrag);
+                handle.addEventListener("lostpointercapture", endDrag);
             });
         });
     }
