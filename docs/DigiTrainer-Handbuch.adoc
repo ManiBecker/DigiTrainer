@@ -16,7 +16,7 @@
 
 [NOTE]
 ====
-Dieses Handbuch beschreibt den dokumentierten Funktionsstand von DigiTrainer v0.69. Die Bedienfunktionen und Hardwaremerkmale basieren auf der Projekt-README, der Online-Hilfe und den beschriebenen Neuerungen von Pull Request #4. Die konkreten Steckbuchsenverbindungen der späteren Experimente werden vor der Veröffentlichung anhand von `board.json` und den gespeicherten Projektdateien verifiziert. Ungeprüfte Verdrahtungslisten werden bewusst nicht als fertige Bauanleitung ausgegeben.
+Dieses Handbuch beschreibt den dokumentierten Funktionsstand von DigiTrainer v0.69. Die Bedienfunktionen und Hardwaremerkmale basieren auf der Projekt-README, der Online-Hilfe und den beschriebenen Neuerungen von Pull Request #4. Die konkreten Steckbuchsenverbindungen der späteren e werden vor der Veröffentlichung anhand von `board.json` und den gespeicherten Projektdateien verifiziert. Ungeprüfte Verdrahtungslisten werden bewusst nicht als fertige Bauanleitung ausgegeben.
 ====
 
 == Vorwort
@@ -246,28 +246,7 @@ Der NE5037N ist als *experimentelles, vereinfachtes Modell* implementiert. Der W
 
 Jedes Experiment enthält Lernziel, benötigte Funktionsgruppen, geprüfte Verdrahtung, Durchführung, erwartete Beobachtung, Erklärung und eine Zusatzaufgabe. Die Stecklisten werden aus der Boarddefinition und gespeicherten JSON-Projekten übernommen und anschließend im Simulator getestet.
 
-=== Experiment 1: Ein Inverter verändert ein Signal
-
-*Lernziel:* Verstehen, dass ein NOT-Gatter aus 0 eine 1 und aus 1 eine 0 macht.
-
-*Benötigt:* Ein Schiebeschalter, ein Inverter des SN74LS04N und eine Ausgangs-LED.
-
-*Vorbereitung:* Den DigiTrainer ausschalten und die korrekte +5-V-/GND-Versorgung des ICs sicherstellen.
-
-*Verdrahtungskonzept:* Schalterausgang → Invertereingang → Inverterausgang → LED-Eingang.
-
-[NOTE]
-====
-Die exakten Buchsen-IDs werden ergänzt, sobald `board.json` geprüft wurde. Dieses Experiment ist deshalb zunächst ein didaktischer Entwurf und keine freigegebene Steckanleitung.
-====
-
-*Durchführung:* DigiTrainer einschalten und den verwendeten Schalter abwechselnd auf 0 und 1 stellen.
-
-*Erwartete Beobachtung:* Der LED-Zustand ist jeweils das Gegenteil des Schalterzustands.
-
-*Erklärung:* Ein Inverter gibt stets den negierten logischen Eingangswert aus.
-
-*Zusatzaufgabe:* Zwei Inverter hintereinander schalten. Was passiert mit dem ursprünglichen Signal?
+include::experiment01-not-gatter.adoc[leveloffset=+2]
 
 === Experiment 2: Ein 4-Bit-Zähler zeigt Hexadezimalzahlen
 
