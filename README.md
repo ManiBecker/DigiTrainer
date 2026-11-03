@@ -434,6 +434,18 @@ DigiTrainer beigetragen hat:
 Vielen Dank für die großartige Unterstützung und die
 viele Entwicklungsarbeit!
 
+### KI-Unterstützung bei der Entwicklung
+
+Bei der Entwicklung des DigiTrainers wird auch künstliche Intelligenz (insbesondere ChatGPT von OpenAI) als unterstützendes Werkzeug eingesetzt.
+
+Die KI hilft unter anderem bei der Erstellung und Überarbeitung von JavaScript-Code, der Fehlersuche und der Dokumentation.
+
+Die Konzeption, die funktionalen Anforderungen sowie die Überprüfung und Weiterentwicklung des Simulators erfolgen unter menschlicher Verantwortung. Darüber hinaus enthält das Projekt eigenständige Beiträge weiterer Entwickler, die über GitHub eingebracht werden.
+
+Der Einsatz von KI soll die Entwicklung erleichtern und beschleunigen, ersetzt jedoch nicht die praktische Überprüfung der Ergebnisse.
+
+Die verwendete Open-Source-Lizenz und die Rechte der jeweiligen Mitwirkenden bleiben davon unberührt, soweit entsprechende Rechte bestehen.
+
 ## 🔗 Links
 
 - **Live-Demo:** https://manibecker.github.io/DigiTrainer/
