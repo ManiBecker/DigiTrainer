@@ -36,7 +36,7 @@ Für den DigiTrainer entsteht ein ausführliches Handbuch mit
 Bedienungsanleitungen, Grundlagen der Digitaltechnik und
 praktischen Experimenten.
 
-👉 [DigiTrainer-Handbuch](docs/DigiTrainer-Handbuch.adoc)
+👉 [DigiTrainer-Handbuch](docs/DigiTrainer-Handbuch.pdf)
 
 ## ✨ Bereits implementierte Funktionen
 
@@ -320,6 +320,8 @@ DigiTrainer/
 │   └── lauflicht-D0-D7-Pendel.json
 ├── docs/
 │   ├── DigiTrainer-Handbuch.adoc
+│   ├── DigiTrainer-Handbuch.pdf
+│   ├── experimentxx.adoc
 │   └── Schaltplan-aus-Netzliste.pdf
 └── images/
     ├── digitrainer-v0.69.jpg
@@ -450,6 +452,6 @@ Die verwendete Open-Source-Lizenz und die Rechte der jeweiligen Mitwirkenden ble
 
 - **Live-Demo:** https://manibecker.github.io/DigiTrainer/
 - **GitHub-Repository:** https://github.com/ManiBecker/DigiTrainer
-- **DigiTrainer-Handbuch:** https://github.com/ManiBecker/DigiTrainer/docs/DigiTrainer-Handbuch.adoc
+- **DigiTrainer-Handbuch:** https://github.com/ManiBecker/DigiTrainer/docs/DigiTrainer-Handbuch.pdf
 - **Besucherstatistik:** https://digitrainer.goatcounter.com/
 - **Classic-Computing-Forum:** https://forum.classic-computing.de/
