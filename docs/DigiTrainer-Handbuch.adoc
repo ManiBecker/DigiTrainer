@@ -1,5 +1,5 @@
 = DigiTrainer: Benutzer- und Experimentierhandbuch
-:subtitle: Digitale Elektronik verstehen und ausprobieren – mit dem virtuellen ITT Digi-Trainer 2
+:subtitle: Digitale Elektronik verstehen und ausprobieren
 :author: Manfred Becker
 :revnumber: 0.69
 :revdate: 2026-11-02
@@ -10,13 +10,18 @@
 :icons: font
 :source-highlighter: rouge
 :lang: de
+:chapter-signifier: Kapitel
+:toc-title: Inhaltsverzeichnis
+:appendix-caption: Anhang
 
 [.lead]
 *Arbeitsfassung 0.3 – Benutzerteil, Schaltplanerstellung, erste Experimente und IC-Katalog.*
 
 [NOTE]
 ====
-Dieses Handbuch beschreibt den dokumentierten Funktionsstand von DigiTrainer v0.69. Die Bedienfunktionen und Hardwaremerkmale basieren auf der Projekt-README, der Online-Hilfe und den beschriebenen Neuerungen von Pull Request #4. Die konkreten Steckbuchsenverbindungen der späteren e werden vor der Veröffentlichung anhand von `board.json` und den gespeicherten Projektdateien verifiziert. Ungeprüfte Verdrahtungslisten werden bewusst nicht als fertige Bauanleitung ausgegeben.
+Dieses Handbuch beschreibt den dokumentierten Funktionsstand von DigiTrainer v0.69. Die Bedienfunktionen und Hardwaremerkmale basieren auf der Projekt-README, der Online-Hilfe und den beschriebenen Neuerungen von Pull Request #4. Die konkreten Steckbuchsenverbindungen der späteren Experimente
+werden vor der Veröffentlichung anhand von `board.json` und den
+gespeicherten Projektdateien verifiziert. Ungeprüfte Verdrahtungslisten werden bewusst nicht als fertige Bauanleitung ausgegeben.
 ====
 
 == Vorwort
@@ -53,7 +58,7 @@ Teil I führt in die Bedienung ein. Teil II erklärt die digitale Elektronik und
 
 == Teil I: Den DigiTrainer bedienen
 
-=== 1. Erster Start
+=== Erster Start
 
 . Öffne https://manibecker.github.io/DigiTrainer/ in einem modernen Browser.
 . Warte, bis das Foto des Digi-Trainer 2 vollständig angezeigt wird.
@@ -66,7 +71,7 @@ Teil I führt in die Bedienung ein. Teil II erklärt die digitale Elektronik und
 Zum Kennenlernen eignet sich ein fertiges Beispielprojekt. Öffne *Projekt*, wähle unter *Beispielprojekte* einen Binärzähler aus, lies die Beschreibung, lade das Projekt und schalte den DigiTrainer ein.
 ====
 
-=== 2. Bedienelemente
+=== Bedienelemente
 
 ==== Hauptschalter
 
@@ -80,7 +85,7 @@ Acht Schiebeschalter S0 bis S7 liefern manuell einstellbare logische Signale. Ac
 
 Mehr als 200 definierte Hotspots repräsentieren Buchsen und Anschlüsse des Originalgeräts. Beim Zeigen auf Anschlüsse können deren Bezeichnungen und IC-Pinfunktionen angezeigt werden. Für die Dokumentation verwenden wir die tatsächlichen Anschlussnamen des Simulators.
 
-=== 3. Patchkabel bearbeiten
+=== Patchkabel bearbeiten
 
 ==== Leitung stecken
 
@@ -111,7 +116,7 @@ Mit *Strg+Z* unter Windows/Linux, *⌘+Z* unter macOS oder der Schaltfläche *�
 Kabel dürfen nur bei ausgeschaltetem DigiTrainer und außerhalb des Vermessungsmodus bearbeitet werden.
 ====
 
-=== 4. Spannungsversorgung und Verbindungsschienen
+=== Spannungsversorgung und Verbindungsschienen
 
 Die Logik-ICs benötigen eine korrekte Versorgung mit +5 V und GND. Die entsprechenden Versorgungsschienen sind innerhalb ihrer Gruppe elektrisch verbunden. Die fünf passiven Verbindungsschienen L0 bis L4 bieten jeweils vier miteinander verbundene Buchsen. Sie helfen dabei, ein Signal zu verteilen und lange Leitungen zu vermeiden.
 
@@ -120,15 +125,15 @@ Die Logik-ICs benötigen eine korrekte Versorgung mit +5 V und GND. Die entsprec
 Ein direktes Verbinden von +5 V und GND verursacht einen Kurzschluss. Der Simulator erkennt Kurzschlüsse und Ausgangskonflikte. In realen Schaltungen können solche Fehler Bauteile beschädigen.
 ====
 
-=== 5. Anzeige, Zoom und Touch
+=== Anzeige, Zoom und Touch
 
 Der DigiTrainer unterstützt Zoomstufen von 100 % bis 400 %, Schaltflächen und Tastatur, Mausrad-Zoom, Zwei-Finger-Zoom sowie das Verschieben der vergrößerten Platine. Mit *0* kehrst du zu 100 % zurück; *+* und *−* verändern den Zoom. Vollbild wird auf PC und iPad unterstützt; auf dem iPhone steht ein Pseudo-Vollbildmodus zur Verfügung.
 
-=== 6. Vermessungsmodus
+=== Vermessungsmodus
 
 Mit *M* wechselst du zwischen Verdrahtungs- und Vermessungsmodus. Im Vermessungsmodus können Koordinaten und rechteckige Bereiche auf dem Platinenfoto ermittelt werden. Die Ausgabe im JSON-Format dient insbesondere dazu, weitere Steckbuchsen-Hotspots zu definieren.
 
-=== 6a. Die Schaltplanansicht (neu in v0.69)
+=== Die Schaltplanansicht (neu in v0.69)
 
 Über die Schaltfläche *Schaltplan* öffnest du eine automatisch erzeugte Schaltplanansicht der aktuell gesteckten Verdrahtung. Die Darstellung ordnet die verwendeten Gatter und Anschlüsse möglichst entlang des Signalflusses von links nach rechts an. +5 V und GND werden zur besseren Übersicht nicht eingezeichnet; das bedeutet nicht, dass die Bausteine ohne Versorgung funktionieren.
 
@@ -157,7 +162,7 @@ Die Anordnung und Leitungsführung erfolgen automatisch und können bei komplexe
 
 == Teil II: Digitale Elektronik und simulierte Baugruppen
 
-=== 7. Grundlagen: LOW, HIGH und Wahrheitstabellen
+=== Grundlagen: LOW, HIGH und Wahrheitstabellen
 
 Digitale Schaltungen arbeiten mit zwei logischen Zuständen: LOW (0) und HIGH (1). Ein Gatter berechnet aus seinen Eingangssignalen einen Ausgangszustand. Eine Wahrheitstabelle zeigt alle möglichen Eingangskombinationen.
 
@@ -205,7 +210,7 @@ Digitale Schaltungen arbeiten mit zwei logischen Zuständen: LOW (0) und HIGH (1
 
 NAND ist die Negation von AND; NOR ist die Negation von OR. Der Simulator unterscheidet außerdem undefinierte Zustände. Offene Eingänge der simulierten 74LS-TTL-Gatter werden logisch als HIGH interpretiert; offene CMOS-Eingänge des CD4069 bleiben undefiniert.
 
-=== 8. Die sechs Logik-IC-Sockel
+=== Die sechs Logik-IC-Sockel
 
 [cols="1,2,4",options="header"]
 |===
@@ -220,33 +225,33 @@ NAND ist die Negation von AND; NOR ist die Negation von OR. Der Simulator unters
 
 Die simulierten Bausteine können miteinander verdrahtet werden. Für jedes Experiment müssen die Versorgungspins des verwendeten ICs korrekt angeschlossen werden. Die genaue Pinbelegung wird im Anhang nach Prüfung der Boarddefinition ergänzt.
 
-=== 9. Taktgenerator
+=== Taktgenerator
 
 Der integrierte Taktgenerator unterstützt 1 Hz und 10 Hz, manuelle Impulse, Start/Stopp sowie einen normalen und einen invertierten Taktausgang. Er ermöglicht Versuche mit Zählern und zeitabhängigen Schaltungen.
 
-=== 10. 4-Bit-Binärzähler SN74LS293N
+=== 4-Bit-Binärzähler SN74LS293N
 
 Der Zähler besitzt die Takteingänge CK A und CK B, vier Ausgänge QA bis QD und zwei asynchrone Reset-Eingänge. In der üblichen Zählerbeschaltung liefert er eine Folge von 0 bis 15. Für eine vollständige 4-Bit-Zählfolge wird QA mit CK B verbunden, während CK A die Taktimpulse erhält.
 
-=== 11. 7-Segment-Anzeige MC14495P
+=== 7-Segment-Anzeige MC14495P
 
 Vier binäre Eingänge mit den Wertigkeiten 1, 2, 4 und 8 steuern die hexadezimale Darstellung von 0 bis F. Der Eingang E beeinflusst die Latch-Funktion. So kann der Zählerstand direkt sichtbar gemacht werden.
 
-=== 12. 4-Bit-ALU SN74LS382N
+=== 4-Bit-ALU SN74LS382N
 
 Die ALU verarbeitet zwei 4-Bit-Operanden A0–A3 und B0–B3. Die Steuereingänge S0–S2 wählen eine Funktion; Cn ist der Eingangsübertrag. Ausgänge sind F0–F3, OVR und Cn+4. Der Simulator unterstützt unter anderem Addition, Subtraktion und logische Operationen. Ein dokumentierter Funktionstest ist 3 + 2 = 5.
 
-=== 13. 6-Bit-A/D-Wandler NE5037N
+=== 6-Bit-A/D-Wandler NE5037N
 
 Der NE5037N ist als *experimentelles, vereinfachtes Modell* implementiert. Der Wandler liefert sechs digitale Ausgänge Q0–Q5. Als geprüfte Grenzwerte sind 0 V → `000000` und +5 V → `111111` dokumentiert. Zwischenwerte und zeitliche Details sind noch nicht abschließend verifiziert.
 
 == Teil III: Experimente
 
-=== 14. So sind die Experimente aufgebaut
+=== So sind die Experimente aufgebaut
 
 Jedes Experiment enthält Lernziel, benötigte Funktionsgruppen, geprüfte Verdrahtung, Durchführung, erwartete Beobachtung, Erklärung und eine Zusatzaufgabe. Die Stecklisten werden aus der Boarddefinition und gespeicherten JSON-Projekten übernommen und anschließend im Simulator getestet.
 
-include::experiment01-not-gatter.adoc[leveloffset=+2]
+include::experiment01-not-gatter.adoc[leveloffset=+1]
 
 === Experiment 2: Ein 4-Bit-Zähler zeigt Hexadezimalzahlen
 
@@ -291,13 +296,13 @@ Lade das Pendellauflicht, schalte ein und starte den Takt. Beobachte die Folge v
 
 == Teil IV: Projekte, Fehlersuche und Technik
 
-=== 15. Projekte speichern und laden
+=== Projekte speichern und laden
 
 Der Button *Projekt* öffnet die Projektverwaltung. *Meine Projekte* enthält im Browser gespeicherte Schaltungen. *Beispielprojekte* zeigt die bereitgestellten JSON-Dateien aus dem GitHub-Repository. Für diese öffentliche Bibliothek ist eine Internetverbindung erforderlich.
 
 Du kannst Projekte lokal im Browser speichern, als JSON exportieren und JSON-Dateien importieren. Der Export ist die zuverlässigere Sicherung, da Browserdaten gelöscht werden können. Gespeichert werden Verbindungen, Schalterstellungen, Taktgenerator-Einstellungen, Debug-Zustand und gegebenenfalls eine Beschreibung. Interne Laufzeitzustände, etwa ein aktueller Zählerstand, werden nicht mitgespeichert. Beim Laden ist der DigiTrainer ausgeschaltet.
 
-=== 16. Beschreibungen in JSON
+=== Beschreibungen in JSON
 
 Eine Projektbeschreibung steht vorzugsweise direkt im Feld `description`:
 
@@ -312,15 +317,15 @@ Eine Projektbeschreibung steht vorzugsweise direkt im Feld `description`:
 
 Dieses Beispiel zeigt nur die Metadaten und ist *keine vollständig importierbare Schaltung*. In echten Projektdateien kommen unter anderem `board`, `wires` und `switches` hinzu. `\n` erzeugt einen Zeilenumbruch; `\n\n` eine Leerzeile. Fehlt `description`, kann die Bibliothek alternativ eine gleichnamige `.txt`-Datei lesen. Die JSON-Beschreibung hat Vorrang.
 
-=== 17. Eigene Projekte beitragen
+=== Eigene Projekte beitragen
 
 Die Beispielbibliothek soll durch Schaltungen aus der Community wachsen. Erstelle eine Schaltung, teste sie im Simulator und exportiere sie als JSON-Datei. Ergänze eine kurze Beschreibung mit Zweck und Bedienhinweisen und sende die Datei an den Projektbetreiber. Nach Prüfung kann sie in die öffentliche Bibliothek aufgenommen werden.
 
-=== 18. Debug-Anzeige
+=== Debug-Anzeige
 
 Bei eingeschaltetem Gerät zeigt *Debug* die logischen Pegel: Rot für HIGH (1), Hellblau für LOW (0) und Hellgrau für undefiniert. Zusätzlich werden binäre Werte unter Schaltern und LEDs angezeigt. Ohne Debug werden zusammenhängende elektrische Netze durch gleiche Kabelfarben kenntlich gemacht; Versorgung und Masse erhalten eigene Farben.
 
-=== 19. Typische Fehler
+=== Typische Fehler
 
 [cols="2,4",options="header"]
 |===
@@ -335,7 +340,7 @@ Bei eingeschaltetem Gerät zeigt *Debug* die logischen Pegel: Rot für HIGH (1),
 |Projekt nach Browserbereinigung verschwunden |Nach Möglichkeit aus einer zuvor exportierten JSON-Datei importieren.
 |===
 
-=== 20. Technische Umsetzung und Grenzen
+=== Technische Umsetzung und Grenzen
 
 Der DigiTrainer verwendet HTML, CSS und JavaScript. Die Steckbuchsen werden anhand einer Boarddefinition zugeordnet; Patchkabel bilden elektrische Netze. Der Simulator berechnet daraus die logischen Zustände. Er ersetzt keine vollständige elektrische Schaltungssimulation: reale Laufzeiten, Stromaufnahme, Belastbarkeit und analoge Grenzfälle sind nur eingeschränkt modelliert. Der A/D-Wandler befindet sich ausdrücklich in einem experimentellen Entwicklungsstadium.
 
@@ -348,7 +353,7 @@ python3 -m http.server 8000
 
 Anschließend `http://localhost:8000/` öffnen. Das direkte Öffnen von `index.html` über `file://` kann durch Browser-Sicherheitsbeschränkungen das Laden der Boarddefinition verhindern. Die eigentliche Simulation benötigt keine Internetverbindung; die online bereitgestellten Beispielprojekte hingegen schon.
 
-=== 21. Wie entsteht der automatische Schaltplan?
+=== Wie entsteht der automatische Schaltplan?
 
 Die Schaltplanerstellung wurde von Lutz (`lschulze`) in Pull Request #4 beigesteuert. Sie wertet die vorhandenen elektrischen Netze aus, erkennt die daran angeschlossenen Logikfunktionen und erstellt daraus eine grafische Darstellung. Für die Anordnung der Elemente werden Verfahren aus der Graphendarstellung verwendet; die Leitungen werden anschließend mit möglichst gut lesbaren Abständen und Verzweigungen geführt.
 
@@ -356,7 +361,8 @@ Die Schaltplanansicht ist von der eigentlichen Simulation getrennt: Die Einführ
 
 Für die geplante austauschbare IC-Bibliothek muss die Schaltplanerstellung später auch die Definitionen neu ausgewählter ICs berücksichtigen. Die technische Beschreibung von Lutz erläutert die derzeitige Vorgehensweise ausführlicher: link:Schaltplan-aus-Netzliste.pdf[Schaltplan aus der Netzliste].
 
-== Anhang A: Funktions- und Quellenprüfung
+[appendix]
+== Funktions- und Quellenprüfung
 
 [cols="3,3,2",options="header"]
 |===
@@ -369,7 +375,8 @@ Für die geplante austauschbare IC-Bibliothek muss die Schaltplanerstellung spä
 |Bildschirmfotos |Live-Demo v0.69 |Bildauswahl offen
 |===
 
-== Anhang B: Quellen und Mitwirkende
+[appendix]
+== Quellen und Mitwirkende
 
 * DigiTrainer: https://github.com/ManiBecker/DigiTrainer
 * Live-Demo: https://manibecker.github.io/DigiTrainer/
@@ -378,11 +385,12 @@ Für die geplante austauschbare IC-Bibliothek muss die Schaltplanerstellung spä
 Der Simulator basiert auf Fotografien eines originalen ITT Digi-Trainer 2, die jobi23 aus dem Classic-Computing-Forum bereitgestellt hat. Lutz (`lschulze`) hat unter anderem zur Projektverwaltung, Kabelbedienung, Projektbibliothek und zur automatischen Schaltplanerstellung (Pull Request #4) beigetragen. Seine technische Dokumentation liegt unter link:Schaltplan-aus-Netzliste.pdf[Schaltplan aus der Netzliste].
 
 
-== Anhang C: IC-Katalog für künftige Experimente
+[appendix]
+== IC-Katalog für künftige Experimente
 
 Dieser Katalog sammelt Bausteine, die sich für spätere DigiTrainer-Experimente und eine austauschbare IC-Bibliothek eignen. *Die Aufnahme in diese Liste bedeutet nicht, dass der Baustein bereits simuliert oder in einem Sockel auswählbar ist.* Die Verfügbarkeit und die Pinbelegung müssen vor jedem Experiment geprüft werden.
 
-=== C.1 Bereits simulierte ICs
+=== Bereits simulierte ICs
 
 [cols="2,1,3,4",options="header"]
 |===
@@ -397,7 +405,7 @@ Dieser Katalog sammelt Bausteine, die sich für spätere DigiTrainer-Experimente
 
 Der *CD4069UBE ist kein TTL-IC*, sondern ein CMOS-Baustein der 4000er-Familie. Er ist hier aufgeführt, weil er zur vorhandenen Bestückung gehört. Zusätzlich sind auf dem Board unter anderem der Binärzähler SN74LS293N, die 7-Segment-Ansteuerung MC14495P, die ALU SN74LS382N und der experimentell modellierte A/D-Wandler NE5037N vorhanden. Diese Baugruppen sind nicht mit den sechs frei zu bestückenden IC-Plätzen gleichzusetzen.
 
-=== C.2 Logikgatter und kombinatorische Funktionen
+=== Logikgatter und kombinatorische Funktionen
 
 [cols="2,1,4,4",options="header"]
 |===
@@ -411,7 +419,7 @@ Der *CD4069UBE ist kein TTL-IC*, sondern ein CMOS-Baustein der 4000er-Familie. E
 |74LS266 |14 |Vier XNOR-Gatter mit Open-Collector-Ausgängen |Gleichheitsprüfung, Ausgangsbeschaltung
 |===
 
-=== C.3 Flipflops und Schieberegister
+=== Flipflops und Schieberegister
 
 [cols="2,1,4,4",options="header"]
 |===
@@ -426,7 +434,7 @@ Der *CD4069UBE ist kein TTL-IC*, sondern ein CMOS-Baustein der 4000er-Familie. E
 |74LS194 |16 |Bidirektionales 4-Bit-Schieberegister |Verschieben nach links und rechts
 |===
 
-=== C.4 Zähler und Frequenzteiler
+=== Zähler und Frequenzteiler
 
 [cols="2,1,4,4",options="header"]
 |===
@@ -440,7 +448,7 @@ Der *CD4069UBE ist kein TTL-IC*, sondern ein CMOS-Baustein der 4000er-Familie. E
 |74LS193 |16 |Synchroner 4-Bit-Auf-/Abwärtszähler |Pendelzähler
 |===
 
-=== C.5 Decoder, Multiplexer und Anzeige
+=== Decoder, Multiplexer und Anzeige
 
 [cols="2,1,4,4",options="header"]
 |===
@@ -456,7 +464,7 @@ Der *CD4069UBE ist kein TTL-IC*, sondern ein CMOS-Baustein der 4000er-Familie. E
 
 Der 74LS47 ist für Anzeigen mit passender elektrischer Ansteuerung gedacht. Er kann nicht ohne Weiteres als Ersatz für den auf dem DigiTrainer vorhandenen MC14495P betrachtet werden.
 
-=== C.6 Arithmetik und Vergleicher
+=== Arithmetik und Vergleicher
 
 [cols="2,1,4,4",options="header"]
 |===
@@ -467,7 +475,7 @@ Der 74LS47 ist für Anzeigen mit passender elektrischer Ansteuerung gedacht. Er 
 |74LS283 |16 |4-Bit-Volladdierer |Addition und Subtraktion mit Zusatzlogik
 |===
 
-=== C.7 Besonders interessante 20-polige Bausteine
+=== Besonders interessante 20-polige Bausteine
 
 [cols="2,1,4,4",options="header"]
 |===
@@ -480,7 +488,7 @@ Der 74LS47 ist für Anzeigen mit passender elektrischer Ansteuerung gedacht. Er 
 |74LS374 |20 |Acht flankengesteuerte D-Flipflops mit Tri-State-Ausgängen |8-Bit-Register und Datenbus
 |===
 
-=== C.8 Sockel und elektrische Besonderheiten
+=== Sockel und elektrische Besonderheiten
 
 * Die *Sockel 0 bis 4 sind 16-polig*, *Sockel 5 ist 20-polig*. Das muss die spätere Bausteinauswahl berücksichtigen.
 * Die vielen 14-poligen TTL-ICs benötigen eine definierte Zuordnung zu den 16-poligen Steckplätzen. Eine physisch und elektrisch korrekte Einsetzposition darf nicht stillschweigend angenommen werden.
@@ -489,7 +497,7 @@ Der 74LS47 ist für Anzeigen mit passender elektrischer Ansteuerung gedacht. Er 
 * Open-Collector-Ausgänge benötigen eine geeignete Pull-up-Beschaltung; Tri-State-Ausgänge können hochohmig sein. Solche Eigenschaften müssen vom Simulator unterstützt werden, bevor entsprechende Experimente als funktionsfähig gelten.
 * Nicht alle Bausteine der 74xx-Familie sind untereinander elektrisch oder zeitlich identisch. Für die Dokumentation ist die konkrete Typbezeichnung maßgeblich.
 
-=== C.9 Vorgeschlagene Reihenfolge für die IC-Bibliothek
+=== Vorgeschlagene Reihenfolge für die IC-Bibliothek
 
 [cols="1,2,5",options="header"]
 |===
