@@ -1,0 +1,88 @@
+{
+  "format": "digitrainer-projekt",
+  "version": 1,
+  "app": "DigiTrainer v0.70",
+  "board": "tel-digitrainer2",
+  "saved": "2026-11-06T22:50:58.588Z",
+  "wires": [
+    {
+      "from": "vcc4",
+      "to": "ic1-pin16"
+    },
+    {
+      "from": "gnd3",
+      "to": "ic1-pin7"
+    },
+    {
+      "from": "ic1-pin2",
+      "to": "ic1-pin3"
+    },
+    {
+      "from": "ic1-pin4",
+      "to": "ic1-pin5"
+    },
+    {
+      "from": "ic1-pin6",
+      "to": "ic1-pin15"
+    },
+    {
+      "from": "ic1-pin14",
+      "to": "ic1-pin13"
+    },
+    {
+      "from": "ic1-pin12",
+      "to": "ic1-pin11"
+    },
+    {
+      "from": "clk-out",
+      "to": "ic1-pin1"
+    },
+    {
+      "from": "clk-out-not",
+      "to": "D0"
+    },
+    {
+      "from": "D1",
+      "to": "clk-out"
+    },
+    {
+      "from": "D2",
+      "to": "ic1-pin3"
+    },
+    {
+      "from": "ic1-pin5",
+      "to": "D3"
+    },
+    {
+      "from": "D4",
+      "to": "ic1-pin15"
+    },
+    {
+      "from": "ic1-pin13",
+      "to": "D5"
+    },
+    {
+      "from": "D6",
+      "to": "ic1-pin11"
+    },
+    {
+      "from": "ic1-pin10",
+      "to": "D7"
+    }
+  ],
+  "switches": {
+    "power": 0,
+    "switch_clk_f": 0,
+    "switch_clk_stop": 1,
+    "switch0": 0,
+    "switch1": 0,
+    "switch2": 0,
+    "switch3": 0,
+    "switch4": 0,
+    "switch5": 0,
+    "switch6": 0,
+    "switch7": 0
+  },
+  "debug": true,
+  "description": "6-fach Inverter in Reihe geschaltet"
+}

@@ -822,7 +822,7 @@ boardArea.appendChild(switchLedLayer);
 
 updateStatus();
 
-fetch("boards/itt-digitrainer2/board.json")
+fetch("boards/tel-digitrainer2/board.json")
     .then(function (response) {
         if (!response.ok) {
             throw new Error("HTTP " + response.status);

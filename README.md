@@ -1,19 +1,19 @@
 # DigiTrainer
 
-**A web-based simulator of the ITT Digi-Trainer 2 digital electronics training system.**
+**A web-based simulator of the TEL Digi-Trainer 2 digital electronics training system.**
 
 <a href="https://manibecker.github.io/DigiTrainer/">
-  <img src="images/digitrainer-v0.69.jpg"
+  <img src="images/digitrainer-v0.70.jpg"
        alt="DigiTrainer Live-Demo"
        width="800"
        style="max-width: 100%; height: auto;">
 </a>
 
-Der **DigiTrainer** ist ein browserbasierter Simulator des historischen **ITT Digi-Trainer 2**, eines Lehr- und Experimentiersystems für digitale Elektronik.
+Der **DigiTrainer** ist ein browserbasierter Simulator des historischen **TEL Digi-Trainer 2**, eines Lehr- und Experimentiersystems für digitale Elektronik.
 
 Ziel des Projekts ist es, die Funktionen und Experimente des Originals möglichst realitätsnah am Bildschirm nachzubilden. Dazu gehören Schalter, LEDs, Steckbuchsen, Patchkabel und verschiedene digitale Logikbausteine.
 
-Der Simulator basiert auf Fotografien eines originalen ITT Digi-Trainer 2. Die Bedienelemente und Steckbuchsen wurden durch interaktive Elemente ergänzt. Die gesteckten Verbindungen werden elektrisch ausgewertet, sodass sich digitale Schaltungen aufbauen und unmittelbar ausprobieren lassen.
+Der Simulator basiert auf Fotografien eines originalen TEL Digi-Trainer 2. Die Bedienelemente und Steckbuchsen wurden durch interaktive Elemente ergänzt. Die gesteckten Verbindungen werden elektrisch ausgewertet, sodass sich digitale Schaltungen aufbauen und unmittelbar ausprobieren lassen.
 
 **Für die Online-Version ist keine Installation und keine zusätzliche Hardware erforderlich – ein moderner Browser genügt.**
 
@@ -42,7 +42,7 @@ praktischen Experimenten.
 
 ### Bedienung und Verdrahtung
 
-- Originalgetreue Darstellung des ITT Digi-Trainer 2
+- Originalgetreue Darstellung des TEL Digi-Trainer 2
 - Originalgetreuer Hauptschalter mit fotografischem ON-Overlay und roter Betriebsanzeige
 - Acht bedienbare Schiebeschalter S0–S7
 - Simulation der Schalter- und Ausgangs-LEDs D0–D7
@@ -169,9 +169,9 @@ Beim Laden wird der DigiTrainer ausgeschaltet. Interne Laufzeitzustände der sim
 
 Die Projektverwaltung wurde von **[Lutz (lschulze)](https://github.com/lschulze)** als erster externer Beitrag über **[Pull Request #1](https://github.com/ManiBecker/DigiTrainer/pull/1)** beigesteuert.
 
-## 💡 Beispielprojekte
+## 💡 Beispielprojekte (offline nutzbar ab v0.70)
 
-Im Verzeichnis [`projects/`](projects/) stehen vier vorbereitete Beispielschaltungen. Im Dialog **Projekt** sind die lokal gespeicherten Schaltungen unter **Meine Projekte** und die öffentlich bereitgestellten Schaltungen unter **Beispielprojekte** getrennt aufgeführt. Die Beispielprojekte werden aus dem Repository [ManiBecker/DigiTrainer](https://github.com/ManiBecker/DigiTrainer), Branch `main`, geladen; dafür ist eine Internetverbindung nötig. Ein Klick auf den Projektnamen zeigt die Beschreibung, **Laden** übernimmt die Schaltung. Dieselbe JSON-Datei lässt sich weiterhin über **Datei importieren** laden.
+Im Verzeichnis [`projects/`](projects/) stehen vorbereitete Beispielschaltungen. Die Datei [`projects/index.json`](projects/index.json) enthält die Liste der angebotenen Projekte. Im Dialog **Projekt** sind die lokal gespeicherten Schaltungen unter **Meine Projekte** und die mitgelieferten Schaltungen unter **Beispielprojekte** getrennt aufgeführt. Die Beispielprojekte werden über relative Pfade vom jeweils verwendeten Webserver geladen: online über GitHub Pages, lokal über den eigenen Webserver. **Damit sind auch die Beispielprojekte ohne Internetverbindung nutzbar**, sofern die Projektdateien lokal vorhanden und in `index.json` eingetragen sind. Ein Klick auf den Projektnamen zeigt die Beschreibung, **Laden** übernimmt die Schaltung. Dieselbe JSON-Datei lässt sich weiterhin über **Datei importieren** laden.
 
 Die Beschreibung steht vorzugsweise direkt im Feld `description` der JSON-Datei. Alternativ unterstützt die Projektbibliothek eine gleichnamige `.txt`-Datei, falls im JSON keine Beschreibung hinterlegt ist. Die JSON-Beschreibung hat Vorrang. Mehrzeilige Texte können in JSON mit `\n` (Zeilenumbruch) bzw. `\n\n` (Leerzeile) geschrieben werden. Eine eigene Beschreibung wird beim Speichern im Browser und beim JSON-Export mit der Schaltung gespeichert. Ältere Projekte ohne Beschreibung bleiben weiterhin ladbar.
 
@@ -308,12 +308,13 @@ DigiTrainer/
 │   ├── kabel.js
 │   └── schaltplan.js
 ├── boards/
-│   └── itt-digitrainer2/
+│   └── tel-digitrainer2/
 │       ├── board.jpg
 │       ├── board.json
 │       ├── power-on.jpg
 │       └── switch-off.jpg
 ├── projects/
+│   ├── index.json
 │   ├── counter-1.json
 │   ├── counter-2.json
 │   ├── lauflicht-D0-D7.json
@@ -338,10 +339,11 @@ Die Aufgaben der einzelnen Dateien:
 - `js/kabel.js` – Kabel markieren, entfernen, umstecken und Änderungen rückgängig machen
 - `js/schaltplan.js` – Automatische Schaltplanerstellung, Symbolanordnung, Leitungsführung, SVG-Export und Druckfunktion
 - `help.html` – Bedienungshinweise und Hilfe
-- `boards/itt-digitrainer2/board.jpg` – Foto des Originalgeräts
-- `boards/itt-digitrainer2/board.json` – Positionen und Definitionen der Steckbuchsen, Schalter und LEDs einschließlich der Hauptschalter-Konfiguration
+- `boards/tel-digitrainer2/board.jpg` – Foto des Originalgeräts
+- `boards/tel-digitrainer2/board.json` – Positionen und Definitionen der Steckbuchsen, Schalter und LEDs einschließlich der Hauptschalter-Konfiguration
 - `images/power-on.jpg` – fotografisches Overlay des eingeschalteten Hauptschalters
 - `projects/` – JSON-Beispielschaltungen mit optionaler integrierter Beschreibung
+- `projects/index.json` – Liste der im Projektdialog angebotenen Beispielschaltungen; bei neuen Beispielen ergänzen
 
 Die Simulation arbeitet mit einem Verbindungsmodell, das die über Patchkabel zusammengeschalteten Anschlüsse zu elektrischen Netzen zusammenfasst. Dazu gehören auch die passiven Verbindungsschienen L0–L4.
 
@@ -359,13 +361,19 @@ Die Live-Demo benötigt keine Installation. Für die lokale Offline-Nutzung das 
 python3 -m http.server 8000
 ```
 
-Unter Windows funktioniert alternativ häufig `py -m http.server 8000`. Anschließend `http://localhost:8000/` im Browser öffnen. Der Server wird mit **Strg+C** beendet. Eine Internetverbindung ist für die eigentliche Simulation nicht nötig.
+Unter Windows funktioniert alternativ häufig `py -m http.server 8000`. Anschließend `http://localhost:8000/` im Browser öffnen. Der Server wird mit **Strg+C** beendet. Eine Internetverbindung ist weder für die Simulation noch für das Laden der lokal mitgelieferten Beispielprojekte nötig.
 
-**Wichtig:** Der direkte Aufruf von `index.html` über `file://` kann wegen der Browser-Sicherheitsbeschränkungen beim Laden von `board.json` die Verdrahtung verhindern. Die Beispielschaltungen kommen immer aus Manfreds Repository und brauchen dafür eine Internetverbindung.
+**Wichtig:** Der direkte Aufruf von `index.html` über `file://` kann wegen der Browser-Sicherheitsbeschränkungen beim Laden von `board.json` die Verdrahtung verhindern. Die Beispielschaltungen werden über `projects/index.json` und relative Dateipfade geladen. Beim lokalen Betrieb stammen sie aus dem lokalen Verzeichnis `projects/`; auf GitHub Pages werden dieselben Dateien online bereitgestellt.
 
 ## 📊 Besucherstatistik
 
 Auf der Live-Demo wird die Anzahl der **Besuche seit dem 26.10.2026** angezeigt. Die Zahl wird über [GoatCounter](https://www.goatcounter.com/) abgerufen. Über den verlinkten Zähler lässt sich die [DigiTrainer-Besucherstatistik](https://digitrainer.goatcounter.com/) aufrufen (sofern öffentlich freigegeben bzw. mit entsprechender Anmeldung). Die Statistik ist unabhängig von der elektrischen Simulation.
+
+## 🆕 Änderungen in v0.70
+
+- Boardverzeichnis und interne Boardkennung von `itt-digitrainer2` auf `tel-digitrainer2` korrigiert.
+- Beispielprojektbibliothek auf relative Dateipfade und `projects/index.json` umgestellt; die Beispiele lassen sich nun auch über den lokalen Webserver ohne Internetverbindung laden.
+- Die Projektverwaltung bleibt für eigene Projekte im Browserspeicher sowie JSON-Import und -Export erhalten.
 
 ## 📋 Geplante Erweiterungen
 
@@ -380,7 +388,7 @@ Auf der Live-Demo wird die Anzahl der **Besuche seit dem 26.10.2026** angezeigt.
 
 ## 📌 Projektstatus
 
-**Work in Progress – Stand November 2026 (zuletzt dokumentierte Version 0.67)**
+**Work in Progress – Stand November 2026 (Version 0.70)**
 
 Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind implementiert. Darüber hinaus wurden folgende Funktionen bereits in grundlegenden Funktionstests erprobt:
 
@@ -398,11 +406,11 @@ Die grundlegende Bedienung, Verdrahtung und Simulation der sechs Logik-ICs sind 
 - Debug-Anzeige mit Logikpegeln und binären Zustandsanzeigen
 - Speichern und Laden mehrerer Projekte im Browser
 - Export und Import von Schaltungen als JSON-Dateien einschließlich optionaler Projektbeschreibung
-- Automatisch geladene Beispielprojektbibliothek aus GitHub mit Beschreibungen
+- Beispielprojektbibliothek mit Beschreibungen, online über GitHub Pages und offline über den lokalen Webserver nutzbar
 - Getrennte Listen für eigene Projekte und Beispielprojekte
 - Besucherzähler auf der Live-Demo
 - Fotografisches ON-Overlay des Hauptschalters, dessen Position und Größe über `board.json` festgelegt sind
-- Vier Beispielprojekte: zwei Zählerschaltungen und zwei Lauflichtvarianten
+- Beispielprojekte für Zähler, Lauflichter und erste Logikexperimente (abhängig von den Einträgen in `projects/index.json`)
 
 Die wesentlichen digitalen Funktionsgruppen des Originalgeräts sind damit im Simulator abgebildet. Einige Details – insbesondere die analoge Beschaltung, das Widerstandsnetzwerk und das Verhalten bei Grenzfällen – müssen noch weiter untersucht werden.
 
@@ -412,7 +420,7 @@ Der DigiTrainer ist ein privates Hobby- und Lernprojekt. Die Simulation wird sch
 
 ## 🙏 Danksagung
 
-Ein besonderer Dank gilt **jobi23 aus dem Classic-Computing-Forum**, der Fotografien seines originalen ITT Digi-Trainer 2 für dieses Projekt zur Verfügung gestellt hat.
+Ein besonderer Dank gilt **jobi23 aus dem Classic-Computing-Forum**, der Fotografien seines originalen TEL Digi-Trainer 2 für dieses Projekt zur Verfügung gestellt hat.
 
 Ohne diese Bilder wäre die originalgetreue Darstellung des Geräts in dieser Form nicht möglich gewesen.
 

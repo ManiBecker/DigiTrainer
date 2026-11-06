@@ -29,7 +29,7 @@
 //   "format": "digitrainer-projekt",
 //   "version": 1,
 //   "app": "DigiTrainer v0.63",
-//   "board": "itt-digitrainer2",
+//   "board": "tel-digitrainer2",
 //   "saved": "2026-10-28T12:00:00.000Z",
 //   "wires": [ { "from": "clk-out", "to": "ctr-CKA" }, ... ],
 //   "switches": { "switch0": 0, ..., "switch_clk_f": 0, "switch_clk_stop": 1 },
@@ -43,7 +43,7 @@
 // dem Feld description oder, falls das fehlt, aus der gleichnamigen
 // Textdatei. Beides wird nie dorthin zurueckgeschrieben. Eine eigene
 // Beschreibung bleibt beim Speichern im Browser und beim JSON-Export erhalten.
-// "from"/"to" sind die Buchsen-IDs aus boards/itt-digitrainer2/board.json.
+// "from"/"to" sind die Buchsen-IDs aus boards/tel-digitrainer2/board.json.
 //
 // Lizenz: MIT, wie das DigiTrainer-Projekt (siehe LICENSE).
 // ------------------------------------------------------------
@@ -53,7 +53,7 @@
 
     const PROJECT_FORMAT = "digitrainer-projekt";
     const PROJECT_VERSION = 1;
-    const PROJECT_BOARD = "itt-digitrainer2";
+    const PROJECT_BOARD = "tel-digitrainer2";
     const PROJECT_STORAGE_KEY = "digitrainer.projekte";
     const PROJECT_MAX_FILE_SIZE = 1024 * 1024;
 
@@ -382,8 +382,10 @@
 
     const libraryElement = dialog.querySelector("#library-list");
 
-    const LIBRARY_API = "https://api.github.com/repos/ManiBecker/DigiTrainer/contents/projects?ref=main";
-    const LIBRARY_BASE = "https://raw.githubusercontent.com/ManiBecker/DigiTrainer/main/projects/";
+    // Beispielprojekte liegen im selben Repository wie der Simulator.
+    // Die Indexdatei funktioniert sowohl lokal als auch auf GitHub Pages.
+    const LIBRARY_BASE = "projects/";
+    const LIBRARY_INDEX = LIBRARY_BASE + "index.json";
 
     function libraryFileName(file) {
         const base = decodeURIComponent(String(file).split("?")[0].split("/").pop());
@@ -403,18 +405,17 @@
 
     async function listProjectFiles() {
         try {
-            const response = await fetch(LIBRARY_API, {
-                headers: { Accept: "application/vnd.github+json" },
-                cache: "no-cache"
-            });
+            const response = await fetch(LIBRARY_INDEX, { cache: "no-cache" });
             if (!response.ok) return null;
             const data = await response.json();
             if (!Array.isArray(data)) return null;
-            return data
-                .map(item => item && item.type === "file" ? libraryFileName(item.name) : "")
-                .filter(Boolean)
+            return [...new Set(data
+                .filter(item => typeof item === "string")
+                .map(libraryFileName)
+                .filter(name => name && name.toLowerCase() !== "index.json"))]
                 .sort((a, b) => a.localeCompare(b, "de"));
         } catch (error) {
+            console.warn("Beispielprojekt-Index konnte nicht geladen werden:", error);
             return null;
         }
     }

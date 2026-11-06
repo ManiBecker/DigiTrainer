@@ -1,6 +1,6 @@
 {
-  "id": "itt-digitrainer2",
-  "name": "ITT Digi-Trainer 2",
+  "id": "tel-digitrainer2",
+  "name": "TEL Digi-Trainer 2",
   "hotspots": [
     {
       "id": "vcc1",
@@ -1790,7 +1790,7 @@
       "height": 0.06455,
       "defaultState": "off",
       "overlay": {
-        "on": "boards/itt-digitrainer2/power-on.jpg"
+        "on": "boards/tel-digitrainer2/power-on.jpg"
       }
     },
     {

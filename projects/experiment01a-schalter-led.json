@@ -2,7 +2,7 @@
   "format": "digitrainer-projekt",
   "version": 1,
   "app": "DigiTrainer v0.69",
-  "board": "itt-digitrainer2",
+  "board": "tel-digitrainer2",
   "saved": "2026-11-02T21:58:05.663Z",
   "wires": [
     {

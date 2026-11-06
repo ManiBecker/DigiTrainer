@@ -26,7 +26,7 @@ gespeicherten Projektdateien verifiziert. Ungeprüfte Verdrahtungslisten werden 
 
 == Vorwort
 
-Der ITT Digi-Trainer 2 ist ein Lehr- und Experimentiersystem für digitale Elektronik. Der browserbasierte DigiTrainer bildet das Gerät anhand eines Fotos und interaktiver Bedienelemente nach. Statt physische Patchkabel zu stecken, verbindet man Buchsen mit Maus oder Finger. Der Simulator ermittelt die elektrischen Netze und berechnet die logischen Zustände der simulierten Baugruppen.
+Der TEL Digi-Trainer 2 ist ein Lehr- und Experimentiersystem für digitale Elektronik. Der browserbasierte DigiTrainer bildet das Gerät anhand eines Fotos und interaktiver Bedienelemente nach. Statt physische Patchkabel zu stecken, verbindet man Buchsen mit Maus oder Finger. Der Simulator ermittelt die elektrischen Netze und berechnet die logischen Zustände der simulierten Baugruppen.
 
 Das Handbuch richtet sich an Neugierige ohne Vorkenntnisse ebenso wie an Menschen, die bereits mit TTL-Bausteinen gearbeitet haben. Es verbindet die Bedienung des Programms mit nachvollziehbaren Experimenten. Eine Installation ist für die Online-Version nicht erforderlich.
 
@@ -382,7 +382,7 @@ Für die geplante austauschbare IC-Bibliothek muss die Schaltplanerstellung spä
 * Live-Demo: https://manibecker.github.io/DigiTrainer/
 * Projekt-README (Stand der Arbeitsfassung): https://raw.githubusercontent.com/ManiBecker/DigiTrainer/main/README.md
 
-Der Simulator basiert auf Fotografien eines originalen ITT Digi-Trainer 2, die jobi23 aus dem Classic-Computing-Forum bereitgestellt hat. Lutz (`lschulze`) hat unter anderem zur Projektverwaltung, Kabelbedienung, Projektbibliothek und zur automatischen Schaltplanerstellung (Pull Request #4) beigetragen. Seine technische Dokumentation liegt unter link:Schaltplan-aus-Netzliste.pdf[Schaltplan aus der Netzliste].
+Der Simulator basiert auf Fotografien eines originalen TEL Digi-Trainer 2, die jobi23 aus dem Classic-Computing-Forum bereitgestellt hat. Lutz (`lschulze`) hat unter anderem zur Projektverwaltung, Kabelbedienung, Projektbibliothek und zur automatischen Schaltplanerstellung (Pull Request #4) beigetragen. Seine technische Dokumentation liegt unter link:Schaltplan-aus-Netzliste.pdf[Schaltplan aus der Netzliste].
 
 
 [appendix]

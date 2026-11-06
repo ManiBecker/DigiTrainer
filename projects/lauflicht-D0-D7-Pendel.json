@@ -3,7 +3,7 @@
   "version": 1,
   "app": "DigiTrainer v0.66",
   "description": "Pendellauflicht von D0 nach D7 und zurück, mit doppelter Leuchtdauer an den Endpunkten.",
-  "board": "itt-digitrainer2",
+  "board": "tel-digitrainer2",
   "saved": "2026-10-30T23:23:40.666Z",
   "wires": [
     {
